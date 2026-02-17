@@ -1,0 +1,39 @@
+{
+  "providers": {
+    "openai": {
+      "baseUrl": "https://api.deepseek.com",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "deepseek-chat",
+          "name": "DeepSeek Chat",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": {
+            "input": 0.14,
+            "output": 0.28,
+            "cacheRead": 0.014,
+            "cacheWrite": 0.14
+          },
+          "contextWindow": 32000,
+          "maxTokens": 4096
+        },
+        {
+          "id": "deepseek-coder",
+          "name": "DeepSeek Coder",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": {
+            "input": 0.14,
+            "output": 0.28,
+            "cacheRead": 0.014,
+            "cacheWrite": 0.14
+          },
+          "contextWindow": 32000,
+          "maxTokens": 4096
+        }
+      ],
+      "apiKey": "OPENAI_API_KEY"
+    }
+  }
+}

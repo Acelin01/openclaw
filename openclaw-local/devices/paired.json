@@ -1,0 +1,23 @@
+{
+  "c5865452a57e265618bee07ee672c8fed260febe223b113011ee3a1b9ce25574": {
+    "deviceId": "c5865452a57e265618bee07ee672c8fed260febe223b113011ee3a1b9ce25574",
+    "publicKey": "3Qb8rfBcDxaMXIxuRzAAzLm0xs-tuRiAo_4Ogr_Vuxg",
+    "platform": "darwin",
+    "clientId": "cli",
+    "clientMode": "cli",
+    "role": "operator",
+    "roles": ["operator"],
+    "scopes": ["operator.admin", "operator.approvals", "operator.pairing"],
+    "tokens": {
+      "operator": {
+        "token": "224432c4020d4102bb546a8e31e4d509",
+        "role": "operator",
+        "scopes": ["operator.admin", "operator.approvals", "operator.pairing"],
+        "createdAtMs": 1771322267026,
+        "lastUsedAtMs": 1771322354885
+      }
+    },
+    "createdAtMs": 1771322267026,
+    "approvedAtMs": 1771322267026
+  }
+}
