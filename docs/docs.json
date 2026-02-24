@@ -882,8 +882,15 @@
                   "plugins/voice-call",
                   "plugins/zalouser",
                   "skills/product-manager-skills",
+                  "skills/autonomous-project-management",
                   "skills/multi-agent-team",
                   "skills/custom-morning-brief",
+                  "skills/content-factory",
+                  "skills/dynamic-dashboard",
+                  "skills/event-guest-confirmation",
+                  "skills/calendar-assistant",
+                  "skills/knowledge-base-rag",
+                  "skills/market-research-product-factory",
                   "skills/resume-job-application"
                 ]
               },
@@ -1325,8 +1332,15 @@
                   "zh-CN/plugins/voice-call",
                   "zh-CN/plugins/zalouser",
                   "zh-CN/skills/product-manager-skills",
+                  "zh-CN/skills/autonomous-project-management",
                   "zh-CN/skills/multi-agent-team",
                   "zh-CN/skills/custom-morning-brief",
+                  "zh-CN/skills/content-factory",
+                  "zh-CN/skills/dynamic-dashboard",
+                  "zh-CN/skills/event-guest-confirmation",
+                  "zh-CN/skills/calendar-assistant",
+                  "zh-CN/skills/knowledge-base-rag",
+                  "zh-CN/skills/market-research-product-factory",
                   "zh-CN/skills/resume-job-application"
                 ]
               },
