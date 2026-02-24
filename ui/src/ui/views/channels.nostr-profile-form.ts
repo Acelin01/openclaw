@@ -6,6 +6,7 @@
 
 import { html, nothing, type TemplateResult } from "lit";
 import type { NostrProfile as NostrProfileType } from "../types.ts";
+import { t } from "../../i18n.ts";
 
 // ============================================================================
 // Types
@@ -166,8 +167,8 @@ export function renderNostrProfileForm(params: {
   return html`
     <div class="nostr-profile-form" style="padding: 16px; background: var(--bg-secondary); border-radius: 8px; margin-top: 12px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <div style="font-weight: 600; font-size: 16px;">Edit Profile</div>
-        <div style="font-size: 12px; color: var(--text-muted);">Account: ${accountId}</div>
+        <div style="font-weight: 600; font-size: 16px;">${t("channels.nostr_profile.edit_title", "Edit Profile")}</div>
+        <div style="font-size: 12px; color: var(--text-muted);">${t("channels.nostr_profile.account", "Account: {id}", { id: accountId })}</div>
       </div>
 
       ${
@@ -184,57 +185,60 @@ export function renderNostrProfileForm(params: {
 
       ${renderPicturePreview()}
 
-      ${renderField("name", "Username", {
+      ${renderField("name", t("channels.nostr_profile.username", "Username"), {
         placeholder: "satoshi",
         maxLength: 256,
-        help: "Short username (e.g., satoshi)",
+        help: t("channels.nostr_profile.username_help", "Short username (e.g., satoshi)"),
       })}
 
-      ${renderField("displayName", "Display Name", {
+      ${renderField("displayName", t("channels.nostr_profile.display_name", "Display Name"), {
         placeholder: "Satoshi Nakamoto",
         maxLength: 256,
-        help: "Your full display name",
+        help: t("channels.nostr_profile.display_name_help", "Your full display name"),
       })}
 
-      ${renderField("about", "Bio", {
+      ${renderField("about", t("channels.nostr_profile.bio", "Bio"), {
         type: "textarea",
-        placeholder: "Tell people about yourself...",
+        placeholder: t("channels.nostr_profile.bio_placeholder", "Tell people about yourself..."),
         maxLength: 2000,
-        help: "A brief bio or description",
+        help: t("channels.nostr_profile.bio_help", "A brief bio or description"),
       })}
 
-      ${renderField("picture", "Avatar URL", {
+      ${renderField("picture", t("channels.nostr_profile.avatar_url", "Avatar URL"), {
         type: "url",
         placeholder: "https://example.com/avatar.jpg",
-        help: "HTTPS URL to your profile picture",
+        help: t("channels.nostr_profile.avatar_help", "HTTPS URL to your profile picture"),
       })}
 
       ${
         state.showAdvanced
           ? html`
             <div style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 12px;">
-              <div style="font-weight: 500; margin-bottom: 12px; color: var(--text-muted);">Advanced</div>
+              <div style="font-weight: 500; margin-bottom: 12px; color: var(--text-muted);">${t("channels.nostr_profile.advanced", "Advanced")}</div>
 
-              ${renderField("banner", "Banner URL", {
+              ${renderField("banner", t("channels.nostr_profile.banner_url", "Banner URL"), {
                 type: "url",
                 placeholder: "https://example.com/banner.jpg",
-                help: "HTTPS URL to a banner image",
+                help: t("channels.nostr_profile.banner_help", "HTTPS URL to a banner image"),
               })}
 
-              ${renderField("website", "Website", {
+              ${renderField("website", t("channels.nostr_profile.website", "Website"), {
                 type: "url",
                 placeholder: "https://example.com",
-                help: "Your personal website",
+                help: t("channels.nostr_profile.website_help", "Your personal website"),
               })}
 
-              ${renderField("nip05", "NIP-05 Identifier", {
+              ${renderField("nip05", t("channels.nostr_profile.nip05", "NIP-05 Identifier"), {
                 placeholder: "you@example.com",
-                help: "Verifiable identifier (e.g., you@domain.com)",
+                help: t(
+                  "channels.nostr_profile.nip05_help",
+                  "Verifiable identifier (e.g., you@domain.com)",
+                ),
               })}
 
-              ${renderField("lud16", "Lightning Address", {
+              ${renderField("lud16", t("channels.nostr_profile.lud16", "Lightning Address"), {
                 placeholder: "you@getalby.com",
-                help: "Lightning address for tips (LUD-16)",
+                help: t("channels.nostr_profile.lud16_help", "Lightning address for tips (LUD-16)"),
               })}
             </div>
           `
@@ -247,7 +251,7 @@ export function renderNostrProfileForm(params: {
           @click=${callbacks.onSave}
           ?disabled=${state.saving || !isDirty}
         >
-          ${state.saving ? "Saving..." : "Save & Publish"}
+          ${state.saving ? t("channels.nostr_profile.saving", "Saving...") : t("channels.nostr_profile.save", "Save & Publish")}
         </button>
 
         <button
@@ -255,14 +259,14 @@ export function renderNostrProfileForm(params: {
           @click=${callbacks.onImport}
           ?disabled=${state.importing || state.saving}
         >
-          ${state.importing ? "Importing..." : "Import from Relays"}
+          ${state.importing ? t("channels.nostr_profile.importing", "Importing...") : t("channels.nostr_profile.import", "Import from Relays")}
         </button>
 
         <button
           class="btn"
           @click=${callbacks.onToggleAdvanced}
         >
-          ${state.showAdvanced ? "Hide Advanced" : "Show Advanced"}
+          ${state.showAdvanced ? t("channels.nostr_profile.hide_advanced", "Hide Advanced") : t("channels.nostr_profile.show_advanced", "Show Advanced")}
         </button>
 
         <button
@@ -270,7 +274,7 @@ export function renderNostrProfileForm(params: {
           @click=${callbacks.onCancel}
           ?disabled=${state.saving}
         >
-          Cancel
+          ${t("channels.nostr_profile.cancel", "Cancel")}
         </button>
       </div>
 
@@ -278,7 +282,7 @@ export function renderNostrProfileForm(params: {
         isDirty
           ? html`
               <div style="font-size: 12px; color: var(--warning-color); margin-top: 8px">
-                You have unsaved changes
+                ${t("channels.nostr_profile.unsaved_changes", "You have unsaved changes")}
               </div>
             `
           : nothing

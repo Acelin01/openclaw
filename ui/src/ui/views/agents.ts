@@ -16,6 +16,7 @@ import {
   normalizeToolName,
   resolveToolProfilePolicy,
 } from "../../../../src/agents/tool-policy.js";
+import { t } from "../../i18n.ts";
 import { formatAgo } from "../format.ts";
 import {
   formatCronPayload,
@@ -82,96 +83,189 @@ export type AgentsProps = {
   onAgentSkillsDisableAll: (agentId: string) => void;
 };
 
-const TOOL_SECTIONS = [
+const getToolSections = () => [
   {
     id: "fs",
-    label: "Files",
+    label: t("agents.tool.files.label", "Files"),
     tools: [
-      { id: "read", label: "read", description: "Read file contents" },
-      { id: "write", label: "write", description: "Create or overwrite files" },
-      { id: "edit", label: "edit", description: "Make precise edits" },
-      { id: "apply_patch", label: "apply_patch", description: "Patch files (OpenAI)" },
+      { id: "read", label: "read", description: t("agents.tool.files.read", "Read file contents") },
+      {
+        id: "write",
+        label: "write",
+        description: t("agents.tool.files.write", "Create or overwrite files"),
+      },
+      { id: "edit", label: "edit", description: t("agents.tool.files.edit", "Make precise edits") },
+      {
+        id: "apply_patch",
+        label: "apply_patch",
+        description: t("agents.tool.files.patch", "Patch files (OpenAI)"),
+      },
     ],
   },
   {
     id: "runtime",
-    label: "Runtime",
+    label: t("agents.tool.runtime.label", "Runtime"),
     tools: [
-      { id: "exec", label: "exec", description: "Run shell commands" },
-      { id: "process", label: "process", description: "Manage background processes" },
+      {
+        id: "exec",
+        label: "exec",
+        description: t("agents.tool.runtime.exec", "Run shell commands"),
+      },
+      {
+        id: "process",
+        label: "process",
+        description: t("agents.tool.runtime.process", "Manage background processes"),
+      },
     ],
   },
   {
     id: "web",
-    label: "Web",
+    label: t("agents.tool.web.label", "Web"),
     tools: [
-      { id: "web_search", label: "web_search", description: "Search the web" },
-      { id: "web_fetch", label: "web_fetch", description: "Fetch web content" },
+      {
+        id: "web_search",
+        label: "web_search",
+        description: t("agents.tool.web.search", "Search the web"),
+      },
+      {
+        id: "web_fetch",
+        label: "web_fetch",
+        description: t("agents.tool.web.fetch", "Fetch web content"),
+      },
     ],
   },
   {
     id: "memory",
-    label: "Memory",
+    label: t("agents.tool.memory.label", "Memory"),
     tools: [
-      { id: "memory_search", label: "memory_search", description: "Semantic search" },
-      { id: "memory_get", label: "memory_get", description: "Read memory files" },
+      {
+        id: "memory_search",
+        label: "memory_search",
+        description: t("agents.tool.memory.search", "Semantic search"),
+      },
+      {
+        id: "memory_get",
+        label: "memory_get",
+        description: t("agents.tool.memory.get", "Read memory files"),
+      },
     ],
   },
   {
     id: "sessions",
-    label: "Sessions",
+    label: t("agents.tool.sessions.label", "Sessions"),
     tools: [
-      { id: "sessions_list", label: "sessions_list", description: "List sessions" },
-      { id: "sessions_history", label: "sessions_history", description: "Session history" },
-      { id: "sessions_send", label: "sessions_send", description: "Send to session" },
-      { id: "sessions_spawn", label: "sessions_spawn", description: "Spawn sub-agent" },
-      { id: "session_status", label: "session_status", description: "Session status" },
+      {
+        id: "sessions_list",
+        label: "sessions_list",
+        description: t("agents.tool.sessions.list", "List sessions"),
+      },
+      {
+        id: "sessions_history",
+        label: "sessions_history",
+        description: t("agents.tool.sessions.history", "Session history"),
+      },
+      {
+        id: "sessions_send",
+        label: "sessions_send",
+        description: t("agents.tool.sessions.send", "Send to session"),
+      },
+      {
+        id: "sessions_spawn",
+        label: "sessions_spawn",
+        description: t("agents.tool.sessions.spawn", "Spawn sub-agent"),
+      },
+      {
+        id: "session_status",
+        label: "session_status",
+        description: t("agents.tool.sessions.status", "Session status"),
+      },
     ],
   },
   {
     id: "ui",
-    label: "UI",
+    label: t("agents.tool.ui.label", "UI"),
     tools: [
-      { id: "browser", label: "browser", description: "Control web browser" },
-      { id: "canvas", label: "canvas", description: "Control canvases" },
+      {
+        id: "browser",
+        label: "browser",
+        description: t("agents.tool.ui.browser", "Control web browser"),
+      },
+      {
+        id: "canvas",
+        label: "canvas",
+        description: t("agents.tool.ui.canvas", "Control canvases"),
+      },
     ],
   },
   {
     id: "messaging",
-    label: "Messaging",
-    tools: [{ id: "message", label: "message", description: "Send messages" }],
+    label: t("agents.tool.messaging.label", "Messaging"),
+    tools: [
+      {
+        id: "message",
+        label: "message",
+        description: t("agents.tool.messaging.send", "Send messages"),
+      },
+    ],
   },
   {
     id: "automation",
-    label: "Automation",
+    label: t("agents.tool.automation.label", "Automation"),
     tools: [
-      { id: "cron", label: "cron", description: "Schedule tasks" },
-      { id: "gateway", label: "gateway", description: "Gateway control" },
+      {
+        id: "cron",
+        label: "cron",
+        description: t("agents.tool.automation.cron", "Schedule tasks"),
+      },
+      {
+        id: "gateway",
+        label: "gateway",
+        description: t("agents.tool.automation.gateway", "Gateway control"),
+      },
     ],
   },
   {
     id: "nodes",
-    label: "Nodes",
-    tools: [{ id: "nodes", label: "nodes", description: "Nodes + devices" }],
+    label: t("agents.tool.nodes.label", "Nodes"),
+    tools: [
+      {
+        id: "nodes",
+        label: "nodes",
+        description: t("agents.tool.nodes.manage", "Nodes + devices"),
+      },
+    ],
   },
   {
     id: "agents",
-    label: "Agents",
-    tools: [{ id: "agents_list", label: "agents_list", description: "List agents" }],
+    label: t("agents.tool.agents.label", "Agents"),
+    tools: [
+      {
+        id: "agents_list",
+        label: "agents_list",
+        description: t("agents.tool.agents.list", "List agents"),
+      },
+    ],
   },
   {
     id: "media",
-    label: "Media",
-    tools: [{ id: "image", label: "image", description: "Image understanding" }],
+    label: t("agents.tool.media.label", "Media"),
+    tools: [
+      {
+        id: "image",
+        label: "image",
+        description: t("agents.tool.media.image", "Image understanding"),
+      },
+    ],
   },
 ];
 
-const PROFILE_OPTIONS = [
-  { id: "minimal", label: "Minimal" },
-  { id: "coding", label: "Coding" },
-  { id: "messaging", label: "Messaging" },
-  { id: "full", label: "Full" },
-] as const;
+const getProfileOptions = () =>
+  [
+    { id: "minimal", label: t("agents.profile.minimal", "Minimal") },
+    { id: "coding", label: t("agents.profile.coding", "Coding") },
+    { id: "messaging", label: t("agents.profile.messaging", "Messaging") },
+    { id: "full", label: t("agents.profile.full", "Full") },
+  ] as const;
 
 type ToolPolicy = {
   allow?: string[];
@@ -327,7 +421,9 @@ function buildAgentContext(
     model: modelLabel,
     identityName,
     identityEmoji,
-    skillsLabel: skillFilter ? `${skillCount} selected` : "all skills",
+    skillsLabel: skillFilter
+      ? t("agents.skills.selected", "${count} selected", { count: skillCount! })
+      : t("agents.skills.all", "all skills"),
     isDefault: Boolean(defaultId && agent.id === defaultId),
   };
 }
@@ -344,7 +440,12 @@ function resolveModelLabel(model?: unknown): string {
     const primary = record.primary?.trim();
     if (primary) {
       const fallbackCount = Array.isArray(record.fallbacks) ? record.fallbacks.length : 0;
-      return fallbackCount > 0 ? `${primary} (+${fallbackCount} fallback)` : primary;
+      return fallbackCount > 0
+        ? t("agents.model.fallback_count", "${primary} (+${count} fallback)", {
+            primary,
+            count: fallbackCount,
+          })
+        : primary;
     }
   }
   return "-";
@@ -441,11 +542,14 @@ function buildModelOptions(configForm: Record<string, unknown> | null, current?:
   const options = resolveConfiguredModels(configForm);
   const hasCurrent = current ? options.some((option) => option.value === current) : false;
   if (current && !hasCurrent) {
-    options.unshift({ value: current, label: `Current (${current})` });
+    options.unshift({
+      value: current,
+      label: t("agents.model.current", "Current (${current})", { current }),
+    });
   }
   if (options.length === 0) {
     return html`
-      <option value="" disabled>No configured models</option>
+      <option value="" disabled>${t("agents.model.none", "No configured models")}</option>
     `;
   }
   return options.map((option) => html`<option value=${option.value}>${option.label}</option>`);
@@ -547,11 +651,13 @@ export function renderAgents(props: AgentsProps) {
       <section class="card agents-sidebar">
         <div class="row" style="justify-content: space-between;">
           <div>
-            <div class="card-title">Agents</div>
-            <div class="card-sub">${agents.length} configured.</div>
+            <div class="card-title">${t("agents.list.title", "Agents")}</div>
+            <div class="card-sub">
+              ${t("agents.list.configured", "${count} configured.", { count: agents.length })}
+            </div>
           </div>
           <button class="btn btn--sm" ?disabled=${props.loading} @click=${props.onRefresh}>
-            ${props.loading ? "Loading…" : "Refresh"}
+            ${props.loading ? t("agents.list.loading", "Loading…") : t("agents.list.refresh", "Refresh")}
           </button>
         </div>
         ${
@@ -563,7 +669,7 @@ export function renderAgents(props: AgentsProps) {
           ${
             agents.length === 0
               ? html`
-                  <div class="muted">No agents found.</div>
+                  <div class="muted">${t("agents.list.empty", "No agents found.")}</div>
                 `
               : agents.map((agent) => {
                   const badge = agentBadgeText(agent.id, defaultId);
@@ -593,8 +699,13 @@ export function renderAgents(props: AgentsProps) {
           !selectedAgent
             ? html`
                 <div class="card">
-                  <div class="card-title">Select an agent</div>
-                  <div class="card-sub">Pick an agent to inspect its workspace and tools.</div>
+                  <div class="card-title">${t("agents.select.title", "Select an agent")}</div>
+                  <div class="card-sub">
+                    ${t(
+                      "agents.select.subtitle",
+                      "Pick an agent to inspect its workspace and tools.",
+                    )}
+                  </div>
                 </div>
               `
             : html`
@@ -1454,7 +1565,7 @@ function renderAgentTools(params: {
   const basePolicy = hasAgentAllow
     ? { allow: agentTools.allow ?? [], deny: agentTools.deny ?? [] }
     : (resolveToolProfilePolicy(profile) ?? undefined);
-  const toolIds = TOOL_SECTIONS.flatMap((section) => section.tools.map((tool) => tool.id));
+  const toolIds = getToolSections().flatMap((section) => section.tools.map((tool) => tool.id));
 
   const resolveAllowed = (toolId: string) => {
     const baseAllowed = isAllowedByPolicy(toolId, basePolicy);
@@ -1607,7 +1718,7 @@ function renderAgentTools(params: {
       <div class="agent-tools-presets" style="margin-top: 16px;">
         <div class="label">Quick Presets</div>
         <div class="agent-tools-buttons">
-          ${PROFILE_OPTIONS.map(
+          ${getProfileOptions().map(
             (option) => html`
               <button
                 class="btn btn--sm ${profile === option.id ? "active" : ""}"
@@ -1629,7 +1740,7 @@ function renderAgentTools(params: {
       </div>
 
       <div class="agent-tools-grid" style="margin-top: 20px;">
-        ${TOOL_SECTIONS.map(
+        ${getToolSections().map(
           (section) =>
             html`
             <div class="agent-tools-section">

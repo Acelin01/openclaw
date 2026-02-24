@@ -1,0 +1,146 @@
+{"hash":"23787f10610b61ffbb3fbcd9c2fd9aff5798d14b8a87535c97163c8857731d0c","source":"This gateway requires auth. Add a token or password, then click Connect.","target":"此网关需要身份验证。请添加令牌或密码，然后点击“连接”。","updatedAt":"2026-02-23T00:15:10.714Z"}
+{"hash":"ce6c8419a3e8c816370194630998334d1b50b0086d7a95b0ef1372da4f4041c3","source":"Auth failed. Re-copy a tokenized URL with <span class=\"mono\">openclaw dashboard --no-open</span>, or update the token, then click Connect.","target":"认证失败。请重新复制一个带令牌的 URL，使用 <span class=\"mono\">openclaw dashboard --no-open</span>，或更新令牌，然后点击连接。","updatedAt":"2026-02-23T00:15:12.083Z"}
+{"hash":"2643725608b446e5c8c6810cb458b90d6d2d78437927acc96aa229615b2da336","source":"Docs: Control UI auth","target":"文档：控制界面认证","updatedAt":"2026-02-23T00:15:12.942Z"}
+{"hash":"bf609b1686f6a10dff726b73460b2432d90d1604c706f9d3227863bfd14bf391","source":"This page is HTTP, so the browser blocks device identity. Use HTTPS (Tailscale Serve) or open <span class=\"mono\">http://127.0.0.1:18789</span> on the gateway host.","target":"此页面使用 HTTP 协议，因此浏览器会阻止设备身份验证。请使用 HTTPS（Tailscale Serve）或在网关主机上打开 <span class=\"mono\">http://127.0.0.1:18789</span>。","updatedAt":"2026-02-23T00:15:14.346Z"}
+{"hash":"b18d946b014addee67b6d6b88f9e7a7192e010db24d01e6c6dd0ab3089654017","source":"If you must stay on HTTP, set <span class=\"mono\">gateway.controlUi.allowInsecureAuth: true</span> (token-only).","target":"如果必须使用 HTTP，请设置 <span class=\"mono\">gateway.controlUi.allowInsecureAuth: true</span>（仅限令牌）。","updatedAt":"2026-02-23T00:15:15.955Z"}
+{"hash":"55898449eb74fb2e348d13e5a5d84ab019bb87ea92687b50b3d3302eb409b784","source":"Health","target":"健康","updatedAt":"2026-02-23T00:21:15.544Z"}
+{"hash":"565339bc4d33d72817b583024112eb7f5cdf3e5eef0252d6ec1b9c9a94e12bb3","source":"OK","target":"好的","updatedAt":"2026-02-23T00:21:15.958Z"}
+{"hash":"a1794783aab72d205dc532b1170d1be63ebdce8816b57c21acb451c15dab969a","source":"Offline","target":"离线","updatedAt":"2026-02-23T00:21:16.914Z"}
+{"hash":"37a5d6485e109bf695382308d0e2cd33913c3e5f7e9ab990e8f1a5f4287b2c6a","source":"Expand sidebar","target":"展开侧边栏","updatedAt":"2026-02-23T00:21:17.901Z"}
+{"hash":"aab31cde23ba9783050a754575b80c05e0e799b1542990b24b4b4bde2327e37e","source":"Collapse sidebar","target":"收起侧边栏","updatedAt":"2026-02-23T00:21:18.694Z"}
+{"hash":"e89b30aa1dc30a6ad8c34610689bede83b3ef645a24c3a84a0990826687fb735","source":"Resources","target":"资源","updatedAt":"2026-02-23T00:21:19.480Z"}
+{"hash":"7af023c43013b9a53fbff7dd4b5821588bba3319308878229740489152c43f6d","source":"Docs","target":"文档","updatedAt":"2026-02-23T00:21:20.332Z"}
+{"hash":"460b3a7da007b7af9d35bca54181dc91382263b2bf133ca214871ca1fed1fc1c","source":"Chat","target":"聊天","updatedAt":"2026-02-23T00:23:19.758Z"}
+{"hash":"32d7e82082479b8cb546187ff0af11e4915e4d17bc28e02dca7425288b79badd","source":"Control","target":"控制","updatedAt":"2026-02-23T00:23:20.530Z"}
+{"hash":"11b39c93777e8f1f3983bdba7c72b22fe68cfea20c677e9de53e17cb7dbfb19f","source":"Agent","target":"智能体","updatedAt":"2026-02-23T00:23:21.377Z"}
+{"hash":"74a883a037bc227f91891ab654a753d3a99f31ab06ae5b5d2b6e594a692b41f8","source":"Settings","target":"设置","updatedAt":"2026-02-23T00:23:22.236Z"}
+{"hash":"279b44d2ab4b40c0fc132f8f3051293544cca91de9c8aa14f2cd29adb132b0ee","source":"Agents","target":"Agents","updatedAt":"2026-02-23T00:23:23.234Z"}
+{"hash":"d4b1ea5708dd532930a85188b45aff6f0a3ed458500c7577e0127a538eb0d100","source":"Overview","target":"概述","updatedAt":"2026-02-23T00:23:24.034Z"}
+{"hash":"4c8906cf76f5740ab8792aef9f0033fe21a92045e90b357816064e9f6860a03e","source":"Channels","target":"Channels","updatedAt":"2026-02-23T00:23:25.005Z"}
+{"hash":"aa8c181ac3381dcd5890e42f64315a2540a9c7b35897570cf72f7ec1227e52e3","source":"Instances","target":"实例","updatedAt":"2026-02-23T00:23:25.718Z"}
+{"hash":"6fa3cbf451b2a1d54159d42c3ea5ab8725b0c8620d831f8c1602676b38ab00e6","source":"Sessions","target":"Sessions","updatedAt":"2026-02-23T00:23:26.624Z"}
+{"hash":"043d5c96a8cd2805d6743faef29eaa7deb83ff3ed45f8cd42df1b75c257f8d65","source":"Cron Jobs","target":"定时任务","updatedAt":"2026-02-23T00:23:27.464Z"}
+{"hash":"66d0f523a379b2de6f8d5fba3a817ebc395f7bcaa54cc132ca9dfa665d1e9378","source":"Skills","target":"Skills","updatedAt":"2026-02-23T00:23:28.572Z"}
+{"hash":"7ac362063b9f204602f38f9f1ec9cf047f03e0d7b83896571c9df6d31ad41e9c","source":"Nodes","target":"节点","updatedAt":"2026-02-23T00:23:29.223Z"}
+{"hash":"87e89abb4c1c551fe08d355d097f18b8de78edca5f556997085681662fce8eed","source":"Config","target":"配置","updatedAt":"2026-02-23T00:23:29.964Z"}
+{"hash":"1a03bd2fd107c453f3183e30b9716f82200671e8270fbbefbe602f5a48705527","source":"Debug","target":"调试","updatedAt":"2026-02-23T00:23:31.053Z"}
+{"hash":"ea2100dc89ae9fe21fa9b08ab1bf18662dca1e53a3eebd7d03afebcaf5d57515","source":"Logs","target":"日志","updatedAt":"2026-02-23T00:23:31.969Z"}
+{"hash":"11f06fbe9e4b67552fb73cc01c696743be1c29c046f4593824a402325d14f9e6","source":"Manage agent workspaces, tools, and identities.","target":"管理智能体工作区、工具和身份。","updatedAt":"2026-02-23T00:23:32.727Z"}
+{"hash":"16e1f68cbee95f41868f132f520bb81e4800043e23320d2abce798d308ccf915","source":"Gateway status, entry points, and a fast health read.","target":"Gateway 网关状态、入口点及快速健康检查。","updatedAt":"2026-02-23T00:23:33.670Z"}
+{"hash":"7fa2475836b56056f207ba6e719fb56b2c1e6f35e96567f50cce3aaeb5eb5194","source":"Manage channels and settings.","target":"管理渠道和设置。","updatedAt":"2026-02-23T00:23:34.505Z"}
+{"hash":"b923e139326d1388acd88b2a2c9e3eca6e04e047fbc97946fc2f6407107599fa","source":"Presence beacons from connected clients and nodes.","target":"来自已连接客户端和节点的存在信标。","updatedAt":"2026-02-23T00:23:35.420Z"}
+{"hash":"31169014d2c200da5526f7dfc471d0706f993220dbb800bf643ca201c9777e07","source":"Inspect active sessions and adjust per-session defaults.","target":"检查活动会话并调整每个会话的默认设置。","updatedAt":"2026-02-23T00:23:36.217Z"}
+{"hash":"e3ed2101d42eb269a76ddc1d1570dbd840dfc54829d5ba88a584de8c4816eaed","source":"Schedule wakeups and recurring agent runs.","target":"安排唤醒和定期智能体运行。","updatedAt":"2026-02-23T00:23:37.103Z"}
+{"hash":"530b10951b44e6f5744f1fe640dbc7dba1f9949566325c099a372ff28a31c490","source":"Manage and enable agent skills.","target":"管理和启用智能体 Skills。","updatedAt":"2026-02-23T00:23:37.960Z"}
+{"hash":"d9ce048b609463e44d229627408a552e2c3d31b726d7bf7d3d9e00331c760028","source":"Inspect connected execution nodes.","target":"检查已连接的执行节点。","updatedAt":"2026-02-23T00:23:38.770Z"}
+{"hash":"7af3dea4aa29beeb6709571e08f856f5e59fbfd4c557e40b45f950d10f42069a","source":"Interact with agents directly.","target":"直接与智能体交互。","updatedAt":"2026-02-23T00:23:39.581Z"}
+{"hash":"f7f1f74a4fe623963d3dc2c91b1855301b0dfdae60bbc182ed34ee4fe73a3e91","source":"Gateway configuration and settings.","target":"Gateway 网关配置与设置。","updatedAt":"2026-02-23T00:23:40.391Z"}
+{"hash":"652ccbe5eef9e904479c77c579d22fe0c7ae110058ebb0906b4f3cb341bdb86e","source":"Debug tools and system internals.","target":"调试工具与系统内部信息。","updatedAt":"2026-02-23T00:23:41.309Z"}
+{"hash":"06384d04dac3662653180bd6b239e3911a59d4b4fd478d6d6f4cc95743d6c3df","source":"System logs and event history.","target":"系统日志与事件历史记录。","updatedAt":"2026-02-23T00:23:42.141Z"}
+{"hash":"a8522bc89c44e439cfbfbc198de5d39606c580982dbd619e7c73d8b92134c730","source":"Docs (opens in new tab)","target":"文档（在新标签页中打开）","updatedAt":"2026-02-23T00:25:29.829Z"}
+{"hash":"a8a4f466acb4542337608029c6f0769f3daa5fed65128f73ab99f00eddfa6ccb","source":"Gateway Dashboard","target":"Gateway 网关 仪表盘","updatedAt":"2026-02-23T00:25:30.388Z"}
+{"hash":"4ffc03107f19ff43bc14cf84fc703c7de4716a08e1368561d53ba09b96e46fa9","source":"Disconnected from gateway.","target":"已与网关断开连接。","updatedAt":"2026-02-23T00:25:31.396Z"}
+{"hash":"a22d5425b3cb2d89a7e8d96398b1d9b8141b49afcdc4d9e0c6a591e64e82de5d","source":"Gateway Access","target":"Gateway 网关访问","updatedAt":"2026-02-23T00:28:11.876Z"}
+{"hash":"2f6f51f66a943e8e3fc0204189b15b27a161e28fec528288dc8886c924b2ff51","source":"Where the dashboard connects and how it authenticates.","target":"仪表板连接位置与身份验证方式。","updatedAt":"2026-02-23T00:28:12.765Z"}
+{"hash":"e09731b4efa96f0a1f1d5a2d054151ab0297af95bd92b137008cc61534b09e95","source":"WebSocket URL","target":"WebSocket URL","updatedAt":"2026-02-23T00:28:13.582Z"}
+{"hash":"45941f516017d194e44801df82d8da6599b9b069c0ba6b0b67e9bd6524f999ca","source":"Gateway Token","target":"Gateway 网关令牌","updatedAt":"2026-02-23T00:28:14.255Z"}
+{"hash":"a693085108fe8ddea3acb78ba8ac0c275e593fc85db1c526006247ceb1372dda","source":"Password (not stored)","target":"密码（不存储）","updatedAt":"2026-02-23T00:28:15.165Z"}
+{"hash":"9c4bec378fd5608ae5a57abc04c650590471e5a69c57922cc89e93815bb240c2","source":"Default Session Key","target":"默认会话密钥","updatedAt":"2026-02-23T00:28:15.935Z"}
+{"hash":"1a2303ede07493acc7caaa7c737f3c52bcc9cf04372be19ed1b0af6b9f2c791e","source":"Connect","target":"连接","updatedAt":"2026-02-23T00:28:16.634Z"}
+{"hash":"0e91610117029a62a478b7fa7df0b8598bebe3ab1e192d4b1882e310719c9671","source":"Refresh","target":"刷新","updatedAt":"2026-02-23T00:28:17.410Z"}
+{"hash":"473e1a24ad5a8bff00b2db667b8ff16a9b537a5b127dd2af42842620ea830b6d","source":"Click Connect to apply connection changes.","target":"点击“连接”以应用连接更改。","updatedAt":"2026-02-23T00:28:18.339Z"}
+{"hash":"6ad27bd4ec33b079208334dfea86ff96900f95ca640dda1d2638d694d077668b","source":"Snapshot","target":"快照","updatedAt":"2026-02-23T00:28:19.043Z"}
+{"hash":"02c4ea80485c6beaf97787975883e58d65e0d1d4dd30e0c4c101e862fb45634a","source":"Latest gateway handshake information.","target":"最新的网关握手信息。","updatedAt":"2026-02-23T00:28:20.005Z"}
+{"hash":"920e413c7d411b61ef3e8c63b1cb6ad058d5f95f8b481dbafe60248387d8c355","source":"Status","target":"状态","updatedAt":"2026-02-23T00:28:20.733Z"}
+{"hash":"22965568d22a14ee17af055d2870b50afcfe9fd94a83eec3196e266932297bb2","source":"Connected","target":"已连接","updatedAt":"2026-02-23T00:28:21.417Z"}
+{"hash":"04dfac3671b494ad53fcd152f7a14511bfb35747278aad8ce254a0d6e4ba4718","source":"Disconnected","target":"已断开连接","updatedAt":"2026-02-23T00:28:22.163Z"}
+{"hash":"d63ab4711473b0398feb4b56622605d5d2ec7ecd3b1bb5070a7dd56de96aaf88","source":"Uptime","target":"运行时间","updatedAt":"2026-02-23T00:28:22.927Z"}
+{"hash":"5e913b1331d1645eed8f87e79af3016b78b2ebe8b1286f2ce861c50671ae6886","source":"Tick Interval","target":"轮询间隔","updatedAt":"2026-02-23T00:28:23.656Z"}
+{"hash":"97a20d4f5b29914b8a08748cfc55d704a4d52ed948180cc90b7c1e06267c692f","source":"Last Channels Refresh","target":"最近一次渠道刷新","updatedAt":"2026-02-23T00:28:24.391Z"}
+{"hash":"331a0eb6bb5691842d5881802ac7756e67763d8687f2ea5d96d4d33b06700c6e","source":"Docs: Tailscale Serve","target":"文档：Tailscale Serve","updatedAt":"2026-02-23T00:28:25.201Z"}
+{"hash":"203c0a5d2a6d0e5f4fb9aece80770f6b56642c5731997b9f9afcda31936a63f0","source":"Docs: Insecure HTTP","target":"Docs: 不安全的 HTTP","updatedAt":"2026-02-23T00:28:26.091Z"}
+{"hash":"896f065ce08f08bfcea282c0f911c7df7eefa8d7d8ed89f04157666f11afbf34","source":"Control UI auth docs (opens in new tab)","target":"控制界面认证文档（在新标签页中打开）","updatedAt":"2026-02-23T00:28:26.972Z"}
+{"hash":"abc7e9892806b047b4d4786b3685285543f76ca314c4c76246d5f6544c7856c9","source":"Files","target":"文件","updatedAt":"2026-02-23T00:29:55.843Z"}
+{"hash":"4b24d940f5836c690daf7c56f5735e35962fdf3de849ad858b3fad72e5468a8b","source":"Read file contents","target":"读取文件内容","updatedAt":"2026-02-23T00:29:56.697Z"}
+{"hash":"b29a2552b08fc6afff15e7d9e6276beeaa33e59f3fa298a999c6e8115b487d7a","source":"Create or overwrite files","target":"创建或覆盖文件","updatedAt":"2026-02-23T00:29:57.501Z"}
+{"hash":"758dd82fc1391a16106eeecbd14d3229771959675f0ae7c8f6476ebf1a883b82","source":"Make precise edits","target":"进行精确编辑","updatedAt":"2026-02-23T00:29:57.952Z"}
+{"hash":"e0ebd02afc40c27d3dc100f68f3a92551696b3b1794cd3adab2a05a816d70147","source":"Patch files (OpenAI)","target":"补丁文件 (OpenAI)","updatedAt":"2026-02-23T00:29:58.842Z"}
+{"hash":"1093115897879aa3ad9511a1dc2850929cfb60ba45ec741605f69f5d20203472","source":"Runtime","target":"运行时","updatedAt":"2026-02-23T00:30:00.048Z"}
+{"hash":"e289b75dc7e0b28a660f8627abea1c31eb6193908d61d007b65e0e233e06b5f6","source":"Run shell commands","target":"运行 shell 命令","updatedAt":"2026-02-23T00:30:01.060Z"}
+{"hash":"6487c83fd48f5f00fe32e763f726dc7492cb2d3e934ccab7ba1d2ca98a829ad3","source":"Manage background processes","target":"管理后台进程","updatedAt":"2026-02-23T00:30:01.974Z"}
+{"hash":"2975104784a401e3880e2215550e9490eda7e67db5fc2b35e1a244acb092ced3","source":"Web","target":"Web","updatedAt":"2026-02-23T00:30:02.999Z"}
+{"hash":"0d3d9dd6d2ebd697f7068a644d1b72767a7b04309e333fa432fbadc536c46491","source":"Search the web","target":"搜索网络","updatedAt":"2026-02-23T00:30:03.853Z"}
+{"hash":"c84e7a059056a29e0c9f6ae625982737636e81bdbc1dc7c983524a490207d9f9","source":"Fetch web content","target":"获取网页内容","updatedAt":"2026-02-23T00:30:04.692Z"}
+{"hash":"c3963aedaac6c83c04cf8fb997b479c61e66b3caeecfadd2f2d4bd5b0aef1778","source":"Memory","target":"Memory","updatedAt":"2026-02-23T00:30:05.455Z"}
+{"hash":"e1a8427665b9238a408714df432b2c2868da570bb508e0318b56b13b54e49b6d","source":"Semantic search","target":"语义搜索","updatedAt":"2026-02-23T00:30:06.312Z"}
+{"hash":"273136cc9ac82f03a16c816790e50053303ad9780deb16c241f74b4c584deddd","source":"Read memory files","target":"读取内存文件","updatedAt":"2026-02-23T00:30:07.080Z"}
+{"hash":"27697fc396535f1c439cd1ef3995c1f24b472f29b88dee060471342bb9724481","source":"List sessions","target":"列出会话","updatedAt":"2026-02-23T00:30:08.171Z"}
+{"hash":"c1c80b0378673980ede38211c2825e329bff23d901957849e7420d9dd8b26891","source":"Session history","target":"会话历史","updatedAt":"2026-02-23T00:30:09.000Z"}
+{"hash":"832b527e87a2c949b0af9f7220414adb15dcbe92d6b29d42f8bb427e3216d15e","source":"Send to session","target":"发送到会话","updatedAt":"2026-02-23T00:30:09.768Z"}
+{"hash":"b022cd6d99d9c1096bac8dcae3ebc160c1ec428136e4437ed28922cfdea34950","source":"Spawn sub-agent","target":"生成子智能体","updatedAt":"2026-02-23T00:30:10.459Z"}
+{"hash":"63729c6a14bebcea3a757cd303282a60c896fdc8dcd7f2bf63c1225ed716355b","source":"Session status","target":"会话状态","updatedAt":"2026-02-23T00:30:11.288Z"}
+{"hash":"7c32699ff595e13b5c1315db137593163f4e28052592c776bea23471139b2422","source":"UI","target":"UI","updatedAt":"2026-02-23T00:30:12.257Z"}
+{"hash":"4c99358b099daf6172352f111c30fc6e71b8ba519bbeab6d45107a902179512f","source":"Control web browser","target":"控制网页浏览器","updatedAt":"2026-02-23T00:30:13.070Z"}
+{"hash":"08dbd5631872bea797a78b0fe95b1ec07ae2691b97690db29d8930d6ab28e48e","source":"Control canvases","target":"控制面板","updatedAt":"2026-02-23T00:30:13.910Z"}
+{"hash":"eebdbb25cbbc7651f9519d09e94ca52598e5531655ad0c4f8cf402c4cda1bff1","source":"Messaging","target":"消息收发","updatedAt":"2026-02-23T00:30:14.680Z"}
+{"hash":"27a3f5335350f18465a1bb8c950fe1aad4c5909c77610e64844ff7714848d640","source":"Send messages","target":"发送消息","updatedAt":"2026-02-23T00:30:15.438Z"}
+{"hash":"d909750b1bbb71a39b6330ba8f81f4f8f6e889ed96d7ab366e74857909750c64","source":"Automation","target":"自动化","updatedAt":"2026-02-23T00:30:16.135Z"}
+{"hash":"44c6425e3e6f0bb4df510671d2cf05cabd6d2070d94af0a4a961024db2a7f754","source":"Schedule tasks","target":"计划任务","updatedAt":"2026-02-23T00:30:16.834Z"}
+{"hash":"477e95e144fd7bfb5afcfe32b35e77af8c4815afa764a321cd8992f00f7c39c0","source":"Gateway control","target":"Gateway 网关控制","updatedAt":"2026-02-23T00:30:17.734Z"}
+{"hash":"5cdb5fa17d9c10adc3c60a90aeea46ddf079222df1c2f7aa883490542cccf6c6","source":"Nodes + devices","target":"节点 + 设备","updatedAt":"2026-02-23T00:30:18.449Z"}
+{"hash":"14c11ce2c1ad03acc37cf3f89893cd4d986f1ab24ab2d7fb5e49bd89c923c72d","source":"List agents","target":"列出智能体","updatedAt":"2026-02-23T00:30:19.319Z"}
+{"hash":"d357175cfe8978d39b0f86552dcd9404973493e2816101d9ff6c05ee248ef6bd","source":"Media","target":"媒体","updatedAt":"2026-02-23T00:30:20.128Z"}
+{"hash":"aec67a106aa810addfcd9b734f34f329ba4805caf5abbe0cf5483c6c42d177bc","source":"Image understanding","target":"图像理解","updatedAt":"2026-02-23T00:30:20.886Z"}
+{"hash":"057b5de48d7b90f123ec28d7e15f65d99b508d6b7cc2958c39472070f0f0f6bb","source":"Minimal","target":"Minimal","updatedAt":"2026-02-23T00:30:21.727Z"}
+{"hash":"a18b4be8e3181ff4e601779cb8744c00304e1531cc5671248199f94085aad765","source":"Coding","target":"编程","updatedAt":"2026-02-23T00:30:22.494Z"}
+{"hash":"008dacb6d1e85bd8c0ae9661c4472810ef75537f690dd75d77fc74ca62f78fec","source":"Full","target":"完整","updatedAt":"2026-02-23T00:30:23.275Z"}
+{"hash":"81301d978a8cfbc59258e88f53a6206b549803d85ca96baf4b374a632113f534","source":"configured.","target":"已配置。","updatedAt":"2026-02-23T00:30:24.424Z"}
+{"hash":"ba3bbbe10d8bef66441c88536ce7b8e724e2829b59a3da658654f4961cd61ae5","source":"Loading…","target":"加载中…","updatedAt":"2026-02-23T00:30:24.806Z"}
+{"hash":"61666542b1caa1e26dcc1b3594c7520ea98cc285effe5884ed74684563662205","source":"No agents found.","target":"未找到智能体。","updatedAt":"2026-02-23T00:30:25.694Z"}
+{"hash":"7d4cf06874635248d725bcf641438f58529d029c16d9c2a88cdb5aee88142b1d","source":"Select an agent","target":"选择一个智能体","updatedAt":"2026-02-23T00:30:26.374Z"}
+{"hash":"01d17a9ae97ae5e6013aae3c9d01230091c519f9a1b8e214d9e1041e1c4e6bae","source":"Pick an agent to inspect its workspace and tools.","target":"选择一个智能体以检查其工作区和工具。","updatedAt":"2026-02-23T00:30:27.506Z"}
+{"hash":"e86f8383c23e76cf0a7470cedd7af5feb24a4c8c041a942582a966a8f9dc606c","source":"{count} configured.","target":"已配置 {count} 个。","updatedAt":"2026-02-23T00:33:12.377Z"}
+{"hash":"529aacfdfd2b17bf9fe56ebad9a24339a2d1151327dd420c52c5f163aeb9acc6","source":"{count} selected","target":"已选择 {count} 项","updatedAt":"2026-02-23T00:33:12.996Z"}
+{"hash":"b4b26039425d8c24efa68e4192cd76c2a6566594948b15d866e9dd98ee5af113","source":"all skills","target":"所有 Skills","updatedAt":"2026-02-23T00:33:13.737Z"}
+{"hash":"7a36e95b3dc96ee5b5ee452132360b06a7b09d1382c03638c84cec7eb7be70ae","source":"{primary} (+{count} fallback)","target":"{primary} (+{count} 个备用)","updatedAt":"2026-02-23T00:33:14.888Z"}
+{"hash":"8cab838acf2d346d77f18e4b8d6d606578cf86ee3c7b3a2260b4c2d42e33fcf0","source":"Current ({current})","target":"当前 ({current})","updatedAt":"2026-02-23T00:33:15.719Z"}
+{"hash":"b7b89bf0fd930a9f4500a7f2f9dc0053100ea5f342a925215a84af96e90f658b","source":"No configured models","target":"未配置模型","updatedAt":"2026-02-23T00:33:16.376Z"}
+{"hash":"94b75158336d4d5a8eb64aa423240d9f6a02b6fd677d826908dd898800849f80","source":"Agent workspace and routing.","target":"智能体工作空间与路由。","updatedAt":"2026-02-23T00:33:17.378Z"}
+{"hash":"ea93d6a262ecb87a9fa4d09edbd7654c046597936a8e235fc3949eb01775ff99","source":"Tools","target":"Tools","updatedAt":"2026-02-23T00:33:18.221Z"}
+{"hash":"48e6315352561c36be84097326fbb3558b4c2fa3fc4f833402d32040ccb640f7","source":"Reload Config","target":"重新加载配置","updatedAt":"2026-02-23T00:33:18.909Z"}
+{"hash":"1509f561f2416598629b886ad7d3c05a7e221e4e0675c84bbff4ee6d9e03913d","source":"Save","target":"保存","updatedAt":"2026-02-23T00:33:19.675Z"}
+{"hash":"23e39291d6135814ed7c936e278974544b0df5fbf0eb0427b6700979b7472a93","source":"Saving…","target":"正在保存…","updatedAt":"2026-02-23T00:33:20.617Z"}
+{"hash":"e95dfac3306c6052222ee5f2007267d30280c46d5dfa4600ee86f56a6d20b27b","source":"Agent Context","target":"智能体上下文","updatedAt":"2026-02-23T00:33:21.505Z"}
+{"hash":"87bb59ba2f92f2a5a9f13e021fd58dd14ae5c065b1046146875e6e68d5ebc8b7","source":"Workspace","target":"工作区","updatedAt":"2026-02-23T00:33:22.306Z"}
+{"hash":"bc2701b024601dd88c58cdba885c980d2f87f74401b4182bfcbebf1cd9fe8647","source":"Primary Model","target":"主模型","updatedAt":"2026-02-23T00:33:23.389Z"}
+{"hash":"d84785a85db54b51e0410c02d7b691f92d08ecf7677378cf43ad82ae4e8595f3","source":"Identity Name","target":"身份名称","updatedAt":"2026-02-23T00:33:24.217Z"}
+{"hash":"abd23e006f9d0ce92d76679ce4d7de393b4a1199b25b435d8a732ff6e0091979","source":"Identity Emoji","target":"身份表情符号","updatedAt":"2026-02-23T00:33:25.016Z"}
+{"hash":"55adfafb5397bbb183fd28a9fc9cee00c327d45ae1a9ed4841be66cd4658e99e","source":"Skills Filter","target":"Skills 筛选器","updatedAt":"2026-02-23T00:33:26.180Z"}
+{"hash":"21b111cbfe6e8fca2d181c43f53ad548b22e38aca955b9824706a504b0a07a2d","source":"Default","target":"默认","updatedAt":"2026-02-23T00:33:26.909Z"}
+{"hash":"8a798890fe93817163b10b5f7bd2ca4d25d84c52739a645a889c173eee7d9d3d","source":"yes","target":"是","updatedAt":"2026-02-23T00:33:27.287Z"}
+{"hash":"9390298f3fb0c5b160498935d79cb139aef28e1c47358b4bbba61862b9c26e59","source":"no","target":"没有","updatedAt":"2026-02-23T00:33:28.029Z"}
+{"hash":"cf8084fcb3ba5158b83bed00ade2acfcba14311d9da2e7f7891f321addcd1c6c","source":"Tool Access","target":"工具访问","updatedAt":"2026-02-23T00:33:28.708Z"}
+{"hash":"7c4967aca1aa16eea06257ea4956294c136dbdb6dd95f09664913692cf8011cb","source":"Profile + per-tool overrides for this agent. {enabled}/{total} enabled.","target":"此智能体的配置文件 + 各工具覆盖设置。已启用 {enabled}/{total} 项。","updatedAt":"2026-02-23T00:33:29.720Z"}
+{"hash":"87b3b5dda6254823c6bb59d3c280c56154f4e5fa463b4b4918fa28d46b89f1ee","source":"Enable All","target":"全部启用","updatedAt":"2026-02-23T00:33:30.478Z"}
+{"hash":"cd265895b3d90a6774b7a744fec7b1bee63d15638800905e1320bc72f0f3505a","source":"Disable All","target":"全部禁用","updatedAt":"2026-02-23T00:33:31.286Z"}
+{"hash":"0e9291ef2bab7a6a96376087b37d281a973319e0c5b893360b67cf5681d8c863","source":"Load the gateway config to adjust tool profiles.","target":"加载网关配置以调整工具配置文件。","updatedAt":"2026-02-23T00:33:32.223Z"}
+{"hash":"f118557c84a3d0935c608540ef792b1779ccba5a8889838961369f275436fddb","source":"This agent is using an explicit allowlist in config. Tool overrides are managed in the Config tab.","target":"此智能体在配置中使用了显式允许列表。工具覆盖在“配置”选项卡中管理。","updatedAt":"2026-02-23T00:33:33.323Z"}
+{"hash":"6ed7b4490e801857e6e2adbf254849397815c162e38dbd705311fcf6434a2939","source":"Global tools.allow is set. Agent overrides cannot enable tools that are globally blocked.","target":"全局 tools.allow 已设置。智能体覆盖无法启用被全局阻止的工具。","updatedAt":"2026-02-23T00:33:34.364Z"}
+{"hash":"d696a35bdd1883da07a8d6c41bb7a3153381b23aa197629ee273479a6eaa5a9c","source":"Profile","target":"个人资料","updatedAt":"2026-02-23T00:33:35.119Z"}
+{"hash":"0e570ca6fabe24f94e52c1833f3ffd25567022beb826fa16891f3322051bc221","source":"Source","target":"来源","updatedAt":"2026-02-23T00:33:35.935Z"}
+{"hash":"9c80e8331a862108064d063c621730772cb3559bd1ef22450ed68ce71a98f74c","source":"unsaved","target":"未保存","updatedAt":"2026-02-23T00:33:36.792Z"}
+{"hash":"8ac4e50e74b490bf5d39149f1e5129f540ea0f00eeb3ae7de3ff27fd981f8785","source":"Quick Presets","target":"快速预设","updatedAt":"2026-02-23T00:33:37.491Z"}
+{"hash":"3f72f0385768d2842d8d4a9205a4d704cffe7ef1820ded371b6b31f032142025","source":"Inherit","target":"继承","updatedAt":"2026-02-23T00:33:38.270Z"}
+{"hash":"9a7f6a546955d511cf52579540d2cce060fdd1daf78941b55b0e34d7cc8e3ff7","source":"Workspace Skills","target":"Workspace Skills","updatedAt":"2026-02-23T00:33:38.998Z"}
+{"hash":"eb4f7789eadee2923123c6c7cffa5295c22e4e1b3158d71a792fa643f2ed8d66","source":"Built-in Skills","target":"内置 Skills","updatedAt":"2026-02-23T00:33:39.674Z"}
+{"hash":"ed416e3fcb42c129b89f4110a1da28214ff6bcffe33e965d94e9f869511e5b70","source":"Installed Skills","target":"已安装的 Skills","updatedAt":"2026-02-23T00:33:40.695Z"}
+{"hash":"1999b1716503a67377522c9416f5d2b2a424668ec761c5007655f0c8d284d686","source":"Extra Skills","target":"额外 Skills","updatedAt":"2026-02-23T00:33:41.632Z"}
+{"hash":"9f5fa179467e417431376f5445f4bacb1ecb88c7bf93c3426d11d6059dc45879","source":"Other Skills","target":"其他 Skills","updatedAt":"2026-02-23T00:33:42.634Z"}
+{"hash":"e7f82b9b7f93b64f580e924c04467df86d0350ba008d958992583169e260895b","source":"Skills available to this agent. {enabled}/{total} enabled.","target":"此智能体可用的 Skills。已启用 {enabled}/{total} 个。","updatedAt":"2026-02-23T00:33:43.619Z"}
+{"hash":"271caee61ca3a221f77074668f988c14559927472914411229b5282e2a551d57","source":"Filter skills…","target":"筛选 Skills…","updatedAt":"2026-02-23T00:33:44.229Z"}
+{"hash":"561e7da6354cabfd3a6bc8436230b2c68d6e2783f10a65fde6be07751770873f","source":"Clear Overrides","target":"清除覆盖设置","updatedAt":"2026-02-23T00:33:45.002Z"}
+{"hash":"938f6bf143875a8ef9e653a1298d2022518fcb4917e193456a75a3d6e357fc9c","source":"Load the gateway config to adjust enabled skills.","target":"加载网关配置以调整启用的 Skills。","updatedAt":"2026-02-23T00:33:45.908Z"}
+{"hash":"65bb48f7b19d84e44e7e72bf053e14e7f38c68d4660a85fca90d348400692299","source":"This agent is using an explicit allowlist. Use the config tab to manage skills.","target":"此智能体正在使用显式允许列表。请使用配置选项卡管理 Skills。","updatedAt":"2026-02-23T00:33:46.899Z"}
+{"hash":"32bddf99233e450856a5e9a7d018206a4f6b33577144fd00a1fa34087694c806","source":"No skills found.","target":"未找到 Skills。","updatedAt":"2026-02-23T00:33:47.708Z"}
+{"hash":"79d3a1f108e8d9c37f573ce55f27741845eb61f64c3272f91608f653ee4439e5","source":"Bundled","target":"捆绑","updatedAt":"2026-02-23T00:33:48.338Z"}
+{"hash":"8f2de600bf940a26c63a7ac23984a12ca8970fcf1a85947aa5566c34e23eea07","source":"Managed","target":"托管","updatedAt":"2026-02-23T00:33:48.996Z"}

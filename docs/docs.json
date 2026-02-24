@@ -880,7 +880,11 @@
                   "tools/clawhub",
                   "plugin",
                   "plugins/voice-call",
-                  "plugins/zalouser"
+                  "plugins/zalouser",
+                  "skills/product-manager-skills",
+                  "skills/multi-agent-team",
+                  "skills/custom-morning-brief",
+                  "skills/resume-job-application"
                 ]
               },
               {
@@ -1009,7 +1013,14 @@
               },
               {
                 "group": "Web interfaces",
-                "pages": ["web/index", "web/control-ui", "web/dashboard", "web/webchat", "tui"]
+                "pages": [
+                  "web/index",
+                  "web/control-ui",
+                  "web/dashboard",
+                  "web/webchat",
+                  "tui",
+                  "ui/chat-interface"
+                ]
               },
               {
                 "group": "macOS companion app",
@@ -1312,7 +1323,11 @@
                   "zh-CN/tools/clawhub",
                   "zh-CN/plugin",
                   "zh-CN/plugins/voice-call",
-                  "zh-CN/plugins/zalouser"
+                  "zh-CN/plugins/zalouser",
+                  "zh-CN/skills/product-manager-skills",
+                  "zh-CN/skills/multi-agent-team",
+                  "zh-CN/skills/custom-morning-brief",
+                  "zh-CN/skills/resume-job-application"
                 ]
               },
               {
@@ -1454,7 +1469,8 @@
                   "zh-CN/web/control-ui",
                   "zh-CN/web/dashboard",
                   "zh-CN/web/webchat",
-                  "zh-CN/tui"
+                  "zh-CN/tui",
+                  "ui/chat-interface"
                 ]
               },
               {

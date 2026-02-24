@@ -1,0 +1,189 @@
+{
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "proxy": "socks5://127.0.0.1:10793",
+      "dmPolicy": "open",
+      "allowFrom": ["*"],
+      "groupPolicy": "open",
+      "streamMode": "partial",
+      "groups": {
+        "*": {
+          "requireMention": true
+        }
+      },
+      "accounts": {
+        "xulinyi": {
+          "botToken": "8397071495:AAEOaUxfEZn2IN2my2Z5K6u-6aBDSGmImHU"
+        },
+        "rrvccn": {
+          "botToken": "8706082084:AAEqO7rusfOXIDuOevP20ZffZYaTacyMHM4"
+        }
+      }
+    },
+    "feishu": {
+      "appId": "cli_a91e3fad7d789cd3",
+      "appSecret": "nRcFy0MlKEoFBoC2qaeoIbKIbDDU3D5U",
+      "enabled": true,
+      "dmPolicy": "open",
+      "groupPolicy": "open",
+      "groups": {
+        "*": {
+          "requireMention": false
+        }
+      }
+    }
+  },
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "token": "test-token"
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "agents": {
+    "list": [
+      {
+        "id": "agent_xulinyi",
+        "name": "Xulinyi Bot",
+        "workspace": "workspace-xulinyi",
+        "subagents": {
+          "allowAgents": ["agent_milo", "agent_josh", "agent_marketing", "agent_dev"]
+        }
+      },
+      {
+        "id": "agent_rrvccn",
+        "name": "Rrvccn Bot",
+        "workspace": "workspace-rrvccn",
+        "subagents": {
+          "allowAgents": ["agent_milo", "agent_josh", "agent_marketing", "agent_dev"]
+        }
+      },
+      {
+        "id": "agent_milo",
+        "name": "Milo",
+        "skills": ["product-manager", "project-manager", "pm-docs", "task-tracker"],
+        "identity": {
+          "name": "Milo",
+          "emoji": "🧭"
+        }
+      },
+      {
+        "id": "agent_josh",
+        "name": "Josh",
+        "identity": {
+          "name": "Josh",
+          "emoji": "📈"
+        }
+      },
+      {
+        "id": "agent_marketing",
+        "name": "Marketing",
+        "identity": {
+          "name": "Marketing",
+          "emoji": "🧪"
+        }
+      },
+      {
+        "id": "agent_dev",
+        "name": "Dev",
+        "identity": {
+          "name": "Dev",
+          "emoji": "🧱"
+        }
+      }
+    ],
+    "defaults": {
+      "model": {
+        "primary": "deepseek/deepseek-chat"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "bindings": [
+    {
+      "match": {
+        "channel": "telegram",
+        "accountId": "xulinyi"
+      },
+      "agentId": "agent_xulinyi"
+    },
+    {
+      "match": {
+        "channel": "telegram",
+        "accountId": "rrvccn"
+      },
+      "agentId": "agent_rrvccn"
+    }
+  ],
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "deepseek": {
+        "baseUrl": "https://api.deepseek.com/v1",
+        "apiKey": "${DEEPSEEK_API_KEY}",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "deepseek-chat",
+            "name": "DeepSeek Chat",
+            "reasoning": false,
+            "input": ["text"]
+          },
+          {
+            "id": "deepseek-reasoner",
+            "name": "DeepSeek Reasoner",
+            "reasoning": true,
+            "input": ["text"]
+          }
+        ]
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions",
+    "groupChat": {
+      "mentionPatterns": [
+        "\\b@xulinyi_bot\\b",
+        "\\b@rrvccn_bot\\b",
+        "\\b@milo\\b",
+        "\\b@josh\\b",
+        "\\b@marketing\\b",
+        "\\b@dev\\b"
+      ]
+    }
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true,
+      "allow": ["agent_*"]
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      },
+      "feishu": {
+        "enabled": true
+      }
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.2.3",
+    "lastTouchedAt": "2026-02-21T06:07:44.412Z"
+  }
+}

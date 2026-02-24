@@ -20,6 +20,7 @@ export type MonitorFeishuOpts = {
 };
 
 export async function monitorFeishuProvider(opts: MonitorFeishuOpts = {}): Promise<void> {
+  logger.info("Entering monitorFeishuProvider...");
   const cfg = opts.config ?? loadConfig();
   const account = resolveFeishuAccount({
     cfg,
@@ -73,7 +74,7 @@ export async function monitorFeishuProvider(opts: MonitorFeishuOpts = {}): Promi
   // Create event dispatcher
   const eventDispatcher = new Lark.EventDispatcher({}).register({
     "im.message.receive_v1": async (data) => {
-      logger.info(`Received Feishu message event`);
+      logger.info(`Received Feishu message event: ${JSON.stringify(data)}`);
       try {
         await processFeishuMessage(client, data, appId, {
           cfg,
@@ -99,13 +100,13 @@ export async function monitorFeishuProvider(opts: MonitorFeishuOpts = {}): Promi
         logger.debug?.(msg);
       },
       info: (msg) => {
-        logger.info(msg);
+        logger.info(`Feishu WS Info: ${msg}`);
       },
       warn: (msg) => {
-        logger.warn(msg);
+        logger.warn(`Feishu WS Warn: ${msg}`);
       },
       error: (msg) => {
-        logger.error(msg);
+        logger.error(`Feishu WS Error: ${msg}`);
       },
       trace: (msg) => {
         logger.silly?.(msg);
@@ -126,8 +127,23 @@ export async function monitorFeishuProvider(opts: MonitorFeishuOpts = {}): Promi
 
   try {
     logger.info("Starting Feishu WebSocket client...");
-    await wsClient.start({ eventDispatcher });
-    logger.info("Feishu WebSocket connection established");
+    // Start WS client (non-blocking in some SDK versions, but let's see)
+    // We don't await it if it blocks, but usually start() connects and returns or promises a connection.
+    // If it blocks forever, we should wrap it or not await it?
+    // Lark SDK docs say start() keeps running.
+    // If it blocks, we should NOT await it here if we want to return from this function?
+    // But monitorFeishuProvider is supposed to be a long-running task?
+    // Let's check if it blocks.
+    wsClient
+      .start({ eventDispatcher })
+      .then(() => {
+        logger.info("Feishu WebSocket client start() returned (connection closed?)");
+      })
+      .catch((err) => {
+        logger.error(`Feishu WebSocket client error: ${err}`);
+      });
+
+    logger.info("Feishu WebSocket connection initiated (async)");
 
     // The WSClient.start() should keep running until disconnected
     // If it returns, we need to keep the process alive

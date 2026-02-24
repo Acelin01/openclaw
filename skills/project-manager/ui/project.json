@@ -1,0 +1,19 @@
+{
+  "requirements": [
+    {
+      "id": "auth",
+      "content": "# 用户注册与登录\n用户可以通过邮箱注册新账户，并通过邮箱密码登录。\n\n## 验收标准\n- [ ] 邮箱格式校验\n- [ ] 密码强度校验（至少8位，包含大小写字母和数字）\n- [ ] 注册成功后自动登录"
+    },
+    {
+      "id": "dashboard",
+      "content": "# 项目仪表盘\n管理员登录后可以看到项目概览，包括进行中的任务数、已完成任务数等。\n\n## 验收标准\n- [ ] 展示关键指标卡片\n- [ ] 展示任务燃尽图"
+    }
+  ],
+  "tasks": [
+    { "id": "TASK-001", "description": "设计数据库 Schema", "status": "COMPLETED" },
+    { "id": "TASK-002", "description": "实现用户注册 API", "status": "IN_PROGRESS" },
+    { "id": "TASK-003", "description": "实现用户登录 API", "status": "COMPLETED" },
+    { "id": "TASK-004", "description": "前端登录页面开发", "status": "COMPLETED" },
+    { "id": "TASK-005", "description": "编写 API 文档", "status": "COMPLETED" }
+  ]
+}

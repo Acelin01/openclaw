@@ -4,6 +4,7 @@ import type { AppViewState } from "./app-view-state.ts";
 import type { ThemeTransitionContext } from "./theme-transition.ts";
 import type { ThemeMode } from "./theme.ts";
 import type { SessionsListResult } from "./types.ts";
+import { getLocale, setLocale, type Locale } from "../i18n.ts";
 import { refreshChat } from "./app-chat.ts";
 import { syncUrlWithSessionKey } from "./app-settings.ts";
 import { OpenClawApp } from "./app.ts";
@@ -302,6 +303,43 @@ export function renderThemeToggle(state: AppViewState) {
           title="Dark"
         >
           ${renderMoonIcon()}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+export function renderLocaleToggle() {
+  const current = getLocale();
+  const applyLocale = (next: Locale) => () => {
+    if (current !== next) {
+      void setLocale(next);
+    }
+  };
+
+  const index = current === "zh-CN" ? 1 : 0;
+
+  return html`
+    <div class="theme-toggle theme-toggle--2" style="--theme-index: ${index};">
+      <div class="theme-toggle__track" role="group" aria-label="Language">
+        <span class="theme-toggle__indicator"></span>
+        <button
+          class="theme-toggle__button ${current === "en" ? "active" : ""}"
+          @click=${applyLocale("en")}
+          aria-pressed=${current === "en"}
+          aria-label="English"
+          title="English"
+        >
+          <span class="theme-text">EN</span>
+        </button>
+        <button
+          class="theme-toggle__button ${current === "zh-CN" ? "active" : ""}"
+          @click=${applyLocale("zh-CN")}
+          aria-pressed=${current === "zh-CN"}
+          aria-label="Chinese"
+          title="中文"
+        >
+          <span class="theme-text">中</span>
         </button>
       </div>
     </div>

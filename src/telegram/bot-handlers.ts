@@ -86,6 +86,7 @@ export const registerTelegramHandlers = ({
         return false;
       }
       const text = entry.msg.text ?? entry.msg.caption ?? "";
+      logVerbose(`telegram:inbound:check text=${text.slice(0, 50)} bot=${entry.botUsername}`);
       if (!text.trim()) {
         return false;
       }

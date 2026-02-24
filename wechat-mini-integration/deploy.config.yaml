@@ -1,0 +1,142 @@
+# 微信小程序对接OpenClaw - 部署配置
+
+## 部署环境
+environments:
+  development:
+    # 开发环境配置
+    node_env: development
+    port: 3000
+    require_https: false
+    logging:
+      level: debug
+      format: pretty
+
+  staging:
+    # 测试环境配置
+    node_env: staging
+    port: 3001
+    require_https: true
+    logging:
+      level: info
+      format: json
+
+  production:
+    # 生产环境配置
+    node_env: production
+    port: 443
+    require_https: true
+    logging:
+      level: warn
+      format: json
+
+## Docker配置
+docker:
+  image: node:18-alpine
+  build:
+    context: .
+    dockerfile: Dockerfile
+  ports:
+    - "3000:3000"
+  environment:
+    - NODE_ENV=production
+  volumes:
+    - ./logs:/app/logs
+  restart: unless-stopped
+
+## PM2配置（可选）
+pm2:
+  name: wechat-mini-openclaw
+  script: dist/index.js
+  instances: 1
+  exec_mode: fork
+  watch: false
+  max_memory_restart: "1G"
+  env:
+    NODE_ENV: production
+  log_date_format: "YYYY-MM-DD HH:mm:ss"
+  error_file: "logs/error.log"
+  out_file: "logs/out.log"
+  pid_file: "logs/pid.log"
+
+## Nginx反向代理配置（生产环境）
+nginx:
+  server:
+    listen: 443 ssl http2
+    server_name: wechat.yourdomain.com
+
+    ssl_certificate: /etc/ssl/certs/yourdomain.crt
+    ssl_certificate_key: /etc/ssl/private/yourdomain.key
+    ssl_protocols: TLSv1.2 TLSv1.3
+    ssl_ciphers: HIGH:!aNULL:!MD5
+
+    location /wechat/webhook: proxy_pass http://localhost:3000;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_connect_timeout 60s;
+      proxy_send_timeout 60s;
+      proxy_read_timeout 60s;
+
+    location /health: proxy_pass http://localhost:3000;
+      access_log off;
+
+## 监控配置
+monitoring:
+  # 健康检查端点
+  health_check: /health
+
+  # 指标端点
+  metrics: /metrics
+
+  # 告警配置
+  alerts:
+    - name: high_error_rate
+      condition: error_rate > 5%
+      duration: 5m
+
+    - name: high_response_time
+      condition: p95_response_time > 2000ms
+      duration: 10m
+
+    - name: service_down
+      condition: up == 0
+      duration: 1m
+
+## 备份配置
+backup:
+  # 数据库备份（如果启用）
+  database:
+    enabled: false
+    schedule: "0 2 * * *" # 每天凌晨2点
+    retention_days: 30
+
+  # 日志备份
+  logs:
+    enabled: true
+    schedule: "0 3 * * *" # 每天凌晨3点
+    retention_days: 90
+    compression: gzip
+
+## 安全配置
+security:
+  # IP白名单
+  ip_whitelist:
+    - 127.0.0.1
+    - 192.168.1.0/24
+
+  # 速率限制
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 20
+
+  # 请求大小限制
+  request_size_limit: "10mb"
+
+  # 头部安全
+  security_headers:
+    x-frame-options: DENY
+    x-content-type-options: nosniff
+    x-xss-protection: "1; mode=block"
+    strict-transport-security: "max-age=31536000; includeSubDomains"

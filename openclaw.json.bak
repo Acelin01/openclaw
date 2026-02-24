@@ -1,0 +1,20 @@
+{
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "token": "test-token"
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true
+    }
+  }
+}

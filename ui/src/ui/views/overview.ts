@@ -1,6 +1,7 @@
 import { html } from "lit";
 import type { GatewayHelloOk } from "../gateway.ts";
 import type { UiSettings } from "../storage.ts";
+import { t, tHtml } from "../../i18n.ts";
 import { formatAgo, formatDurationMs } from "../format.ts";
 import { formatNextRun } from "../presenter.ts";
 
@@ -26,8 +27,10 @@ export function renderOverview(props: OverviewProps) {
   const snapshot = props.hello?.snapshot as
     | { uptimeMs?: number; policy?: { tickIntervalMs?: number } }
     | undefined;
-  const uptime = snapshot?.uptimeMs ? formatDurationMs(snapshot.uptimeMs) : "n/a";
-  const tick = snapshot?.policy?.tickIntervalMs ? `${snapshot.policy.tickIntervalMs}ms` : "n/a";
+  const uptime = snapshot?.uptimeMs ? formatDurationMs(snapshot.uptimeMs) : t("common.na", "n/a");
+  const tick = snapshot?.policy?.tickIntervalMs
+    ? `${snapshot.policy.tickIntervalMs}ms`
+    : t("common.na", "n/a");
   const authHint = (() => {
     if (props.connected || !props.lastError) {
       return null;
@@ -42,10 +45,10 @@ export function renderOverview(props: OverviewProps) {
     if (!hasToken && !hasPassword) {
       return html`
         <div class="muted" style="margin-top: 8px">
-          This gateway requires auth. Add a token or password, then click Connect.
+          ${t("overview.auth.required")}
           <div style="margin-top: 6px">
-            <span class="mono">openclaw dashboard --no-open</span> → tokenized URL<br />
-            <span class="mono">openclaw doctor --generate-gateway-token</span> → set token
+            <span class="mono">openclaw dashboard --no-open</span> → ${t("overview.hint.tokenized_url", "tokenized URL")}<br />
+            <span class="mono">openclaw doctor --generate-gateway-token</span> → ${t("overview.hint.set_token", "set token")}
           </div>
           <div style="margin-top: 6px">
             <a
@@ -53,8 +56,8 @@ export function renderOverview(props: OverviewProps) {
               href="https://docs.openclaw.ai/web/dashboard"
               target="_blank"
               rel="noreferrer"
-              title="Control UI auth docs (opens in new tab)"
-              >Docs: Control UI auth</a
+              title="${t("overview.docs.auth_title", "Control UI auth docs (opens in new tab)")}"
+              >${t("overview.auth.docs")}</a
             >
           </div>
         </div>
@@ -62,16 +65,15 @@ export function renderOverview(props: OverviewProps) {
     }
     return html`
       <div class="muted" style="margin-top: 8px">
-        Auth failed. Re-copy a tokenized URL with
-        <span class="mono">openclaw dashboard --no-open</span>, or update the token, then click Connect.
+        ${tHtml("overview.auth.failed")}
         <div style="margin-top: 6px">
           <a
             class="session-link"
             href="https://docs.openclaw.ai/web/dashboard"
             target="_blank"
             rel="noreferrer"
-            title="Control UI auth docs (opens in new tab)"
-            >Docs: Control UI auth</a
+            title="${t("overview.docs.auth_title", "Control UI auth docs (opens in new tab)")}"
+            >${t("overview.auth.docs")}</a
           >
         </div>
       </div>
@@ -91,11 +93,9 @@ export function renderOverview(props: OverviewProps) {
     }
     return html`
       <div class="muted" style="margin-top: 8px">
-        This page is HTTP, so the browser blocks device identity. Use HTTPS (Tailscale Serve) or open
-        <span class="mono">http://127.0.0.1:18789</span> on the gateway host.
+        ${tHtml("overview.insecure.hint")}
         <div style="margin-top: 6px">
-          If you must stay on HTTP, set
-          <span class="mono">gateway.controlUi.allowInsecureAuth: true</span> (token-only).
+          ${tHtml("overview.insecure.allow")}
         </div>
         <div style="margin-top: 6px">
           <a
@@ -103,8 +103,8 @@ export function renderOverview(props: OverviewProps) {
             href="https://docs.openclaw.ai/gateway/tailscale"
             target="_blank"
             rel="noreferrer"
-            title="Tailscale Serve docs (opens in new tab)"
-            >Docs: Tailscale Serve</a
+            title="${t("overview.docs.tailscale", "Docs: Tailscale Serve")}"
+            >${t("overview.docs.tailscale", "Docs: Tailscale Serve")}</a
           >
           <span class="muted"> · </span>
           <a
@@ -112,8 +112,8 @@ export function renderOverview(props: OverviewProps) {
             href="https://docs.openclaw.ai/web/control-ui#insecure-http"
             target="_blank"
             rel="noreferrer"
-            title="Insecure HTTP docs (opens in new tab)"
-            >Docs: Insecure HTTP</a
+            title="${t("overview.docs.insecure", "Docs: Insecure HTTP")}"
+            >${t("overview.docs.insecure", "Docs: Insecure HTTP")}</a
           >
         </div>
       </div>
@@ -123,11 +123,11 @@ export function renderOverview(props: OverviewProps) {
   return html`
     <section class="grid grid-cols-2">
       <div class="card">
-        <div class="card-title">Gateway Access</div>
-        <div class="card-sub">Where the dashboard connects and how it authenticates.</div>
+        <div class="card-title">${t("overview.gateway.title", "Gateway Access")}</div>
+        <div class="card-sub">${t("overview.gateway.subtitle", "Where the dashboard connects and how it authenticates.")}</div>
         <div class="form-grid" style="margin-top: 16px;">
           <label class="field">
-            <span>WebSocket URL</span>
+            <span>${t("overview.field.ws", "WebSocket URL")}</span>
             <input
               .value=${props.settings.gatewayUrl}
               @input=${(e: Event) => {
@@ -138,7 +138,7 @@ export function renderOverview(props: OverviewProps) {
             />
           </label>
           <label class="field">
-            <span>Gateway Token</span>
+            <span>${t("overview.field.token", "Gateway Token")}</span>
             <input
               .value=${props.settings.token}
               @input=${(e: Event) => {
@@ -149,7 +149,7 @@ export function renderOverview(props: OverviewProps) {
             />
           </label>
           <label class="field">
-            <span>Password (not stored)</span>
+            <span>${t("overview.field.password", "Password (not stored)")}</span>
             <input
               type="password"
               .value=${props.password}
@@ -157,11 +157,11 @@ export function renderOverview(props: OverviewProps) {
                 const v = (e.target as HTMLInputElement).value;
                 props.onPasswordChange(v);
               }}
-              placeholder="system or shared password"
+              placeholder="${t("overview.placeholder.password", "system or shared password")}"
             />
           </label>
           <label class="field">
-            <span>Default Session Key</span>
+            <span>${t("overview.field.session", "Default Session Key")}</span>
             <input
               .value=${props.settings.sessionKey}
               @input=${(e: Event) => {
@@ -172,34 +172,34 @@ export function renderOverview(props: OverviewProps) {
           </label>
         </div>
         <div class="row" style="margin-top: 14px;">
-          <button class="btn" @click=${() => props.onConnect()}>Connect</button>
-          <button class="btn" @click=${() => props.onRefresh()}>Refresh</button>
-          <span class="muted">Click Connect to apply connection changes.</span>
+          <button class="btn" @click=${() => props.onConnect()}>${t("overview.action.connect", "Connect")}</button>
+          <button class="btn" @click=${() => props.onRefresh()}>${t("overview.action.refresh", "Refresh")}</button>
+          <span class="muted">${t("overview.hint.connect", "Click Connect to apply connection changes.")}</span>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">Snapshot</div>
-        <div class="card-sub">Latest gateway handshake information.</div>
+        <div class="card-title">${t("overview.snapshot.title", "Snapshot")}</div>
+        <div class="card-sub">${t("overview.snapshot.subtitle", "Latest gateway handshake information.")}</div>
         <div class="stat-grid" style="margin-top: 16px;">
           <div class="stat">
-            <div class="stat-label">Status</div>
+            <div class="stat-label">${t("overview.stat.status", "Status")}</div>
             <div class="stat-value ${props.connected ? "ok" : "warn"}">
-              ${props.connected ? "Connected" : "Disconnected"}
+              ${props.connected ? t("overview.stat.connected", "Connected") : t("overview.stat.disconnected", "Disconnected")}
             </div>
           </div>
           <div class="stat">
-            <div class="stat-label">Uptime</div>
+            <div class="stat-label">${t("overview.stat.uptime", "Uptime")}</div>
             <div class="stat-value">${uptime}</div>
           </div>
           <div class="stat">
-            <div class="stat-label">Tick Interval</div>
+            <div class="stat-label">${t("overview.stat.tick", "Tick Interval")}</div>
             <div class="stat-value">${tick}</div>
           </div>
           <div class="stat">
-            <div class="stat-label">Last Channels Refresh</div>
+            <div class="stat-label">${t("overview.stat.last_refresh", "Last Channels Refresh")}</div>
             <div class="stat-value">
-              ${props.lastChannelsRefresh ? formatAgo(props.lastChannelsRefresh) : "n/a"}
+              ${props.lastChannelsRefresh ? formatAgo(props.lastChannelsRefresh) : t("common.na", "n/a")}
             </div>
           </div>
         </div>

@@ -59,10 +59,11 @@ export function resolveFeishuGroupConfig(params: {
   cfg: OpenClawConfig;
   accountId?: string;
   chatId: string;
-}): { groupConfig?: FeishuGroupConfig } {
+}): { groupConfig?: FeishuGroupConfig; defaultConfig?: FeishuGroupConfig } {
   const resolved = resolveFeishuConfig({ cfg: params.cfg, accountId: params.accountId });
   const groupConfig = resolved.groups[params.chatId];
-  return { groupConfig };
+  const defaultConfig = resolved.groups["*"];
+  return { groupConfig: groupConfig ?? defaultConfig, defaultConfig };
 }
 
 /**
@@ -74,7 +75,6 @@ export function resolveFeishuGroupRequireMention(params: {
   chatId: string;
 }): boolean {
   const { groupConfig } = resolveFeishuGroupConfig(params);
-  // Default: require mention in groups
   return groupConfig?.requireMention ?? true;
 }
 

@@ -280,6 +280,18 @@
   stroke-linejoin: round;
 }
 
+.theme-text {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  color: currentColor;
+}
+
+.theme-toggle--2 .theme-toggle__track {
+  grid-template-columns: repeat(2, var(--theme-item));
+}
+
 /* ===========================================
    Status Dot - With glow for emphasis
    =========================================== */

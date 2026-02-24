@@ -1,6 +1,7 @@
 import { html, nothing } from "lit";
 import type { ChannelAccountSnapshot, NostrStatus } from "../types.ts";
 import type { ChannelsProps } from "./channels.types.ts";
+import { t } from "../../i18n.ts";
 import { formatAgo } from "../format.ts";
 import { renderChannelConfigSection } from "./channels.config.ts";
 import {
@@ -14,7 +15,7 @@ import {
  */
 function truncatePubkey(pubkey: string | null | undefined): string {
   if (!pubkey) {
-    return "n/a";
+    return t("channels.common.na", "n/a");
   }
   if (pubkey.length <= 20) {
     return pubkey;
@@ -50,6 +51,8 @@ export function renderNostrCard(params: {
     nostr?.publicKey ?? (primaryAccount as { publicKey?: string } | undefined)?.publicKey;
   const summaryLastStartAt = nostr?.lastStartAt ?? primaryAccount?.lastStartAt ?? null;
   const summaryLastError = nostr?.lastError ?? primaryAccount?.lastError ?? null;
+  const summaryLastInboundAt = primaryAccount?.lastInboundAt ?? null;
+  const summaryLastProbeAt = primaryAccount?.lastProbeAt ?? null;
   const hasMultipleAccounts = nostrAccounts.length > 1;
   const showingForm = profileFormState !== null && profileFormState !== undefined;
 
@@ -66,20 +69,20 @@ export function renderNostrCard(params: {
         </div>
         <div class="status-list account-card-status">
           <div>
-            <span class="label">Running</span>
-            <span>${account.running ? "Yes" : "No"}</span>
+            <span class="label">${t("channels.common.running", "Running")}</span>
+            <span>${account.running ? t("channels.common.yes", "Yes") : t("channels.common.no", "No")}</span>
           </div>
           <div>
-            <span class="label">Configured</span>
-            <span>${account.configured ? "Yes" : "No"}</span>
+            <span class="label">${t("channels.common.configured", "Configured")}</span>
+            <span>${account.configured ? t("channels.common.yes", "Yes") : t("channels.common.no", "No")}</span>
           </div>
           <div>
-            <span class="label">Public Key</span>
+            <span class="label">${t("channels.nostr.public_key", "Public Key")}</span>
             <span class="monospace" title="${publicKey ?? ""}">${truncatePubkey(publicKey)}</span>
           </div>
           <div>
-            <span class="label">Last inbound</span>
-            <span>${account.lastInboundAt ? formatAgo(account.lastInboundAt) : "n/a"}</span>
+            <span class="label">${t("channels.nostr.last_inbound", "Last inbound")}</span>
+            <span>${account.lastInboundAt ? formatAgo(account.lastInboundAt) : t("channels.common.na", "n/a")}</span>
           </div>
           ${
             account.lastError
@@ -123,7 +126,7 @@ export function renderNostrCard(params: {
     return html`
       <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <div style="font-weight: 500;">Profile</div>
+          <div style="font-weight: 500;">${t("channels.nostr.profile_title", "Profile")}</div>
           ${
             summaryConfigured
               ? html`
@@ -132,7 +135,7 @@ export function renderNostrCard(params: {
                   @click=${onEditProfile}
                   style="font-size: 12px; padding: 4px 8px;"
                 >
-                  Edit Profile
+                  ${t("channels.nostr.edit_profile", "Edit Profile")}
                 </button>
               `
               : nothing
@@ -158,23 +161,23 @@ export function renderNostrCard(params: {
                     `
                     : nothing
                 }
-                ${name ? html`<div><span class="label">Name</span><span>${name}</span></div>` : nothing}
+                ${name ? html`<div><span class="label">${t("channels.nostr.profile.name", "Name")}</span><span>${name}</span></div>` : nothing}
                 ${
                   displayName
-                    ? html`<div><span class="label">Display Name</span><span>${displayName}</span></div>`
+                    ? html`<div><span class="label">${t("channels.nostr.profile.display_name", "Display Name")}</span><span>${displayName}</span></div>`
                     : nothing
                 }
                 ${
                   about
-                    ? html`<div><span class="label">About</span><span style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${about}</span></div>`
+                    ? html`<div><span class="label">${t("channels.nostr.profile.about", "About")}</span><span style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${about}</span></div>`
                     : nothing
                 }
-                ${nip05 ? html`<div><span class="label">NIP-05</span><span>${nip05}</span></div>` : nothing}
+                ${nip05 ? html`<div><span class="label">${t("channels.nostr.profile.nip05", "NIP-05")}</span><span>${nip05}</span></div>` : nothing}
               </div>
             `
             : html`
                 <div style="color: var(--text-muted); font-size: 13px">
-                  No profile set. Click "Edit Profile" to add your name, bio, and avatar.
+                  ${t("channels.nostr.no_profile", 'No profile set. Click "Edit Profile" to add your name, bio, and avatar.')}
                 </div>
               `
         }
@@ -184,8 +187,8 @@ export function renderNostrCard(params: {
 
   return html`
     <div class="card">
-      <div class="card-title">Nostr</div>
-      <div class="card-sub">Decentralized DMs via Nostr relays (NIP-04).</div>
+      <div class="card-title">${t("channels.nostr.title", "Nostr")}</div>
+      <div class="card-sub">${t("channels.nostr.subtitle", "Decentralized DMs via Nostr relays (NIP-04).")}</div>
       ${accountCountLabel}
 
       ${
@@ -198,22 +201,28 @@ export function renderNostrCard(params: {
           : html`
             <div class="status-list" style="margin-top: 16px;">
               <div>
-                <span class="label">Configured</span>
-                <span>${summaryConfigured ? "Yes" : "No"}</span>
+                <span class="label">${t("channels.common.running", "Running")}</span>
+                <span>${summaryRunning ? t("channels.common.yes", "Yes") : t("channels.common.no", "No")}</span>
               </div>
               <div>
-                <span class="label">Running</span>
-                <span>${summaryRunning ? "Yes" : "No"}</span>
+                <span class="label">${t("channels.common.configured", "Configured")}</span>
+                <span>${summaryConfigured ? t("channels.common.yes", "Yes") : t("channels.common.no", "No")}</span>
               </div>
               <div>
-                <span class="label">Public Key</span>
-                <span class="monospace" title="${summaryPublicKey ?? ""}"
-                  >${truncatePubkey(summaryPublicKey)}</span
-                >
+                <span class="label">${t("channels.nostr.public_key", "Public Key")}</span>
+                <span class="monospace" title="${summaryPublicKey ?? ""}">${truncatePubkey(summaryPublicKey)}</span>
               </div>
               <div>
-                <span class="label">Last start</span>
-                <span>${summaryLastStartAt ? formatAgo(summaryLastStartAt) : "n/a"}</span>
+                <span class="label">${t("channels.nostr.last_inbound", "Last inbound")}</span>
+                <span>${summaryLastInboundAt ? formatAgo(summaryLastInboundAt) : t("channels.common.na", "n/a")}</span>
+              </div>
+              <div>
+                <span class="label">${t("channels.nostr.last_start", "Last start")}</span>
+                <span>${summaryLastStartAt ? formatAgo(summaryLastStartAt) : t("channels.common.na", "n/a")}</span>
+              </div>
+              <div>
+                <span class="label">${t("channels.nostr.last_probe", "Last probe")}</span>
+                <span>${summaryLastProbeAt ? formatAgo(summaryLastProbeAt) : t("channels.common.na", "n/a")}</span>
               </div>
             </div>
           `
