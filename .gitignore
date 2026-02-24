@@ -75,3 +75,9 @@ openclaw-local/
 .openclaw-local/workspace/
 workspace-rrvccn/
 workspace-xulinyi/
+/.cache/
+/.corepack/
+/.npm/
+/.openclaw/
+/.openclaw-state/
+/Library/
