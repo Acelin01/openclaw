@@ -1,6 +1,6 @@
 ---
 name: pm-docs
-description: Product Manager skills for creating PRDs and technical specs.
+description: 用于撰写 PRD 与技术规格的产品经理技能。
 metadata: { "openclaw": { "emoji": "📝", "requires": { "bins": ["mkdir", "touch", "cat"] } } }
 ---
 

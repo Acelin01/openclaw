@@ -1,6 +1,6 @@
 ---
 name: trello
-description: Manage Trello boards, lists, and cards via the Trello REST API.
+description: 通过 Trello REST API 管理看板、列表和卡片。
 homepage: https://developer.atlassian.com/cloud/trello/rest/
 metadata:
   {
@@ -9,43 +9,43 @@ metadata:
   }
 ---
 
-# Trello Skill
+# Trello 技能
 
-Manage Trello boards, lists, and cards directly from OpenClaw.
+在 OpenClaw 中直接管理 Trello 看板、列表与卡片。
 
-## Setup
+## 设置
 
-1. Get your API key: https://trello.com/app-key
-2. Generate a token (click "Token" link on that page)
-3. Set environment variables:
+1. 获取 API key：https://trello.com/app-key
+2. 生成 token（点击页面上的 “Token” 链接）
+3. 设置环境变量：
    ```bash
    export TRELLO_API_KEY="your-api-key"
    export TRELLO_TOKEN="your-token"
    ```
 
-## Usage
+## 用法
 
-All commands use curl to hit the Trello REST API.
+所有命令使用 curl 调用 Trello REST API。
 
-### List boards
+### 列出看板
 
 ```bash
 curl -s "https://api.trello.com/1/members/me/boards?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" | jq '.[] | {name, id}'
 ```
 
-### List lists in a board
+### 列出看板中的列表
 
 ```bash
 curl -s "https://api.trello.com/1/boards/{boardId}/lists?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" | jq '.[] | {name, id}'
 ```
 
-### List cards in a list
+### 列出列表中的卡片
 
 ```bash
 curl -s "https://api.trello.com/1/lists/{listId}/cards?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" | jq '.[] | {name, id, desc}'
 ```
 
-### Create a card
+### 创建卡片
 
 ```bash
 curl -s -X POST "https://api.trello.com/1/cards?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" \
@@ -54,34 +54,34 @@ curl -s -X POST "https://api.trello.com/1/cards?key=$TRELLO_API_KEY&token=$TRELL
   -d "desc=Card description"
 ```
 
-### Move a card to another list
+### 移动卡片到其他列表
 
 ```bash
 curl -s -X PUT "https://api.trello.com/1/cards/{cardId}?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" \
   -d "idList={newListId}"
 ```
 
-### Add a comment to a card
+### 给卡片添加评论
 
 ```bash
 curl -s -X POST "https://api.trello.com/1/cards/{cardId}/actions/comments?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" \
   -d "text=Your comment here"
 ```
 
-### Archive a card
+### 归档卡片
 
 ```bash
 curl -s -X PUT "https://api.trello.com/1/cards/{cardId}?key=$TRELLO_API_KEY&token=$TRELLO_TOKEN" \
   -d "closed=true"
 ```
 
-## Notes
+## 说明
 
-- Board/List/Card IDs can be found in the Trello URL or via the list commands
-- The API key and token provide full access to your Trello account - keep them secret!
-- Rate limits: 300 requests per 10 seconds per API key; 100 requests per 10 seconds per token; `/1/members` endpoints are limited to 100 requests per 900 seconds
+- 看板/列表/卡片 ID 可在 Trello URL 或列表命令中获取
+- API key 与 token 拥有完整账号权限，请妥善保管！
+- 限流：每个 API key 每 10 秒 300 次；每个 token 每 10 秒 100 次；`/1/members` 端点每 900 秒 100 次
 
-## Examples
+## 示例
 
 ```bash
 # Get all boards

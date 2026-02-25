@@ -891,6 +891,10 @@
                   "skills/calendar-assistant",
                   "skills/knowledge-base-rag",
                   "skills/market-research-product-factory",
+                  "skills/multi-channel-customer-service",
+                  "skills/overnight-mini-app-builder",
+                  "skills/project-state-management",
+                  "skills/todoist-task-manager",
                   "skills/resume-job-application"
                 ]
               },
@@ -1341,6 +1345,10 @@
                   "zh-CN/skills/calendar-assistant",
                   "zh-CN/skills/knowledge-base-rag",
                   "zh-CN/skills/market-research-product-factory",
+                  "zh-CN/skills/multi-channel-customer-service",
+                  "zh-CN/skills/overnight-mini-app-builder",
+                  "zh-CN/skills/project-state-management",
+                  "zh-CN/skills/todoist-task-manager",
                   "zh-CN/skills/resume-job-application"
                 ]
               },

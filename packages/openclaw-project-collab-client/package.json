@@ -1,0 +1,9 @@
+{
+  "name": "openclaw-project-collab-client",
+  "version": "0.1.0",
+  "description": "OpenClaw project collaboration client helpers",
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  }
+}

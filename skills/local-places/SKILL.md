@@ -1,6 +1,6 @@
 ---
 name: local-places
-description: Search for places (restaurants, cafes, etc.) via Google Places API proxy on localhost.
+description: 通过本地的 Google Places API 代理搜索地点（餐厅、咖啡馆等）。
 homepage: https://github.com/Hyaxia/local_places
 metadata:
   {
@@ -15,11 +15,11 @@ metadata:
 
 # 📍 Local Places
 
-_Find places, Go fast_
+_找地点，速度快_
 
-Search for nearby places using a local Google Places API proxy. Two-step flow: resolve location first, then search.
+通过本地 Google Places API 代理搜索附近地点。流程分两步：先解析位置，再进行搜索。
 
-## Setup
+## 安装与启动
 
 ```bash
 cd {baseDir}
@@ -28,13 +28,13 @@ uv venv && uv pip install -e ".[dev]"
 uv run --env-file .env uvicorn local_places.main:app --host 127.0.0.1 --port 8000
 ```
 
-Requires `GOOGLE_PLACES_API_KEY` in `.env` or environment.
+需要在 `.env` 或环境变量中提供 `GOOGLE_PLACES_API_KEY`。
 
-## Quick Start
+## 快速开始
 
-1. **Check server:** `curl http://127.0.0.1:8000/ping`
+1. **检查服务：** `curl http://127.0.0.1:8000/ping`
 
-2. **Resolve location:**
+2. **解析位置：**
 
 ```bash
 curl -X POST http://127.0.0.1:8000/locations/resolve \
@@ -42,7 +42,7 @@ curl -X POST http://127.0.0.1:8000/locations/resolve \
   -d '{"location_text": "Soho, London", "limit": 5}'
 ```
 
-3. **Search places:**
+3. **搜索地点：**
 
 ```bash
 curl -X POST http://127.0.0.1:8000/places/search \
@@ -55,31 +55,31 @@ curl -X POST http://127.0.0.1:8000/places/search \
   }'
 ```
 
-4. **Get details:**
+4. **获取详情：**
 
 ```bash
 curl http://127.0.0.1:8000/places/{place_id}
 ```
 
-## Conversation Flow
+## 对话流程
 
-1. If user says "near me" or gives vague location → resolve it first
-2. If multiple results → show numbered list, ask user to pick
-3. Ask for preferences: type, open now, rating, price level
-4. Search with `location_bias` from chosen location
-5. Present results with name, rating, address, open status
-6. Offer to fetch details or refine search
+1. 用户说“附近”或位置含糊 → 先解析位置
+2. 多个结果 → 展示编号列表并让用户选择
+3. 询问偏好：类型、是否营业、评分、价格区间
+4. 用选定位置的 `location_bias` 进行搜索
+5. 展示名称、评分、地址、营业状态
+6. 询问是否查看详情或继续细化
 
-## Filter Constraints
+## 筛选限制
 
-- `filters.types`: exactly ONE type (e.g., "restaurant", "cafe", "gym")
-- `filters.price_levels`: integers 0-4 (0=free, 4=very expensive)
-- `filters.min_rating`: 0-5 in 0.5 increments
+- `filters.types`：只能一个类型（如 "restaurant"、"cafe"、"gym"）
+- `filters.price_levels`：整数 0-4（0=免费，4=非常贵）
+- `filters.min_rating`：0-5，步进 0.5
 - `filters.open_now`: boolean
-- `limit`: 1-20 for search, 1-10 for resolve
-- `location_bias.radius_m`: must be > 0
+- `limit`：搜索为 1-20，解析为 1-10
+- `location_bias.radius_m`：必须 > 0
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -99,4 +99,4 @@ curl http://127.0.0.1:8000/places/{place_id}
 }
 ```
 
-Use `next_page_token` as `page_token` in next request for more results.
+下一次请求使用 `next_page_token` 作为 `page_token` 以获取更多结果。

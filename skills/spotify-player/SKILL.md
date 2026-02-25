@@ -1,6 +1,6 @@
 ---
 name: spotify-player
-description: Terminal Spotify playback/search via spogo (preferred) or spotify_player.
+description: 通过 spogo（优先）或 spotify_player 在终端播放/搜索 Spotify。
 homepage: https://www.spotify.com
 metadata:
   {

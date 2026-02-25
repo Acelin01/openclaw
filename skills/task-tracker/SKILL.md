@@ -1,6 +1,6 @@
 ---
 name: task-tracker
-description: Manage tasks and issues using simple file-based system or CLI.
+description: 通过简单的基于文件的系统或 CLI 管理任务和问题。
 metadata: { "openclaw": { "emoji": "📋", "requires": { "bins": ["echo", "grep", "sed"] } } }
 ---
 

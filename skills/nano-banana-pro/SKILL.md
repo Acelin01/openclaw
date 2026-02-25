@@ -1,6 +1,6 @@
 ---
 name: nano-banana-pro
-description: Generate or edit images via Gemini 3 Pro Image (Nano Banana Pro).
+description: 通过 Gemini 3 Pro Image（Nano Banana Pro）生成或编辑图像。
 homepage: https://ai.google.dev/
 metadata:
   {
@@ -23,36 +23,36 @@ metadata:
   }
 ---
 
-# Nano Banana Pro (Gemini 3 Pro Image)
+# Nano Banana Pro（Gemini 3 Pro Image）
 
-Use the bundled script to generate or edit images.
+使用随附脚本生成或编辑图像。
 
-Generate
+生成
 
 ```bash
 uv run {baseDir}/scripts/generate_image.py --prompt "your image description" --filename "output.png" --resolution 1K
 ```
 
-Edit (single image)
+编辑（单张图）
 
 ```bash
 uv run {baseDir}/scripts/generate_image.py --prompt "edit instructions" --filename "output.png" -i "/path/in.png" --resolution 2K
 ```
 
-Multi-image composition (up to 14 images)
+多图合成（最多 14 张）
 
 ```bash
 uv run {baseDir}/scripts/generate_image.py --prompt "combine these into one scene" --filename "output.png" -i img1.png -i img2.png -i img3.png
 ```
 
-API key
+API Key
 
 - `GEMINI_API_KEY` env var
 - Or set `skills."nano-banana-pro".apiKey` / `skills."nano-banana-pro".env.GEMINI_API_KEY` in `~/.openclaw/openclaw.json`
 
-Notes
+说明
 
-- Resolutions: `1K` (default), `2K`, `4K`.
-- Use timestamps in filenames: `yyyy-mm-dd-hh-mm-ss-name.png`.
-- The script prints a `MEDIA:` line for OpenClaw to auto-attach on supported chat providers.
-- Do not read the image back; report the saved path only.
+- 分辨率：`1K`（默认）、`2K`、`4K`
+- 文件名建议使用时间戳：`yyyy-mm-dd-hh-mm-ss-name.png`
+- 脚本会输出 `MEDIA:` 行供 OpenClaw 在支持的聊天渠道自动附加
+- 不要回读图像内容，只需返回保存路径

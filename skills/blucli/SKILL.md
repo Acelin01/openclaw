@@ -1,6 +1,6 @@
 ---
 name: blucli
-description: BluOS CLI (blu) for discovery, playback, grouping, and volume.
+description: BluOS CLI（blu），用于发现设备、播放控制、分组与音量管理。
 homepage: https://blucli.sh
 metadata:
   {
@@ -24,24 +24,24 @@ metadata:
 
 # blucli (blu)
 
-Use `blu` to control Bluesound/NAD players.
+使用 `blu` 控制 Bluesound/NAD 播放器。
 
-Quick start
+快速开始
 
-- `blu devices` (pick target)
+- `blu devices`（选择目标）
 - `blu --device <id> status`
 - `blu play|pause|stop`
 - `blu volume set 15`
 
-Target selection (in priority order)
+目标选择（按优先级）
 
 - `--device <id|name|alias>`
 - `BLU_DEVICE`
-- config default (if set)
+- 配置默认值（如果已设置）
 
-Common tasks
+常见任务
 
-- Grouping: `blu group status|add|remove`
-- TuneIn search/play: `blu tunein search "query"`, `blu tunein play "query"`
+- 分组：`blu group status|add|remove`
+- TuneIn 搜索/播放：`blu tunein search "query"`、`blu tunein play "query"`
 
-Prefer `--json` for scripts. Confirm the target device before changing playback.
+脚本场景优先使用 `--json`。变更播放前请确认目标设备。

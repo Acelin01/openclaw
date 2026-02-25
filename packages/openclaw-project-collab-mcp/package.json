@@ -1,0 +1,12 @@
+{
+  "name": "openclaw-project-collab-mcp",
+  "version": "0.1.0",
+  "description": "OpenClaw project collaboration MCP server",
+  "bin": {
+    "openclaw-project-collab-mcp": "./index.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0"
+  }
+}

@@ -5,7 +5,12 @@ import { formatToolDetail, resolveToolDisplay } from "../tool-display.ts";
 import { TOOL_INLINE_THRESHOLD } from "./constants.ts";
 import { extractTextCached } from "./message-extract.ts";
 import { isToolResultMessage } from "./message-normalizer.ts";
-import { formatToolOutputForSidebar, getTruncatedPreview } from "./tool-helpers.ts";
+import {
+  formatToolOutputForSidebar,
+  getTruncatedPreview,
+  parseProjectCollabArtifact,
+  type ProjectCollabArtifact,
+} from "./tool-helpers.ts";
 
 export function extractToolCards(message: unknown): ToolCard[] {
   const m = message as Record<string, unknown>;
@@ -52,6 +57,8 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
   const display = resolveToolDisplay({ name: card.name, args: card.args });
   const detail = formatToolDetail(display);
   const hasText = Boolean(card.text?.trim());
+  const artifact = card.text ? parseProjectCollabArtifact(card.text) : null;
+  const hasArtifact = Boolean(artifact);
 
   const canClick = Boolean(onOpenSidebar);
   const handleClick = canClick
@@ -68,13 +75,15 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
     : undefined;
 
   const isShort = hasText && (card.text?.length ?? 0) <= TOOL_INLINE_THRESHOLD;
-  const showCollapsed = hasText && !isShort;
-  const showInline = hasText && isShort;
+  const showCollapsed = hasText && !isShort && !hasArtifact;
+  const showInline = hasText && isShort && !hasArtifact;
   const isEmpty = !hasText;
 
   return html`
     <div
-      class="chat-tool-card ${canClick ? "chat-tool-card--clickable" : ""}"
+      class="chat-tool-card ${canClick ? "chat-tool-card--clickable" : ""} ${
+        hasArtifact ? "chat-tool-card--artifact" : ""
+      }"
       @click=${handleClick}
       role=${canClick ? "button" : nothing}
       tabindex=${canClick ? "0" : nothing}
@@ -116,6 +125,7 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
           : nothing
       }
       ${showInline ? html`<div class="chat-tool-card__inline mono">${card.text}</div>` : nothing}
+      ${hasArtifact ? renderProjectArtifact(artifact!) : nothing}
     </div>
   `;
 }
@@ -153,4 +163,65 @@ function extractToolText(item: Record<string, unknown>): string | undefined {
     return item.content;
   }
   return undefined;
+}
+
+function renderProjectArtifact(artifact: ProjectCollabArtifact) {
+  const metrics = artifact.metrics ?? [];
+  const sections = artifact.sections ?? [];
+  const links = artifact.links ?? [];
+
+  return html`
+    <div class="chat-tool-card__artifact">
+      ${artifact.summary ? html`<div class="chat-tool-card__artifact-summary">${artifact.summary}</div>` : nothing}
+      ${
+        metrics.length > 0
+          ? html`
+              <div class="chat-tool-card__artifact-metrics">
+                ${metrics.map((metric) => {
+                  const statusClass = metric.status ? `artifact-metric--${metric.status}` : "";
+                  return html`
+                    <div class="chat-tool-card__artifact-metric ${statusClass}">
+                      <div class="chat-tool-card__artifact-metric-label">${metric.label ?? ""}</div>
+                      <div class="chat-tool-card__artifact-metric-value">${metric.value ?? ""}</div>
+                    </div>
+                  `;
+                })}
+              </div>
+            `
+          : nothing
+      }
+      ${
+        sections.length > 0
+          ? html`
+              <div class="chat-tool-card__artifact-sections">
+                ${sections.map((section) => {
+                  return html`
+                    <div class="chat-tool-card__artifact-section">
+                      <div class="chat-tool-card__artifact-section-title">${section.title ?? ""}</div>
+                      <ul class="chat-tool-card__artifact-section-list">
+                        ${(section.items ?? []).map((item) => html`<li>${item}</li>`)}
+                      </ul>
+                    </div>
+                  `;
+                })}
+              </div>
+            `
+          : nothing
+      }
+      ${
+        links.length > 0
+          ? html`
+              <div class="chat-tool-card__artifact-links">
+                ${links.map((link) => {
+                  if (!link.url) {
+                    return nothing;
+                  }
+                  return html`<a href=${link.url} target="_blank" rel="noreferrer">${link.label ?? link.url}</a>`;
+                })}
+              </div>
+            `
+          : nothing
+      }
+    </div>
+  `;
 }

@@ -1,6 +1,6 @@
 ---
 name: openai-whisper-api
-description: Transcribe audio via OpenAI Audio Transcriptions API (Whisper).
+description: 通过 OpenAI Audio Transcriptions API（Whisper）转录音频。
 homepage: https://platform.openai.com/docs/guides/speech-to-text
 metadata:
   {
@@ -13,22 +13,22 @@ metadata:
   }
 ---
 
-# OpenAI Whisper API (curl)
+# OpenAI Whisper API（curl）
 
-Transcribe an audio file via OpenAI’s `/v1/audio/transcriptions` endpoint.
+通过 OpenAI 的 `/v1/audio/transcriptions` 端点转录音频文件。
 
-## Quick start
+## 快速开始
 
 ```bash
 {baseDir}/scripts/transcribe.sh /path/to/audio.m4a
 ```
 
-Defaults:
+默认值：
 
 - Model: `whisper-1`
 - Output: `<input>.txt`
 
-## Useful flags
+## 常用参数
 
 ```bash
 {baseDir}/scripts/transcribe.sh /path/to/audio.ogg --model whisper-1 --out /tmp/transcript.txt
@@ -37,9 +37,9 @@ Defaults:
 {baseDir}/scripts/transcribe.sh /path/to/audio.m4a --json --out /tmp/transcript.json
 ```
 
-## API key
+## API Key
 
-Set `OPENAI_API_KEY`, or configure it in `~/.openclaw/openclaw.json`:
+设置 `OPENAI_API_KEY`，或在 `~/.openclaw/openclaw.json` 中配置：
 
 ```json5
 {

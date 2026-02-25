@@ -5,25 +5,79 @@ description: "Semi-automated workflow for job applications on platforms like Lin
 
 # Resume Job Application Workflow
 
-This guide outlines a **Human-in-the-Loop** workflow for applying to jobs using OpenClaw. Due to anti-bot measures (CAPTCHA, QR login) on many job platforms, a fully automated "unattended" process is often unreliable. Instead, we recommend a collaborative approach where the agent handles repetitive tasks (parsing, searching, filtering) and you handle the critical authentication step.
+This guide outlines a **Human-in-the-Loop** workflow for applying to jobs using OpenClaw. Due to anti-bot measures (CAPTCHA, QR login) on many job platforms, a fully automated unattended process is often unreliable. The workflow below adds explicit composite skills and trigger phrases so the agent can use resume parsing to autonomously search and apply after you complete login.
 
-## Prerequisites
+---
 
-1.  **Resume File**: Have your resume ready in a readable format (PDF, Markdown, or Text) accessible to OpenClaw.
-2.  **Browser Skill**: Ensure the `browser` skill is enabled in `openclaw.json`.
+## I. Atomic Skill Library (Underlying Capabilities)
 
-## Workflow Overview
+| Atomic Skill        | Description                   | Input Example      | Output Example  |
+| ------------------- | ----------------------------- | ------------------ | --------------- |
+| `resume_parse`      | Extract skills and experience | Resume file        | Skill profile   |
+| `greeting_generate` | Draft recruiter message       | Skill profile      | Greeting text   |
+| `browser_start`     | Start controlled browser      | Target profile     | Browser session |
+| `browser_open`      | Open job platform             | URL                | Page loaded     |
+| `job_search`        | Search by role/location       | Role, city         | Search results  |
+| `job_filter`        | Filter by keywords            | Filters            | Filtered list   |
+| `job_apply`         | Apply or chat                 | Job card, greeting | Action result   |
 
-1.  **Resume Analysis (Agent)**: The agent reads your resume to extract key skills, experience, and generates a personalized introduction.
-2.  **Browser Setup (Agent)**: The agent launches a controlled browser instance.
-3.  **Authentication (User)**: You manually log in to the job platform (e.g., scan QR code) in the agent's browser window.
-4.  **Job Hunting (Agent)**: The agent takes over to search, filter, and initiate conversations or applications based on your criteria.
+---
 
-## Step-by-Step Guide
+## II. Composite Skills (Task-Oriented Advanced Tools)
+
+### 1. Composite Skill: `resume_based_job_apply`
+
+- **Skill Name**: `resume_based_job_apply`
+- **Description**: Parse resume, search jobs, and apply after login.
+- **Input Parameters**:
+  ```json
+  {
+    "resume_path": "/path/to/resume.pdf",
+    "role": "Senior Frontend Engineer",
+    "city": "Shanghai",
+    "filters": ["AI", "SaaS", "React"]
+  }
+  ```
+- **Internal Execution Flow**:
+  1. Call `resume_parse` to extract top skills and experience.
+  2. Call `greeting_generate` to produce recruiter message.
+  3. Call `browser_start` + `browser_open` to open the platform.
+  4. Wait for manual login confirmation.
+  5. Call `job_search` and `job_filter`.
+  6. Call `job_apply` to click “Communicate Immediately” or “Apply”.
+- **Output Results**:
+  ```json
+  {
+    "applied": 8,
+    "skipped": 4,
+    "notes": "Applied where React required"
+  }
+  ```
+
+---
+
+## III. Trigger Prompts (Telegram)
+
+Send any of the following to trigger the composite flow:
+
+- “按 resume-job-application 流程投递简历：/path/to/resume.pdf，岗位 Senior Frontend Engineer，城市上海，筛选 AI/SaaS/React。”
+- “我已登录 Boss 直聘。请开始自动筛选岗位并投递，优先点击投递简历，没有就立即沟通并发问候语。”
+- “根据我的简历自动找工作并投递，筛选包含 React 的岗位。”
+
+---
+
+## IV. Execution Guardrails
+
+- The agent must open the job platform and perform in-browser actions after login.
+- Do not stop at planning or generating files; continue to search and apply.
+- If a CAPTCHA appears, pause and wait for manual resolution, then resume.
+- If “Apply” is unavailable, click “Communicate Immediately” and send the greeting.
+
+---
+
+## V. Step-by-Step Guide
 
 ### 1. Resume Analysis
-
-First, let the agent understand your profile.
 
 ```bash
 # Example: Read resume and extract keywords
@@ -36,31 +90,24 @@ _Prompt the agent:_
 
 ### 2. Launch Browser & Login
 
-Start the OpenClaw browser session.
-
 ```bash
-# Start the browser service
 openclaw browser start
-
-# Navigate to the job platform (e.g., Boss Zhipin)
 openclaw browser open "https://www.zhipin.com"
 ```
 
 **Action Required**:
-At this point, a browser window will open. **Manually scan the QR code** or enter your credentials to log in. Once logged in, you can close the login popup, but keep the browser window open.
+Manually scan the QR code or enter credentials to log in. Keep the browser window open.
 
 ### 3. Automated Search & Application
 
-Once logged in, instruct the agent to search and process jobs.
-
 _Prompt the agent:_
 
-> "I have logged in. Now, search for 'Senior Frontend Engineer' jobs in 'Shanghai'. Filter for companies with 'AI' or 'SaaS' in the description. For each match, click the job card, check if it requires 'React', and if so, click 'Communicate Immediately' and send my greeting."
+> "I have logged in. Now, search for 'Senior Frontend Engineer' jobs in 'Shanghai'. Filter for companies with 'AI' or 'SaaS' in the description. For each match, click the job card, check if it requires 'React', and if so, click 'Apply' or 'Communicate Immediately' and send my greeting. Do not stop after preparing documents; continue to apply in the browser."
 
-The agent will use browser automation tools (click, type, scroll, read) to navigate the site.
+---
 
-### Tips for Success
+## VI. Tips for Success
 
 - **Session Persistence**: OpenClaw's browser profile persists cookies. You typically only need to log in once every few days.
-- **Rate Limiting**: Job platforms may block aggressive scraping. Instruct the agent to "pause for 3-5 seconds between actions" to mimic human behavior.
-- **Visual Verification**: You can watch the agent's actions in real-time in the browser window. If it gets stuck (e.g., a CAPTCHA appears), you can intervene immediately.
+- **Rate Limiting**: Instruct the agent to pause 3–5 seconds between actions.
+- **Visual Verification**: Watch the agent’s actions in real time, intervene on CAPTCHA.
