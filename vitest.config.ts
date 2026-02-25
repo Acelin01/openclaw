@@ -13,6 +13,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "openclaw/plugin-sdk": path.join(repoRoot, "src", "plugin-sdk", "index.ts"),
+      "@vector-im/matrix-bot-sdk": path.join(repoRoot, "test", "mocks", "matrix-bot-sdk.ts"),
+      "@matrix-org/matrix-sdk-crypto-nodejs": path.join(
+        repoRoot,
+        "test",
+        "mocks",
+        "matrix-sdk-crypto-nodejs.ts",
+      ),
     },
   },
   test: {

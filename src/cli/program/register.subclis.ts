@@ -182,6 +182,14 @@ const entries: SubCliEntry[] = [
     },
   },
   {
+    name: "identity",
+    description: "Identity binding helpers",
+    register: async (program) => {
+      const mod = await import("../identity-cli.js");
+      mod.registerIdentityCli(program);
+    },
+  },
+  {
     name: "plugins",
     description: "Plugin management",
     register: async (program) => {

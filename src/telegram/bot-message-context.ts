@@ -243,65 +243,70 @@ export const buildTelegramMessageContext = async ({
       const allowed =
         effectiveDmAllow.hasWildcard || (effectiveDmAllow.hasEntries && allowMatch.allowed);
       if (!allowed) {
+        const normalizedCommand = normalizeCommandBody(msg.text ?? msg.caption ?? "");
+        const allowBind = normalizedCommand.startsWith("/bind");
         if (dmPolicy === "pairing") {
-          try {
-            const from = msg.from as
-              | {
-                  first_name?: string;
-                  last_name?: string;
-                  username?: string;
-                  id?: number;
-                }
-              | undefined;
-            const telegramUserId = from?.id ? String(from.id) : candidate;
-            const { code, created } = await upsertChannelPairingRequest({
-              channel: "telegram",
-              id: telegramUserId,
-              meta: {
-                username: from?.username,
-                firstName: from?.first_name,
-                lastName: from?.last_name,
-              },
-            });
-            if (created) {
-              logger.info(
-                {
-                  chatId: candidate,
+          if (!allowBind) {
+            try {
+              const from = msg.from as
+                | {
+                    first_name?: string;
+                    last_name?: string;
+                    username?: string;
+                    id?: number;
+                  }
+                | undefined;
+              const telegramUserId = from?.id ? String(from.id) : candidate;
+              const { code, created } = await upsertChannelPairingRequest({
+                channel: "telegram",
+                id: telegramUserId,
+                meta: {
                   username: from?.username,
                   firstName: from?.first_name,
                   lastName: from?.last_name,
-                  matchKey: allowMatch.matchKey ?? "none",
-                  matchSource: allowMatch.matchSource ?? "none",
                 },
-                "telegram pairing request",
-              );
-              await withTelegramApiErrorLogging({
-                operation: "sendMessage",
-                fn: () =>
-                  bot.api.sendMessage(
-                    chatId,
-                    [
-                      "OpenClaw: access not configured.",
-                      "",
-                      `Your Telegram user id: ${telegramUserId}`,
-                      "",
-                      `Pairing code: ${code}`,
-                      "",
-                      "Ask the bot owner to approve with:",
-                      formatCliCommand("openclaw pairing approve telegram <code>"),
-                    ].join("\n"),
-                  ),
               });
+              if (created) {
+                logger.info(
+                  {
+                    chatId: candidate,
+                    username: from?.username,
+                    firstName: from?.first_name,
+                    lastName: from?.last_name,
+                    matchKey: allowMatch.matchKey ?? "none",
+                    matchSource: allowMatch.matchSource ?? "none",
+                  },
+                  "telegram pairing request",
+                );
+                await withTelegramApiErrorLogging({
+                  operation: "sendMessage",
+                  fn: () =>
+                    bot.api.sendMessage(
+                      chatId,
+                      [
+                        "OpenClaw: access not configured.",
+                        "",
+                        `Your Telegram user id: ${telegramUserId}`,
+                        "",
+                        `Pairing code: ${code}`,
+                        "",
+                        "Ask the bot owner to approve with:",
+                        formatCliCommand("openclaw pairing approve telegram <code>"),
+                      ].join("\n"),
+                    ),
+                });
+              }
+            } catch (err) {
+              logVerbose(`telegram pairing reply failed for chat ${chatId}: ${String(err)}`);
             }
-          } catch (err) {
-            logVerbose(`telegram pairing reply failed for chat ${chatId}: ${String(err)}`);
+            return null;
           }
         } else {
           logVerbose(
             `Blocked unauthorized telegram sender ${candidate} (dmPolicy=${dmPolicy}, ${allowMatchMeta})`,
           );
+          return null;
         }
-        return null;
       }
     }
   }

@@ -384,6 +384,7 @@ export const registerTelegramNativeCommands = ({
           if (shouldSkipUpdate(ctx)) {
             return;
           }
+          const requireAuth = command.name !== "bind";
           const auth = await resolveTelegramCommandAuth({
             msg,
             bot,
@@ -394,7 +395,7 @@ export const registerTelegramNativeCommands = ({
             useAccessGroups,
             resolveGroupPolicy,
             resolveTelegramGroupConfig,
-            requireAuth: true,
+            requireAuth,
           });
           if (!auth) {
             return;

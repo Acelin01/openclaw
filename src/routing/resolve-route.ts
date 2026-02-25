@@ -1,5 +1,6 @@
 import type { OpenClawConfig } from "../config/config.js";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { resolveIdentityLinksForConfig } from "../identity/identity-store.js";
 import { listBindings } from "./bindings.js";
 import {
   buildAgentMainSessionKey,
@@ -182,7 +183,7 @@ export function resolveAgentRoute(input: ResolveAgentRouteInput): ResolvedAgentR
   });
 
   const dmScope = input.cfg.session?.dmScope ?? "main";
-  const identityLinks = input.cfg.session?.identityLinks;
+  const identityLinks = resolveIdentityLinksForConfig(input.cfg);
 
   const choose = (agentId: string, matchedBy: ResolvedAgentRoute["matchedBy"]) => {
     const resolvedAgentId = pickFirstExistingAgentId(input.cfg, agentId);

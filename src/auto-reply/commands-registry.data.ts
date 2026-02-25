@@ -189,6 +189,21 @@ function buildChatCommands(): ChatCommandDefinition[] {
       category: "management",
     }),
     defineChatCommand({
+      key: "bind",
+      nativeName: "bind",
+      description: "Bind your Telegram account.",
+      textAlias: "/bind",
+      args: [
+        {
+          name: "code",
+          description: "Bind code",
+          type: "string",
+          required: true,
+        },
+      ],
+      category: "management",
+    }),
+    defineChatCommand({
       key: "context",
       nativeName: "context",
       description: "Explain how context is built and used.",

@@ -1,6 +1,25 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { describe, expect, test } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { resolveAgentRoute } from "./resolve-route.js";
+
+async function withTempStateDir<T>(fn: (stateDir: string) => Promise<T>) {
+  const previous = process.env.OPENCLAW_STATE_DIR;
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-route-"));
+  process.env.OPENCLAW_STATE_DIR = dir;
+  try {
+    return await fn(dir);
+  } finally {
+    if (previous === undefined) {
+      delete process.env.OPENCLAW_STATE_DIR;
+    } else {
+      process.env.OPENCLAW_STATE_DIR = previous;
+    }
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+}
 
 describe("resolveAgentRoute", () => {
   test("defaults to main/default when no bindings exist", () => {
@@ -77,6 +96,41 @@ describe("resolveAgentRoute", () => {
       peer: { kind: "dm", id: "222222222222222222" },
     });
     expect(route.sessionKey).toBe("agent:main:discord:dm:alice");
+  });
+
+  test("identityLinksStore merges into DM session resolution", async () => {
+    await withTempStateDir(async (stateDir) => {
+      const storePath = path.join(stateDir, "identity", "identity-links.json");
+      await fs.mkdir(path.dirname(storePath), { recursive: true });
+      await fs.writeFile(
+        storePath,
+        `${JSON.stringify(
+          {
+            version: 1,
+            links: {
+              alice: ["telegram:111111111", "discord:222222222222222222"],
+            },
+            codes: [],
+          },
+          null,
+          2,
+        )}\n`,
+        "utf-8",
+      );
+      const cfg: OpenClawConfig = {
+        session: {
+          dmScope: "per-peer",
+          identityLinksStore: "identity/identity-links.json",
+        },
+      };
+      const route = resolveAgentRoute({
+        cfg,
+        channel: "telegram",
+        accountId: null,
+        peer: { kind: "dm", id: "111111111" },
+      });
+      expect(route.sessionKey).toBe("agent:main:dm:alice");
+    });
   });
 
   test("peer binding wins over account binding", () => {

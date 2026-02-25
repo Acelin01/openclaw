@@ -1,8 +1,4 @@
 import { afterAll, afterEach, beforeEach, vi } from "vitest";
-
-// Ensure Vitest environment is properly set
-process.env.VITEST = "true";
-
 import type {
   ChannelId,
   ChannelOutboundAdapter,
@@ -14,6 +10,9 @@ import { installProcessWarningFilter } from "../src/infra/warnings.js";
 import { setActivePluginRegistry } from "../src/plugins/runtime.js";
 import { createTestRegistry } from "../src/test-utils/channel-plugins.js";
 import { withIsolatedTestHome } from "./test-env";
+
+// Ensure Vitest environment is properly set
+process.env.VITEST = "true";
 
 installProcessWarningFilter();
 
@@ -46,7 +45,7 @@ const createStubOutbound = (
   sendText: async ({ deps, to, text }) => {
     const send = pickSendFn(id, deps);
     if (send) {
-      const result = await send(to, text, {});
+      const result = await send(to, text, { verbose: false });
       return { channel: id, ...result };
     }
     return { channel: id, messageId: "test" };
@@ -54,7 +53,7 @@ const createStubOutbound = (
   sendMedia: async ({ deps, to, text, mediaUrl }) => {
     const send = pickSendFn(id, deps);
     if (send) {
-      const result = await send(to, text, { mediaUrl });
+      const result = await send(to, text, { verbose: false, mediaUrl });
       return { channel: id, ...result };
     }
     return { channel: id, messageId: "test" };
@@ -90,11 +89,14 @@ const createStubPlugin = (params: {
       const ids = accounts ? Object.keys(accounts).filter(Boolean) : [];
       return ids.length > 0 ? ids : ["default"];
     },
-    resolveAccount: (cfg: OpenClawConfig, accountId: string) => {
+    resolveAccount: (cfg: OpenClawConfig, accountId?: string | null) => {
       const channels = cfg.channels as Record<string, unknown> | undefined;
       const entry = channels?.[params.id];
       if (!entry || typeof entry !== "object") {
         return {};
+      }
+      if (!accountId) {
+        return entry;
       }
       const accounts = (entry as { accounts?: Record<string, unknown> }).accounts;
       const match = accounts?.[accountId];

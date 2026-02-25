@@ -82,6 +82,7 @@ export type SessionConfig = {
   dmScope?: DmScope;
   /** Map platform-prefixed identities (e.g. "telegram:123") to canonical DM peers. */
   identityLinks?: Record<string, string[]>;
+  identityLinksStore?: string;
   resetTriggers?: string[];
   idleMinutes?: number;
   reset?: SessionResetConfig;

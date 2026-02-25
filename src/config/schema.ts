@@ -665,6 +665,8 @@ const FIELD_HELP: Record<string, string> = {
     'DM session scoping: "main" keeps continuity; "per-peer", "per-channel-peer", or "per-account-channel-peer" isolates DM history (recommended for shared inboxes/multi-account).',
   "session.identityLinks":
     "Map canonical identities to provider-prefixed peer IDs for DM session linking (example: telegram:123456).",
+  "session.identityLinksStore":
+    "Optional JSON file path for identity links storage (relative paths resolve under the state dir).",
   "channels.telegram.configWrites":
     "Allow Telegram to write config in response to channel events/commands (default: true).",
   "channels.slack.configWrites":

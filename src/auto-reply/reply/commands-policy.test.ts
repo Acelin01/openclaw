@@ -35,6 +35,18 @@ vi.mock("../../pairing/pairing-store.js", async () => {
   };
 });
 
+const redeemIdentityBindCodeMock = vi.hoisted(() => vi.fn());
+
+vi.mock("../../identity/identity-store.js", async () => {
+  const actual = await vi.importActual<typeof import("../../identity/identity-store.js")>(
+    "../../identity/identity-store.js",
+  );
+  return {
+    ...actual,
+    redeemIdentityBindCode: redeemIdentityBindCodeMock,
+  };
+});
+
 vi.mock("../../channels/plugins/pairing.js", async () => {
   const actual = await vi.importActual<typeof import("../../channels/plugins/pairing.js")>(
     "../../channels/plugins/pairing.js",
@@ -82,7 +94,51 @@ function buildParams(commandBody: string, cfg: OpenClawConfig, ctxOverrides?: Pa
     elevated: { enabled: true, allowed: true, failures: [] },
     sessionKey: "agent:main:main",
     workspaceDir: "/tmp",
-    defaultGroupActivation: () => "mention",
+    defaultGroupActivation: () => "mention" as const,
+    resolvedVerboseLevel: "off" as const,
+    resolvedReasoningLevel: "off" as const,
+    resolveDefaultThinkingLevel: async () => undefined,
+    provider: "telegram",
+    model: "test-model",
+    contextTokens: 0,
+    isGroup: false,
+  };
+}
+
+function buildBindParams(
+  commandBody: string,
+  cfg: OpenClawConfig,
+  ctxOverrides?: Partial<MsgContext>,
+) {
+  const ctx = {
+    Body: commandBody,
+    CommandBody: commandBody,
+    CommandSource: "text",
+    CommandAuthorized: false,
+    Provider: "telegram",
+    Surface: "telegram",
+    SenderId: "123",
+    SenderUsername: "tester",
+    ...ctxOverrides,
+  } as MsgContext;
+
+  const command = buildCommandContext({
+    ctx,
+    cfg,
+    isGroup: false,
+    triggerBodyNormalized: commandBody.trim().toLowerCase(),
+    commandAuthorized: false,
+  });
+
+  return {
+    ctx,
+    cfg,
+    command,
+    directives: parseInlineDirectives(commandBody),
+    elevated: { enabled: true, allowed: true, failures: [] },
+    sessionKey: "agent:main:main",
+    workspaceDir: "/tmp",
+    defaultGroupActivation: () => "mention" as const,
     resolvedVerboseLevel: "off" as const,
     resolvedReasoningLevel: "off" as const,
     resolveDefaultThinkingLevel: async () => undefined,
@@ -144,6 +200,47 @@ describe("handleCommands /allowlist", () => {
       entry: "789",
     });
     expect(result.reply?.text).toContain("DM allowlist added");
+  });
+});
+
+describe("handleCommands /bind", () => {
+  it("binds telegram identity with a valid code", async () => {
+    redeemIdentityBindCodeMock.mockResolvedValueOnce({ userKey: "user-1" });
+    addChannelAllowFromStoreEntryMock.mockResolvedValueOnce({
+      changed: true,
+      allowFrom: ["123"],
+    });
+
+    const cfg = {
+      commands: { text: true },
+    } as OpenClawConfig;
+    const params = buildBindParams("/bind ABC123", cfg);
+    const result = await handleCommands(params);
+
+    expect(result.shouldContinue).toBe(false);
+    expect(redeemIdentityBindCodeMock).toHaveBeenCalledWith({
+      code: "abc123",
+      identity: "telegram:123",
+      meta: { username: "tester", name: undefined },
+    });
+    expect(addChannelAllowFromStoreEntryMock).toHaveBeenCalledWith({
+      channel: "telegram",
+      entry: "123",
+    });
+    expect(result.reply?.text).toContain("Telegram account linked");
+  });
+
+  it("rejects invalid or expired codes", async () => {
+    redeemIdentityBindCodeMock.mockResolvedValueOnce(null);
+
+    const cfg = {
+      commands: { text: true },
+    } as OpenClawConfig;
+    const params = buildBindParams("/bind BADCODE", cfg);
+    const result = await handleCommands(params);
+
+    expect(result.shouldContinue).toBe(false);
+    expect(result.reply?.text).toContain("Invalid or expired");
   });
 });
 
