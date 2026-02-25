@@ -340,22 +340,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
     store.projects.push(project);
     await saveStore(store);
-    
+
     const artifact = buildProjectArtifact({ project, milestones: [], tasks: [], risks: [] });
     return jsonResult({ project, artifact });
   }
 
   if (name === "project_query") {
-      console.error(`[MCP] Handling project_query with args: ${JSON.stringify(args)}`);
-      const store = await loadStore();
-      if (typeof args.project_id === "string" && args.project_id) {
-        const project = store.projects.find((item) => item.project_id === args.project_id);
-        console.error(`[MCP] Found project: ${project ? project.name : "not found"}`);
-        return jsonResult({ project: project ?? null });
-      }
-      console.error(`[MCP] Returning ${store.projects.length} projects`);
-      return jsonResult({ projects: store.projects });
+    console.error(`[MCP] Handling project_query with args: ${JSON.stringify(args)}`);
+    const store = await loadStore();
+    if (typeof args.project_id === "string" && args.project_id) {
+      const project = store.projects.find((item) => item.project_id === args.project_id);
+      console.error(`[MCP] Found project: ${project ? project.name : "not found"}`);
+      return jsonResult({ project: project ?? null });
     }
+    console.error(`[MCP] Returning ${store.projects.length} projects`);
+    return jsonResult({ projects: store.projects });
+  }
 
   if (name === "milestone_create") {
     const store = await loadStore();
@@ -425,7 +425,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
     store.tasks.push(task);
     await saveStore(store);
-    
+
     const artifact = getArtifact(store, task.project_id);
     if (artifact) {
       return jsonResult({ task, artifact });
@@ -496,7 +496,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 async function main() {
   const transport = new StdioServerTransport();
-  server.connect(transport).catch(err => {
+  server.connect(transport).catch((err) => {
     console.error(`[MCP] Server connection error: ${err.message}`);
   });
   console.error("openclaw-project-collab-mcp running on stdio");

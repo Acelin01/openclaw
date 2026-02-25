@@ -58,19 +58,23 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
   const display = resolveToolDisplay({ name: card.name, args: card.args });
   const detail = formatToolDetail(display);
   const hasText = Boolean(card.text?.trim());
-  
+
   // Debug log to check received text
   if (hasText) {
     // console.log("[UI] Tool card text:", card.text?.slice(0, 100));
   }
-  
+
   const artifact = card.text ? parseProjectCollabArtifact(card.text) : null;
   const hasArtifact = Boolean(artifact);
-  
+
   if (hasText) {
-    console.log("[UI] Checking artifact in tool result:", card.name, hasArtifact ? "FOUND" : "NOT FOUND");
+    console.log(
+      "[UI] Checking artifact in tool result:",
+      card.name,
+      hasArtifact ? "FOUND" : "NOT FOUND",
+    );
   }
-  
+
   const canClick = Boolean(onOpenSidebar);
   const handleClick = canClick
     ? () => {

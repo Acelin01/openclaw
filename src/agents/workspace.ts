@@ -1,12 +1,11 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { resolveStateDir } from "../config/paths.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { isSubagentSessionKey } from "../routing/session-key.js";
 import { resolveUserPath } from "../utils.js";
 import { resolveWorkspaceTemplateDir } from "./workspace-templates.js";
-
-import { resolveStateDir } from "../config/paths.js";
 
 export function resolveDefaultAgentWorkspaceDir(
   env: NodeJS.ProcessEnv = process.env,

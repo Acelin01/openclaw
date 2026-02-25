@@ -73,7 +73,13 @@
       {
         "id": "agent_milo",
         "name": "Milo",
-        "skills": ["product-manager", "project-manager", "pm-docs", "task-tracker", "project-collab"],
+        "skills": [
+          "product-manager",
+          "project-manager",
+          "pm-docs",
+          "task-tracker",
+          "project-collab"
+        ],
         "identity": {
           "name": "Milo",
           "emoji": "🧭"
