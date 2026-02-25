@@ -1,6 +1,6 @@
 ---
 name: trae
-description: Control Trae IDE chat and features via CLI.
+description: 通过 CLI 控制 Trae IDE 的聊天与功能。
 homepage: https://trae.ai
 metadata: { "openclaw": { "emoji": "🤖", "requires": { "bins": ["trae"] } } }
 ---

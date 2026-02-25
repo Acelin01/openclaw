@@ -1,6 +1,6 @@
 ---
 name: imsg
-description: iMessage/SMS CLI for listing chats, history, watch, and sending.
+description: 用于列出聊天、历史、监听与发送的 iMessage/SMS CLI。
 homepage: https://imsg.to
 metadata:
   {
@@ -23,52 +23,52 @@ metadata:
   }
 ---
 
-# imsg Actions
+# imsg 动作
 
-## Overview
+## 概览
 
-Use `imsg` to read and send Messages.app iMessage/SMS on macOS.
+使用 `imsg` 在 macOS 上读取与发送 Messages.app 的 iMessage/SMS。
 
-Requirements: Messages.app signed in, Full Disk Access for your terminal, and Automation permission to control Messages.app for sending.
+前置条件：Messages.app 已登录；终端具备“完全磁盘访问”权限；发送需要“自动化”权限以控制 Messages.app。
 
-## Inputs to collect
+## 需要收集的输入
 
-- Recipient handle (phone/email) for `send`
-- `chatId` for history/watch (from `imsg chats --limit 10 --json`)
-- `text` and optional `file` path for sends
+- `send` 的接收方（手机号/邮箱）
+- `history/watch` 的 `chatId`（来自 `imsg chats --limit 10 --json`）
+- 发送内容 `text` 与可选 `file` 路径
 
-## Actions
+## 动作
 
-### List chats
+### 列出聊天
 
 ```bash
 imsg chats --limit 10 --json
 ```
 
-### Fetch chat history
+### 获取聊天记录
 
 ```bash
 imsg history --chat-id 1 --limit 20 --attachments --json
 ```
 
-### Watch a chat
+### 监听聊天
 
 ```bash
 imsg watch --chat-id 1 --attachments
 ```
 
-### Send a message
+### 发送消息
 
 ```bash
 imsg send --to "+14155551212" --text "hi" --file /path/pic.jpg
 ```
 
-## Notes
+## 说明
 
-- `--service imessage|sms|auto` controls delivery.
-- Confirm recipient + message before sending.
+- `--service imessage|sms|auto` 控制发送通道。
+- 发送前确认收件人与内容。
 
-## Ideas to try
+## 可尝试的用法
 
-- Use `imsg chats --limit 10 --json` to discover chat ids.
-- Watch a high-signal chat to stream incoming messages.
+- 用 `imsg chats --limit 10 --json` 查找 chat id。
+- 监听高优先级聊天以实时获取新消息。

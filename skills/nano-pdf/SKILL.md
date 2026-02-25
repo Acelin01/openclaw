@@ -1,6 +1,6 @@
 ---
 name: nano-pdf
-description: Edit PDFs with natural-language instructions using the nano-pdf CLI.
+description: 使用 nano-pdf CLI 通过自然语言指令编辑 PDF。
 homepage: https://pypi.org/project/nano-pdf/
 metadata:
   {
@@ -24,15 +24,15 @@ metadata:
 
 # nano-pdf
 
-Use `nano-pdf` to apply edits to a specific page in a PDF using a natural-language instruction.
+使用 `nano-pdf` 通过自然语言指令编辑 PDF 的指定页面。
 
-## Quick start
+## 快速开始
 
 ```bash
 nano-pdf edit deck.pdf 1 "Change the title to 'Q3 Results' and fix the typo in the subtitle"
 ```
 
-Notes:
+说明：
 
-- Page numbers are 0-based or 1-based depending on the tool’s version/config; if the result looks off by one, retry with the other.
-- Always sanity-check the output PDF before sending it out.
+- 页码是从 0 还是 1 开始取决于版本/配置；若结果偏差一页，请切换另一种再试。
+- 发送前务必检查输出 PDF 是否正确。

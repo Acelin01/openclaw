@@ -1,6 +1,6 @@
 ---
 name: github
-description: "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."
+description: "通过 `gh` CLI 与 GitHub 交互，使用 `gh issue`、`gh pr`、`gh run` 与 `gh api` 处理 Issue、PR、CI 运行和高级查询。"
 metadata:
   {
     "openclaw":

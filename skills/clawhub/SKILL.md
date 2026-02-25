@@ -1,6 +1,6 @@
 ---
 name: clawhub
-description: Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.
+description: 使用 ClawHub CLI 从 clawhub.com 搜索、安装、更新与发布技能。需要拉取新技能、将已安装技能同步到最新或指定版本，或发布新/更新技能目录时使用。
 metadata:
   {
     "openclaw":
@@ -22,33 +22,33 @@ metadata:
 
 # ClawHub CLI
 
-Install
+安装
 
 ```bash
 npm i -g clawhub
 ```
 
-Auth (publish)
+登录（发布）
 
 ```bash
 clawhub login
 clawhub whoami
 ```
 
-Search
+搜索
 
 ```bash
 clawhub search "postgres backups"
 ```
 
-Install
+安装
 
 ```bash
 clawhub install my-skill
 clawhub install my-skill --version 1.2.3
 ```
 
-Update (hash-based match + upgrade)
+更新（基于哈希匹配并升级）
 
 ```bash
 clawhub update my-skill
@@ -58,20 +58,20 @@ clawhub update my-skill --force
 clawhub update --all --no-input --force
 ```
 
-List
+列表
 
 ```bash
 clawhub list
 ```
 
-Publish
+发布
 
 ```bash
 clawhub publish ./my-skill --slug my-skill --name "My Skill" --version 1.2.0 --changelog "Fixes + docs"
 ```
 
-Notes
+说明
 
-- Default registry: https://clawhub.com (override with CLAWHUB_REGISTRY or --registry)
-- Default workdir: cwd (falls back to OpenClaw workspace); install dir: ./skills (override with --workdir / --dir / CLAWHUB_WORKDIR)
-- Update command hashes local files, resolves matching version, and upgrades to latest unless --version is set
+- 默认 registry：https://clawhub.com（可用 CLAWHUB_REGISTRY 或 --registry 覆盖）
+- 默认 workdir：当前目录（回退到 OpenClaw workspace）；安装目录：./skills（可用 --workdir / --dir / CLAWHUB_WORKDIR 覆盖）
+- update 会对本地文件做哈希匹配，解析对应版本，并在未指定 --version 时升级到最新

@@ -1,36 +1,36 @@
 ---
 name: healthcheck
-description: Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).
+description: 面向 OpenClaw 部署的主机安全加固与风险容忍度配置。用户请求安全审计、防火墙/SSH/更新加固、风险姿态与暴露面评估、OpenClaw 定期检查的 cron 计划，或检查运行 OpenClaw 的设备（笔记本/工作站/Pi/VPS）版本状态时使用。
 ---
 
-# OpenClaw Host Hardening
+# OpenClaw 主机加固
 
-## Overview
+## 概览
 
-Assess and harden the host running OpenClaw, then align it to a user-defined risk tolerance without breaking access. Use OpenClaw security tooling as a first-class signal, but treat OS hardening as a separate, explicit set of steps.
+评估并加固运行 OpenClaw 的主机，在不影响访问的前提下对齐用户的风险容忍度。将 OpenClaw 安全工具作为重要信号，但 OS 加固必须作为独立且明确的一组步骤执行。
 
-## Core rules
+## 核心规则
 
-- Recommend running this skill with a state-of-the-art model (e.g., Opus 4.5, GPT 5.2+). The agent should self-check the current model and suggest switching if below that level; do not block execution.
-- Require explicit approval before any state-changing action.
-- Do not modify remote access settings without confirming how the user connects.
-- Prefer reversible, staged changes with a rollback plan.
-- Never claim OpenClaw changes the host firewall, SSH, or OS updates; it does not.
-- If role/identity is unknown, provide recommendations only.
-- Formatting: every set of user choices must be numbered so the user can reply with a single digit.
-- System-level backups are recommended; try to verify status.
+- 建议使用最强模型运行此技能（如 Opus 4.5、GPT 5.2+）。需要自检当前模型，若低于该等级则建议切换，但不得阻断执行。
+- 任何改变状态的操作必须显式批准。
+- 未确认用户连接方式前，不要修改远程访问设置。
+- 优先可回滚、分阶段变更，并给出回滚方案。
+- 不要宣称 OpenClaw 会修改主机防火墙、SSH 或系统更新；它不会。
+- 角色/身份不明时，只提供建议。
+- 格式要求：所有可选项必须编号，方便用户用单个数字回复。
+- 建议开启系统级备份，并尽量核实状态。
 
-## Workflow (follow in order)
+## 流程（按顺序执行）
 
-### 0) Model self-check (non-blocking)
+### 0) 模型自检（不阻断）
 
-Before starting, check the current model. If it is below state-of-the-art (e.g., Opus 4.5, GPT 5.2+), recommend switching. Do not block execution.
+开始前检查当前模型。若低于最强模型（如 Opus 4.5、GPT 5.2+），建议切换，但不要阻断执行。
 
-### 1) Establish context (read-only)
+### 1) 建立上下文（只读）
 
-Try to infer 1–5 from the environment before asking. Prefer simple, non-technical questions if you need confirmation.
+在提问前尽量从环境推断 1–5。需要确认时优先使用简单、非技术问题。
 
-Determine (in order):
+依次确认：
 
 1. OS and version (Linux/macOS/Windows), container vs host.
 2. Privilege level (root/admin vs user).
@@ -44,9 +44,9 @@ Determine (in order):
    Note: these are not blocking items, but are highly recommended, especially if OpenClaw can access sensitive data.
 10. Usage mode for a personal assistant with full access (local workstation vs headless/remote vs other).
 
-First ask once for permission to run read-only checks. If granted, run them by default and only ask questions for items you cannot infer or verify. Do not ask for information already visible in runtime or command output. Keep the permission ask as a single sentence, and list follow-up info needed as an unordered list (not numbered) unless you are presenting selectable choices.
+先询问一次是否允许进行只读检查。若获许可，默认执行检查，仅对无法推断或验证的项提问。不要询问已在运行时或命令输出中可见的信息。权限询问用一句话表达；后续所需信息用无序列表（非编号），除非是可选项。
 
-If you must ask, use non-technical prompts:
+确需提问时，使用非技术表达：
 
 - “Are you using a Mac, Windows PC, or Linux?”
 - “Are you logged in directly on the machine, or connecting from another computer?”
@@ -61,9 +61,9 @@ If you must ask, use non-technical prompts:
   - Dedicated remote machine/server accessed remotely (always on)
   - Something else?
 
-Only ask for the risk profile after system context is known.
+仅在系统上下文明确后再询问风险画像。
 
-If the user grants read-only permission, run the OS-appropriate checks by default. If not, offer them (numbered). Examples:
+若用户允许只读检查，默认执行适配 OS 的检查；否则提供可选项（编号）。示例：
 
 1. OS: `uname -a`, `sw_vers`, `cat /etc/os-release`.
 2. Listening ports:
@@ -74,41 +74,41 @@ If the user grants read-only permission, run the OS-appropriate checks by defaul
    - macOS: `/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate` and `pfctl -s info`.
 4. Backups (macOS): `tmutil status` (if Time Machine is used).
 
-### 2) Run OpenClaw security audits (read-only)
+### 2) 运行 OpenClaw 安全审计（只读）
 
-As part of the default read-only checks, run `openclaw security audit --deep`. Only offer alternatives if the user requests them:
+作为默认只读检查的一部分，运行 `openclaw security audit --deep`。仅在用户要求时提供替代方案：
 
 1. `openclaw security audit` (faster, non-probing)
 2. `openclaw security audit --json` (structured output)
 
-Offer to apply OpenClaw safe defaults (numbered):
+提供是否应用 OpenClaw 安全默认值（编号）：
 
 1. `openclaw security audit --fix`
 
-Be explicit that `--fix` only tightens OpenClaw defaults and file permissions. It does not change host firewall, SSH, or OS update policies.
+明确说明 `--fix` 只会加强 OpenClaw 默认配置与文件权限，不会修改主机防火墙、SSH 或系统更新策略。
 
-If browser control is enabled, recommend that 2FA be enabled on all important accounts, with hardware keys preferred and SMS not sufficient.
+若启用了浏览器控制，建议所有重要账号启用 2FA，优先硬件密钥，短信不足够。
 
-### 3) Check OpenClaw version/update status (read-only)
+### 3) 检查 OpenClaw 版本/更新状态（只读）
 
-As part of the default read-only checks, run `openclaw update status`.
+作为默认只读检查的一部分运行 `openclaw update status`。
 
-Report the current channel and whether an update is available.
+报告当前通道及是否有更新。
 
-### 4) Determine risk tolerance (after system context)
+### 4) 确定风险容忍度（在系统上下文之后）
 
-Ask the user to pick or confirm a risk posture and any required open services/ports (numbered choices below).
-Do not pigeonhole into fixed profiles; if the user prefers, capture requirements instead of choosing a profile.
-Offer suggested profiles as optional defaults (numbered). Note that most users pick Home/Workstation Balanced:
+让用户选择或确认风险姿态及必要开放服务/端口（编号选项）。
+不要强行套用固定模板；若用户偏好，改为收集具体要求。
+可提供建议画像作为可选默认值（编号）。注意多数用户会选择家庭/工作站均衡：
 
 1. Home/Workstation Balanced (most common): firewall on with reasonable defaults, remote access restricted to LAN or tailnet.
 2. VPS Hardened: deny-by-default inbound firewall, minimal open ports, key-only SSH, no root login, automatic security updates.
 3. Developer Convenience: more local services allowed, explicit exposure warnings, still audited.
 4. Custom: user-defined constraints (services, exposure, update cadence, access methods).
 
-### 5) Produce a remediation plan
+### 5) 输出整改计划
 
-Provide a plan that includes:
+计划需包含：
 
 - Target profile
 - Current posture summary
@@ -119,40 +119,40 @@ Provide a plan that includes:
 - Least-privilege notes (e.g., avoid admin usage, tighten ownership/permissions where safe)
 - Credential hygiene notes (location of OpenClaw creds, prefer disk encryption)
 
-Always show the plan before any changes.
+任何变更前必须先展示计划。
 
-### 6) Offer execution options
+### 6) 提供执行选项
 
-Offer one of these choices (numbered so users can reply with a single digit):
+提供以下选择（编号，便于单数字回复）：
 
 1. Do it for me (guided, step-by-step approvals)
 2. Show plan only
 3. Fix only critical issues
 4. Export commands for later
 
-### 7) Execute with confirmations
+### 7) 确认后执行
 
-For each step:
+每一步：
 
 - Show the exact command
 - Explain impact and rollback
 - Confirm access will remain available
 - Stop on unexpected output and ask for guidance
 
-### 8) Verify and report
+### 8) 验证与报告
 
-Re-check:
+复检：
 
 - Firewall status
 - Listening ports
 - Remote access still works
 - OpenClaw security audit (re-run)
 
-Deliver a final posture report and note any deferred items.
+输出最终姿态报告并注明延期项。
 
-## Required confirmations (always)
+## 必须确认项（始终）
 
-Require explicit approval for:
+以下必须显式批准：
 
 - Firewall rule changes
 - Opening/closing ports
@@ -164,46 +164,46 @@ Require explicit approval for:
 - Update policy changes
 - Access to sensitive files or credentials
 
-If unsure, ask.
+不确定时先问。
 
-## Periodic checks
+## 定期检查
 
-After OpenClaw install or first hardening pass, run at least one baseline audit and version check:
+OpenClaw 安装后或首次加固后，至少做一次基线审计与版本检查：
 
 - `openclaw security audit`
 - `openclaw security audit --deep`
 - `openclaw update status`
 
-Ongoing monitoring is recommended. Use the OpenClaw cron tool/CLI to schedule periodic audits (Gateway scheduler). Do not create scheduled tasks without explicit approval. Store outputs in a user-approved location and avoid secrets in logs.
-When scheduling headless cron runs, include a note in the output that instructs the user to call `healthcheck` so issues can be fixed.
+建议持续监控。使用 OpenClaw 的 cron 工具/CLI 安排定期审计（Gateway 调度）。未经明确批准不得创建定时任务。输出保存在用户认可的位置，日志中避免包含敏感信息。
+安排无头 cron 任务时，在输出中提示用户调用 `healthcheck` 以便修复问题。
 
-### Required prompt to schedule (always)
+### 调度必需提示（始终）
 
-After any audit or hardening pass, explicitly offer scheduling and require a direct response. Use a short prompt like (numbered):
+每次审计或加固后，必须明确提供调度选项并要求用户直接回复。用简短提示（编号）：
 
 1. “Do you want me to schedule periodic audits (e.g., daily/weekly) via `openclaw cron add`?”
 
-If the user says yes, ask for:
+用户同意后，询问：
 
 - cadence (daily/weekly), preferred time window, and output location
 - whether to also schedule `openclaw update status`
 
-Use a stable cron job name so updates are deterministic. Prefer exact names:
+使用稳定的 cron 任务名以保证可复现。建议固定名称：
 
 - `healthcheck:security-audit`
 - `healthcheck:update-status`
 
-Before creating, `openclaw cron list` and match on exact `name`. If found, `openclaw cron edit <id> ...`.
-If not found, `openclaw cron add --name <name> ...`.
+创建前先 `openclaw cron list` 并按 `name` 精确匹配。若存在则 `openclaw cron edit <id> ...`。
+若不存在则 `openclaw cron add --name <name> ...`。
 
-Also offer a periodic version check so the user can decide when to update (numbered):
+也需提供定期版本检查，以便用户决定何时更新（编号）：
 
 1. `openclaw update status` (preferred for source checkouts and channels)
 2. `npm view openclaw version` (published npm version)
 
-## OpenClaw command accuracy
+## OpenClaw 命令准确性
 
-Use only supported commands and flags:
+仅使用支持的命令与参数：
 
 - `openclaw security audit [--deep] [--fix] [--json]`
 - `openclaw status` / `openclaw status --deep`
@@ -211,35 +211,30 @@ Use only supported commands and flags:
 - `openclaw update status`
 - `openclaw cron add|list|runs|run`
 
-Do not invent CLI flags or imply OpenClaw enforces host firewall/SSH policies.
+不要杜撰 CLI 参数，也不要暗示 OpenClaw 会强制主机防火墙/SSH 策略。
 
-## Logging and audit trail
+## 日志与审计记录
 
-Record:
+记录：
 
 - Gateway identity and role
 - Plan ID and timestamp
 - Approved steps and exact commands
 - Exit codes and files modified (best effort)
 
-Redact secrets. Never log tokens or full credential contents.
+脱敏敏感信息，禁止记录 token 或完整凭据内容。
 
-## Memory writes (conditional)
+## 写入记忆（有条件）
 
-Only write to memory files when the user explicitly opts in and the session is a private/local workspace
-(per `docs/reference/templates/AGENTS.md`). Otherwise provide a redacted, paste-ready summary the user can
-decide to save elsewhere.
+仅在用户明确同意且会话是私有/本地工作区时写入记忆文件（见 `docs/reference/templates/AGENTS.md`）。否则提供已脱敏、可粘贴的摘要供用户自行保存。
 
-Follow the durable-memory prompt format used by OpenClaw compaction:
+遵循 OpenClaw 压缩所用的持久记忆格式：
 
-- Write lasting notes to `memory/YYYY-MM-DD.md`.
+- 持久记录写入 `memory/YYYY-MM-DD.md`
 
-After each audit/hardening run, if opted-in, append a short, dated summary to `memory/YYYY-MM-DD.md`
-(what was checked, key findings, actions taken, any scheduled cron jobs, key decisions,
-and all commands executed). Append-only: never overwrite existing entries.
-Redact sensitive host details (usernames, hostnames, IPs, serials, service names, tokens).
-If there are durable preferences or decisions (risk posture, allowed ports, update policy),
-also update `MEMORY.md` (long-term memory is optional and only used in private sessions).
+每次审计/加固后，若用户同意，将简短带日期的摘要追加到 `memory/YYYY-MM-DD.md`
+（检查内容、关键发现、已执行动作、已安排的 cron 任务、关键决策与所有执行命令）。仅追加，不得覆盖。
+对主机细节脱敏（用户名、主机名、IP、序列号、服务名、token）。
+如有长期偏好或决策（风险画像、允许端口、更新策略），同步更新 `MEMORY.md`（仅在私有会话中可选）。
 
-If the session cannot write to the workspace, ask for permission or provide exact entries
-the user can paste into the memory files.
+如果无法写入工作区，请请求权限或提供可直接粘贴的条目。

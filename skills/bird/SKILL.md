@@ -1,6 +1,6 @@
 ---
 name: bird
-description: X/Twitter CLI for reading, searching, posting, and engagement via cookies.
+description: 通过 Cookie 进行读取、搜索、发帖与互动的 X/Twitter CLI。
 homepage: https://bird.fast
 metadata:
   {
@@ -32,9 +32,9 @@ metadata:
 
 # bird 🐦
 
-Fast X/Twitter CLI using GraphQL + cookie auth.
+基于 GraphQL + Cookie 认证的快速 X/Twitter CLI。
 
-## Install
+## 安装
 
 ```bash
 # npm/pnpm/bun
@@ -47,17 +47,17 @@ brew install steipete/tap/bird
 bunx @steipete/bird whoami
 ```
 
-## Authentication
+## 认证
 
-`bird` uses cookie-based auth.
+`bird` 使用基于 Cookie 的认证。
 
-Use `--auth-token` / `--ct0` to pass cookies directly, or `--cookie-source` for browser cookies.
+可用 `--auth-token` / `--ct0` 直接传入 Cookie，或用 `--cookie-source` 读取浏览器 Cookie。
 
-Run `bird check` to see which source is active. For Arc/Brave, use `--chrome-profile-dir <path>`.
+运行 `bird check` 查看当前启用的来源。Arc/Brave 建议使用 `--chrome-profile-dir <path>`。
 
-## Commands
+## 命令
 
-### Account & Auth
+### 账号与认证
 
 ```bash
 bird whoami                    # Show logged-in account
@@ -65,7 +65,7 @@ bird check                     # Show credential sources
 bird query-ids --fresh         # Refresh GraphQL query ID cache
 ```
 
-### Reading Tweets
+### 读取推文
 
 ```bash
 bird read <url-or-id>          # Read a single tweet
@@ -74,7 +74,7 @@ bird thread <url-or-id>        # Full conversation thread
 bird replies <url-or-id>       # List replies to a tweet
 ```
 
-### Timelines
+### 时间线
 
 ```bash
 bird home                      # Home timeline (For You)
@@ -84,14 +84,14 @@ bird mentions                  # Tweets mentioning you
 bird mentions --user @handle   # Mentions of another user
 ```
 
-### Search
+### 搜索
 
 ```bash
 bird search "query" -n 10
 bird search "from:steipete" --all --max-pages 3
 ```
 
-### News & Trending
+### 新闻与趋势
 
 ```bash
 bird news -n 10                # AI-curated from Explore tabs
@@ -101,7 +101,7 @@ bird news --with-tweets        # Include related tweets
 bird trending                  # Alias for news
 ```
 
-### Lists
+### 列表
 
 ```bash
 bird lists                     # Your lists
@@ -109,7 +109,7 @@ bird lists --member-of         # Lists you're a member of
 bird list-timeline <id> -n 20  # Tweets from a list
 ```
 
-### Bookmarks & Likes
+### 书签与点赞
 
 ```bash
 bird bookmarks -n 10
@@ -121,7 +121,7 @@ bird unbookmark <url-or-id>
 bird likes -n 10
 ```
 
-### Social Graph
+### 社交关系
 
 ```bash
 bird following -n 20           # Users you follow
@@ -130,14 +130,14 @@ bird following --user <id>     # Another user's following
 bird about @handle             # Account origin/location info
 ```
 
-### Engagement Actions
+### 互动操作
 
 ```bash
 bird follow @handle            # Follow a user
 bird unfollow @handle          # Unfollow a user
 ```
 
-### Posting
+### 发布
 
 ```bash
 bird tweet "hello world"
@@ -145,9 +145,9 @@ bird reply <url-or-id> "nice thread!"
 bird tweet "check this out" --media image.png --alt "description"
 ```
 
-**⚠️ Posting risks**: Posting is more likely to be rate limited; if blocked, use the browser tool instead.
+**⚠️ 发布风险**：发布更容易触发限流；如果受阻，请改用浏览器工具。
 
-## Media Uploads
+## 媒体上传
 
 ```bash
 bird tweet "hi" --media img.png --alt "description"
@@ -155,9 +155,9 @@ bird tweet "pics" --media a.jpg --media b.jpg  # Up to 4 images
 bird tweet "video" --media clip.mp4            # Or 1 video
 ```
 
-## Pagination
+## 分页
 
-Commands supporting pagination: `replies`, `thread`, `search`, `bookmarks`, `likes`, `list-timeline`, `following`, `followers`, `user-tweets`
+支持分页的命令：`replies`、`thread`、`search`、`bookmarks`、`likes`、`list-timeline`、`following`、`followers`、`user-tweets`
 
 ```bash
 bird bookmarks --all                    # Fetch all pages
@@ -166,7 +166,7 @@ bird bookmarks --cursor <cursor>        # Resume from cursor
 bird replies <id> --all --delay 1000    # Delay between pages (ms)
 ```
 
-## Output Options
+## 输出选项
 
 ```bash
 --json          # JSON output
@@ -177,7 +177,7 @@ bird replies <id> --all --delay 1000    # Delay between pages (ms)
 --quote-depth n # Max quoted tweet depth in JSON (default: 1)
 ```
 
-## Global Options
+## 全局选项
 
 ```bash
 --auth-token <token>       # Set auth_token cookie
@@ -190,9 +190,9 @@ bird replies <id> --all --delay 1000    # Delay between pages (ms)
 --cookie-timeout <ms>      # Cookie extraction timeout
 ```
 
-## Config File
+## 配置文件
 
-`~/.config/bird/config.json5` (global) or `./.birdrc.json5` (project):
+`~/.config/bird/config.json5`（全局）或 `./.birdrc.json5`（项目）：
 
 ```json5
 {
@@ -203,22 +203,22 @@ bird replies <id> --all --delay 1000    # Delay between pages (ms)
 }
 ```
 
-Environment variables: `BIRD_TIMEOUT_MS`, `BIRD_COOKIE_TIMEOUT_MS`, `BIRD_QUOTE_DEPTH`
+环境变量：`BIRD_TIMEOUT_MS`、`BIRD_COOKIE_TIMEOUT_MS`、`BIRD_QUOTE_DEPTH`
 
-## Troubleshooting
+## 故障排查
 
-### Query IDs stale (404 errors)
+### Query ID 过期（404）
 
 ```bash
 bird query-ids --fresh
 ```
 
-### Cookie extraction fails
+### Cookie 提取失败
 
-- Check browser is logged into X
-- Try different `--cookie-source`
-- For Arc/Brave: use `--chrome-profile-dir`
+- 确认浏览器已登录 X
+- 尝试不同的 `--cookie-source`
+- Arc/Brave 使用 `--chrome-profile-dir`
 
 ---
 
-**TL;DR**: Read/search/engage with CLI. Post carefully or use browser. 🐦
+**TL;DR**：用 CLI 读取/搜索/互动；发布需谨慎，必要时改用浏览器。🐦

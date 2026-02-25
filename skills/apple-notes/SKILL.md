@@ -1,6 +1,6 @@
 ---
 name: apple-notes
-description: Manage Apple Notes via the `memo` CLI on macOS (create, view, edit, delete, search, move, and export notes). Use when a user asks OpenClaw to add a note, list notes, search notes, or manage note folders.
+description: 通过 macOS 上的 `memo` CLI 管理 Apple Notes（创建、查看、编辑、删除、搜索、移动与导出笔记）。当用户让 OpenClaw 添加笔记、列出笔记、搜索笔记或管理笔记文件夹时使用。
 homepage: https://github.com/antoniorodr/memo
 metadata:
   {
@@ -16,7 +16,7 @@ metadata:
               "kind": "brew",
               "formula": "antoniorodr/memo/memo",
               "bins": ["memo"],
-              "label": "Install memo via Homebrew",
+              "label": "通过 Homebrew 安装 memo",
             },
           ],
       },
@@ -25,53 +25,53 @@ metadata:
 
 # Apple Notes CLI
 
-Use `memo notes` to manage Apple Notes directly from the terminal. Create, view, edit, delete, search, move notes between folders, and export to HTML/Markdown.
+使用 `memo notes` 直接在终端管理 Apple Notes。可以创建、查看、编辑、删除、搜索、在文件夹间移动笔记，并导出为 HTML/Markdown。
 
-Setup
+安装配置
 
-- Install (Homebrew): `brew tap antoniorodr/memo && brew install antoniorodr/memo/memo`
-- Manual (pip): `pip install .` (after cloning the repo)
-- macOS-only; if prompted, grant Automation access to Notes.app.
+- 安装（Homebrew）：`brew tap antoniorodr/memo && brew install antoniorodr/memo/memo`
+- 手动（pip）：`pip install .`（先克隆仓库）
+- 仅限 macOS；若出现提示，请授予对 Notes.app 的自动化访问权限。
 
-View Notes
+查看笔记
 
-- List all notes: `memo notes`
-- Filter by folder: `memo notes -f "Folder Name"`
-- Search notes (fuzzy): `memo notes -s "query"`
+- 列出所有笔记：`memo notes`
+- 按文件夹过滤：`memo notes -f "Folder Name"`
+- 模糊搜索笔记：`memo notes -s "query"`
 
-Create Notes
+创建笔记
 
-- Add a new note: `memo notes -a`
-  - Opens an interactive editor to compose the note.
-- Quick add with title: `memo notes -a "Note Title"`
+- 添加新笔记：`memo notes -a`
+  - 打开交互式编辑器撰写内容。
+- 带标题快速添加：`memo notes -a "Note Title"`
 
-Edit Notes
+编辑笔记
 
-- Edit existing note: `memo notes -e`
-  - Interactive selection of note to edit.
+- 编辑现有笔记：`memo notes -e`
+  - 交互式选择要编辑的笔记。
 
-Delete Notes
+删除笔记
 
-- Delete a note: `memo notes -d`
-  - Interactive selection of note to delete.
+- 删除笔记：`memo notes -d`
+  - 交互式选择要删除的笔记。
 
-Move Notes
+移动笔记
 
-- Move note to folder: `memo notes -m`
-  - Interactive selection of note and destination folder.
+- 将笔记移动到文件夹：`memo notes -m`
+  - 交互式选择笔记与目标文件夹。
 
-Export Notes
+导出笔记
 
-- Export to HTML/Markdown: `memo notes -ex`
-  - Exports selected note; uses Mistune for markdown processing.
+- 导出为 HTML/Markdown：`memo notes -ex`
+  - 导出所选笔记，使用 Mistune 处理 Markdown。
 
-Limitations
+限制
 
-- Cannot edit notes containing images or attachments.
-- Interactive prompts may require terminal access.
+- 无法编辑包含图片或附件的笔记。
+- 交互式提示可能需要终端访问权限。
 
-Notes
+说明
 
-- macOS-only.
-- Requires Apple Notes.app to be accessible.
-- For automation, grant permissions in System Settings > Privacy & Security > Automation.
+- 仅限 macOS。
+- 需要能够访问 Apple Notes.app。
+- 若用于自动化，请在“系统设置 > 隐私与安全性 > 自动化”中授予权限。
