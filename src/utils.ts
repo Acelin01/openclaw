@@ -4,6 +4,18 @@ import path from "node:path";
 import { resolveOAuthDir } from "./config/paths.js";
 import { logVerbose, shouldLogVerbose } from "./globals.js";
 
+export function resolveUserPath(input: string): string {
+  const trimmed = input.trim();
+  if (!trimmed) {
+    return trimmed;
+  }
+  if (trimmed.startsWith("~")) {
+    const expanded = trimmed.replace(/^~(?=$|[\\/])/, os.homedir());
+    return path.resolve(expanded);
+  }
+  return path.resolve(trimmed);
+}
+
 export async function ensureDir(dir: string) {
   await fs.promises.mkdir(dir, { recursive: true });
 }
@@ -231,18 +243,6 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
     return input;
   }
   return sliceUtf16Safe(input, 0, limit);
-}
-
-export function resolveUserPath(input: string): string {
-  const trimmed = input.trim();
-  if (!trimmed) {
-    return trimmed;
-  }
-  if (trimmed.startsWith("~")) {
-    const expanded = trimmed.replace(/^~(?=$|[\\/])/, os.homedir());
-    return path.resolve(expanded);
-  }
-  return path.resolve(trimmed);
 }
 
 export function resolveConfigDir(

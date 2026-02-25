@@ -9,9 +9,9 @@ describe("skills/summarize frontmatter", () => {
     const raw = fs.readFileSync(skillPath, "utf-8");
     const frontmatter = parseFrontmatter(raw);
     const description = frontmatter.description ?? "";
-    expect(description.toLowerCase()).toContain("transcrib");
-    expect(description.toLowerCase()).toContain("podcast");
-    expect(description.toLowerCase()).toContain("local files");
+    expect(description.toLowerCase()).toContain("转录");
+    expect(description.toLowerCase()).toContain("播客");
+    expect(description.toLowerCase()).toContain("本地文件");
     expect(description).not.toContain("summarize.sh");
   });
 });

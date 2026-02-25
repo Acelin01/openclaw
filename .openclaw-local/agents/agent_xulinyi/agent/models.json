@@ -2,7 +2,7 @@
   "providers": {
     "deepseek": {
       "baseUrl": "https://api.deepseek.com/v1",
-      "apiKey": "sk-5d9d7e5f328b41faac583b841fc8baf9",
+      "apiKey": "sk-placeholder",
       "api": "openai-completions",
       "models": [
         {

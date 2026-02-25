@@ -42,6 +42,7 @@ async function loadStore() {
 
 async function saveStore(store) {
   const dir = path.dirname(storePath);
+  console.error(`[MCP] Saving store to ${storePath}`);
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(storePath, JSON.stringify(store, null, 2));
 }
@@ -148,6 +149,17 @@ function ensureString(value, fallback = "") {
 
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
+}
+
+function getArtifact(store, projectId) {
+  const project = store.projects.find((item) => item.project_id === projectId);
+  if (!project) return null;
+  const milestones = store.milestones
+    .filter((item) => item.project_id === projectId)
+    .map((item) => ({ ...item, status: toMilestoneStatus(item) }));
+  const tasks = store.tasks.filter((item) => item.project_id === projectId);
+  const risks = store.risks.filter((item) => item.project_id === projectId);
+  return buildProjectArtifact({ project, milestones, tasks, risks });
 }
 
 const toolDefinitions = [
@@ -310,9 +322,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const name = request.params.name;
   const args = request.params.arguments ?? {};
-  const store = await loadStore();
 
   if (name === "project_create") {
+    console.error(`[MCP] Handling project_create with args: ${JSON.stringify(args)}`);
+    const store = await loadStore();
     const project = {
       project_id: createId(),
       name: ensureString(args.name),
@@ -322,22 +335,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       end_date: ensureString(args.end_date),
       budget: typeof args.budget === "number" ? args.budget : undefined,
       team_members: ensureArray(args.team_members),
+      status: "active",
       created_at: new Date().toISOString(),
     };
     store.projects.push(project);
     await saveStore(store);
-    return jsonResult(project);
+    
+    const artifact = buildProjectArtifact({ project, milestones: [], tasks: [], risks: [] });
+    return jsonResult({ project, artifact });
   }
 
   if (name === "project_query") {
-    if (typeof args.project_id === "string" && args.project_id) {
-      const project = store.projects.find((item) => item.project_id === args.project_id);
-      return jsonResult({ project: project ?? null });
+      console.error(`[MCP] Handling project_query with args: ${JSON.stringify(args)}`);
+      const store = await loadStore();
+      if (typeof args.project_id === "string" && args.project_id) {
+        const project = store.projects.find((item) => item.project_id === args.project_id);
+        console.error(`[MCP] Found project: ${project ? project.name : "not found"}`);
+        return jsonResult({ project: project ?? null });
+      }
+      console.error(`[MCP] Returning ${store.projects.length} projects`);
+      return jsonResult({ projects: store.projects });
     }
-    return jsonResult({ projects: store.projects });
-  }
 
   if (name === "milestone_create") {
+    const store = await loadStore();
     const milestone = {
       milestone_id: createId(),
       project_id: ensureString(args.project_id),
@@ -350,10 +371,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
     store.milestones.push(milestone);
     await saveStore(store);
+
+    const artifact = getArtifact(store, milestone.project_id);
+    if (artifact) {
+      return jsonResult({ milestone, artifact });
+    }
     return jsonResult(milestone);
   }
 
   if (name === "milestone_monitor") {
+    const store = await loadStore();
     const projectId = ensureString(args.project_id);
     const milestones = store.milestones
       .filter((item) => item.project_id === projectId)
@@ -362,6 +389,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "requirement_create") {
+    const store = await loadStore();
     const requirement = {
       requirement_id: createId(),
       project_id: ensureString(args.project_id),
@@ -380,6 +408,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "task_create") {
+    const store = await loadStore();
     const task = {
       task_id: createId(),
       project_id: ensureString(args.project_id),
@@ -396,28 +425,40 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
     store.tasks.push(task);
     await saveStore(store);
+    
+    const artifact = getArtifact(store, task.project_id);
+    if (artifact) {
+      return jsonResult({ task, artifact });
+    }
     return jsonResult(task);
   }
 
   if (name === "task_update_status") {
+    const store = await loadStore();
     const taskId = ensureString(args.task_id);
     const status = normalizeTaskStatus(args.status);
-    const task = store.tasks.find((item) => item.task_id === taskId);
-    if (!task) {
-      return jsonResult({ error: "task_not_found", task_id: taskId });
+    const taskIndex = store.tasks.findIndex((item) => item.task_id === taskId);
+    if (taskIndex !== -1) {
+      store.tasks[taskIndex].status = status;
+      store.tasks[taskIndex].updated_at = new Date().toISOString();
+      await saveStore(store);
+      const projectId = store.tasks[taskIndex].project_id;
+      const artifact = getArtifact(store, projectId);
+      return jsonResult({ task: store.tasks[taskIndex], artifact });
     }
-    task.status = status;
-    await saveStore(store);
-    return jsonResult(task);
+    return jsonResult({ error: "Task not found" });
   }
 
   if (name === "task_list") {
+    const store = await loadStore();
     const projectId = ensureString(args.project_id);
     const tasks = store.tasks.filter((item) => item.project_id === projectId);
-    return jsonResult({ project_id: projectId, tasks });
+    const artifact = getArtifact(store, projectId);
+    return jsonResult({ tasks, artifact });
   }
 
   if (name === "risk_create") {
+    const store = await loadStore();
     const risk = {
       risk_id: createId(),
       project_id: ensureString(args.project_id),
@@ -432,25 +473,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
     store.risks.push(risk);
     await saveStore(store);
+
+    const artifact = getArtifact(store, risk.project_id);
+    if (artifact) {
+      return jsonResult({ risk, artifact });
+    }
     return jsonResult(risk);
   }
 
   if (name === "project_dashboard") {
+    const store = await loadStore();
     const projectId = ensureString(args.project_id);
-    const project = store.projects.find((item) => item.project_id === projectId);
-    if (!project) {
-      return jsonResult({ error: "project_not_found", project_id: projectId });
+    const artifact = getArtifact(store, projectId);
+    if (artifact) {
+      return jsonResult({ artifact });
     }
-    const milestones = store.milestones
-      .filter((item) => item.project_id === projectId)
-      .map((item) => ({ ...item, status: toMilestoneStatus(item) }));
-    const tasks = store.tasks.filter((item) => item.project_id === projectId);
-    const risks = store.risks.filter((item) => item.project_id === projectId);
-    const artifact = buildProjectArtifact({ project, milestones, tasks, risks });
-    return jsonResult({
-      artifact,
-      data: { project, milestones, tasks, risks },
-    });
+    return jsonResult({ error: "Project not found" });
   }
 
   throw new Error(`Unknown tool: ${name}`);
@@ -458,7 +496,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 async function main() {
   const transport = new StdioServerTransport();
-  await server.connect(transport);
+  server.connect(transport).catch(err => {
+    console.error(`[MCP] Server connection error: ${err.message}`);
+  });
   console.error("openclaw-project-collab-mcp running on stdio");
 }
 

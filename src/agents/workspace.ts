@@ -6,15 +6,18 @@ import { isSubagentSessionKey } from "../routing/session-key.js";
 import { resolveUserPath } from "../utils.js";
 import { resolveWorkspaceTemplateDir } from "./workspace-templates.js";
 
+import { resolveStateDir } from "../config/paths.js";
+
 export function resolveDefaultAgentWorkspaceDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
   const profile = env.OPENCLAW_PROFILE?.trim();
+  const root = resolveStateDir(env, homedir);
   if (profile && profile.toLowerCase() !== "default") {
-    return path.join(homedir(), ".openclaw", `workspace-${profile}`);
+    return path.join(root, `workspace-${profile}`);
   }
-  return path.join(homedir(), ".openclaw", "workspace");
+  return path.join(root, "workspace");
 }
 
 export const DEFAULT_AGENT_WORKSPACE_DIR = resolveDefaultAgentWorkspaceDir();

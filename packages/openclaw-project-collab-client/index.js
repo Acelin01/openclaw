@@ -1,85 +1,149 @@
-function buildProjectArtifact(params) {
-  const { project, milestones = [], tasks = [], risks = [] } = params;
-  const totalTasks = tasks.length;
-  const doneTasks = tasks.filter((task) => task.status === "completed").length;
-  const inProgressTasks = tasks.filter((task) => task.status === "in_progress").length;
-  const pendingTasks = tasks.filter((task) => task.status === "pending").length;
-  const overdueMilestones = milestones.filter((milestone) => milestone.status === "overdue").length;
-  const riskCount = risks.length;
+/**
+ * Project collaboration artifact types and helpers.
+ */
 
-  const metrics = [
-    {
-      label: "任务完成",
-      value: `${doneTasks}/${totalTasks}`,
-      status: totalTasks > 0 && doneTasks === totalTasks ? "ok" : "warning",
-    },
-    {
-      label: "进行中",
-      value: String(inProgressTasks),
-      status: inProgressTasks > 0 ? "warning" : "ok",
-    },
-    {
-      label: "待处理",
-      value: String(pendingTasks),
-      status: pendingTasks > 0 ? "warning" : "ok",
-    },
-    {
-      label: "里程碑风险",
-      value: String(overdueMilestones),
-      status: overdueMilestones > 0 ? "risk" : "ok",
-    },
-    {
-      label: "风险项",
-      value: String(riskCount),
-      status: riskCount > 0 ? "risk" : "ok",
-    },
-  ];
+/**
+ * @typedef {Object} ArtifactMetric
+ * @property {string} [label]
+ * @property {string} [value]
+ * @property {string} [status]
+ */
 
-  const sections = [
-    {
-      title: "里程碑",
-      items: milestones.map((milestone) => `${milestone.title} · ${milestone.status}`),
-    },
-    {
-      title: "关键任务",
-      items: tasks.slice(0, 5).map((task) => `${task.title} · ${task.status}`),
-    },
-  ].filter((section) => section.items.length > 0);
+/**
+ * @typedef {Object} ArtifactSection
+ * @property {string} [title]
+ * @property {string[]} [items]
+ */
 
-  return {
-    kind: "project-collab",
-    title: project?.name || "项目协同",
-    subtitle: project?.owner_id ? `负责人：${project.owner_id}` : undefined,
-    summary: project?.description || "",
-    metrics,
-    sections,
-  };
+/**
+ * @typedef {Object} ArtifactLink
+ * @property {string} [label]
+ * @property {string} [url]
+ */
+
+/**
+ * @typedef {Object} ProjectCollabArtifact
+ * @property {'project-collab'} kind
+ * @property {string} [title]
+ * @property {string} [subtitle]
+ * @property {string} [summary]
+ * @property {ArtifactMetric[]} [metrics]
+ * @property {ArtifactSection[]} [sections]
+ * @property {ArtifactLink[]} [links]
+ */
+
+/**
+ * Parse project collaboration artifact from text.
+ * Handles both raw JSON and markdown-wrapped JSON.
+ * @param {string} text
+ * @returns {ProjectCollabArtifact | null}
+ */
+export function parseProjectCollabArtifact(text) {
+  if (typeof text !== "string" || !text.trim()) {
+    return null;
+  }
+
+  let jsonStr = text.trim();
+
+  // Try to find JSON block if wrapped in markdown
+  const jsonMatch = jsonStr.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+  if (jsonMatch) {
+    jsonStr = jsonMatch[1];
+  } else {
+    // Try to find the first '{' and last '}'
+    const firstBrace = jsonStr.indexOf("{");
+    const lastBrace = jsonStr.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      jsonStr = jsonStr.substring(firstBrace, lastBrace + 1);
+    }
+  }
+
+  try {
+    const parsed = JSON.parse(jsonStr);
+    if (!parsed || typeof parsed !== "object") {
+      return null;
+    }
+
+    // Check if it's directly the artifact or wrapped in a tool output structure
+    let artifact = parsed.artifact || parsed;
+
+    // Handle nested artifact inside content (MCP style)
+    if (!artifact.kind && parsed.content && Array.isArray(parsed.content)) {
+      for (const item of parsed.content) {
+        if (item.type === "text" && item.text) {
+          const nested = parseProjectCollabArtifact(item.text);
+          if (nested) return nested;
+        }
+      }
+    }
+
+    if (artifact.kind !== "project-collab") {
+      return null;
+    }
+
+    return {
+      kind: "project-collab",
+      title: readString(artifact.title),
+      subtitle: readString(artifact.subtitle),
+      summary: readString(artifact.summary),
+      metrics: readMetrics(artifact.metrics),
+      sections: readSections(artifact.sections),
+      links: readLinks(artifact.links),
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
-function createArtifactPayload(params) {
-  const artifact = buildProjectArtifact(params);
-  const data = {
-    project: params.project ?? null,
-    milestones: params.milestones ?? [],
-    tasks: params.tasks ?? [],
-    risks: params.risks ?? [],
-  };
-  return { artifact, data };
+/**
+ * Helper to extract string from unknown value.
+ */
+function readString(value) {
+  return typeof value === "string" ? value : undefined;
 }
 
-function createArtifactText(params) {
-  return JSON.stringify(createArtifactPayload(params), null, 2);
+/**
+ * Helper to extract metrics array.
+ */
+function readMetrics(value) {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+  return value
+    .filter((m) => m && typeof m === "object")
+    .map((m) => ({
+      label: readString(m.label),
+      value: readString(m.value),
+      status: readString(m.status),
+    }));
 }
 
-function createMcpToolResult(params) {
-  return {
-    content: [
-      {
-        type: "text",
-        text: createArtifactText(params),
-      },
-    ],
-  };
+/**
+ * Helper to extract sections array.
+ */
+function readSections(value) {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+  return value
+    .filter((s) => s && typeof s === "object")
+    .map((s) => ({
+      title: readString(s.title),
+      items: Array.isArray(s.items) ? s.items.filter((i) => typeof i === "string") : [],
+    }));
 }
 
-export { buildProjectArtifact, createArtifactPayload, createArtifactText, createMcpToolResult };
+/**
+ * Helper to extract links array.
+ */
+function readLinks(value) {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+  return value
+    .filter((l) => l && typeof l === "object")
+    .map((l) => ({
+      label: readString(l.label),
+      url: readString(l.url),
+    }));
+}

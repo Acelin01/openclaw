@@ -1,1 +1,79 @@
-{}
+{
+  "agent:agent_milo:main": {
+    "sessionId": "b136ae05-132e-4425-9e3b-3f241e3d8603",
+    "updatedAt": 1771995554226,
+    "deliveryContext": {
+      "channel": "whatsapp"
+    },
+    "lastChannel": "whatsapp",
+    "channel": "whatsapp",
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>project-collab</name>\n    <description>项目协同 MCP 工具，可创建项目、添加任务、生成项目看板等。调用后会返回结构化数据，由配套 UI 组件渲染为可视化看板。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-collab/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pm-docs</name>\n    <description>用于撰写 PRD 与技术规格的产品经理技能。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>product-manager</name>\n    <description>产品经理组合技能：执行市场需求分析、竞品调研与用户画像生成。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>project-manager</name>\n    <description>项目管理全流程：需求分析、任务拆解与进度跟踪。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>task-tracker</name>\n    <description>通过简单的基于文件的系统或 CLI 管理任务和问题。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "project-collab"
+        },
+        {
+          "name": "pm-docs"
+        },
+        {
+          "name": "product-manager"
+        },
+        {
+          "name": "project-manager"
+        },
+        {
+          "name": "task-tracker"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "project-collab",
+          "description": "项目协同 MCP 工具，可创建项目、添加任务、生成项目看板等。调用后会返回结构化数据，由配套 UI 组件渲染为可视化看板。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-collab/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-collab",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pm-docs",
+          "description": "用于撰写 PRD 与技术规格的产品经理技能。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "product-manager",
+          "description": "产品经理组合技能：执行市场需求分析、竞品调研与用户画像生成。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "project-manager",
+          "description": "项目管理全流程：需求分析、任务拆解与进度跟踪。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-manager/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-manager",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "task-tracker",
+          "description": "通过简单的基于文件的系统或 CLI 管理任务和问题。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        }
+      ],
+      "version": 0
+    },
+    "thinkingLevel": "low",
+    "modelProvider": "deepseek",
+    "model": "deepseek-chat",
+    "contextTokens": 200000,
+    "abortedLastRun": false
+  }
+}

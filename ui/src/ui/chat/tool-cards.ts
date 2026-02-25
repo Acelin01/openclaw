@@ -9,6 +9,7 @@ import {
   formatToolOutputForSidebar,
   getTruncatedPreview,
   parseProjectCollabArtifact,
+  renderProjectArtifact as renderProjectArtifactHelper,
   type ProjectCollabArtifact,
 } from "./tool-helpers.ts";
 
@@ -57,9 +58,19 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
   const display = resolveToolDisplay({ name: card.name, args: card.args });
   const detail = formatToolDetail(display);
   const hasText = Boolean(card.text?.trim());
+  
+  // Debug log to check received text
+  if (hasText) {
+    // console.log("[UI] Tool card text:", card.text?.slice(0, 100));
+  }
+  
   const artifact = card.text ? parseProjectCollabArtifact(card.text) : null;
   const hasArtifact = Boolean(artifact);
-
+  
+  if (hasText) {
+    console.log("[UI] Checking artifact in tool result:", card.name, hasArtifact ? "FOUND" : "NOT FOUND");
+  }
+  
   const canClick = Boolean(onOpenSidebar);
   const handleClick = canClick
     ? () => {
@@ -125,7 +136,7 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
           : nothing
       }
       ${showInline ? html`<div class="chat-tool-card__inline mono">${card.text}</div>` : nothing}
-      ${hasArtifact ? renderProjectArtifact(artifact!) : nothing}
+      ${hasArtifact ? renderProjectArtifactHelper(artifact!) : nothing}
     </div>
   `;
 }
@@ -162,66 +173,15 @@ function extractToolText(item: Record<string, unknown>): string | undefined {
   if (typeof item.content === "string") {
     return item.content;
   }
+  if (Array.isArray(item.content)) {
+    return item.content
+      .map((c: any) => {
+        if (typeof c === "string") return c;
+        if (c && typeof c === "object" && typeof c.text === "string") return c.text;
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n");
+  }
   return undefined;
-}
-
-function renderProjectArtifact(artifact: ProjectCollabArtifact) {
-  const metrics = artifact.metrics ?? [];
-  const sections = artifact.sections ?? [];
-  const links = artifact.links ?? [];
-
-  return html`
-    <div class="chat-tool-card__artifact">
-      ${artifact.summary ? html`<div class="chat-tool-card__artifact-summary">${artifact.summary}</div>` : nothing}
-      ${
-        metrics.length > 0
-          ? html`
-              <div class="chat-tool-card__artifact-metrics">
-                ${metrics.map((metric) => {
-                  const statusClass = metric.status ? `artifact-metric--${metric.status}` : "";
-                  return html`
-                    <div class="chat-tool-card__artifact-metric ${statusClass}">
-                      <div class="chat-tool-card__artifact-metric-label">${metric.label ?? ""}</div>
-                      <div class="chat-tool-card__artifact-metric-value">${metric.value ?? ""}</div>
-                    </div>
-                  `;
-                })}
-              </div>
-            `
-          : nothing
-      }
-      ${
-        sections.length > 0
-          ? html`
-              <div class="chat-tool-card__artifact-sections">
-                ${sections.map((section) => {
-                  return html`
-                    <div class="chat-tool-card__artifact-section">
-                      <div class="chat-tool-card__artifact-section-title">${section.title ?? ""}</div>
-                      <ul class="chat-tool-card__artifact-section-list">
-                        ${(section.items ?? []).map((item) => html`<li>${item}</li>`)}
-                      </ul>
-                    </div>
-                  `;
-                })}
-              </div>
-            `
-          : nothing
-      }
-      ${
-        links.length > 0
-          ? html`
-              <div class="chat-tool-card__artifact-links">
-                ${links.map((link) => {
-                  if (!link.url) {
-                    return nothing;
-                  }
-                  return html`<a href=${link.url} target="_blank" rel="noreferrer">${link.label ?? link.url}</a>`;
-                })}
-              </div>
-            `
-          : nothing
-      }
-    </div>
-  `;
 }

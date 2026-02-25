@@ -1,31 +1,46 @@
 {
   "agent:agent_xulinyi:main": {
-    "sessionId": "058b9807-0bcb-4c56-909b-2ca8b1422962",
-    "updatedAt": 1771924877381,
+    "sessionId": "c5412983-2b6b-4352-b141-82b802da14e3",
+    "updatedAt": 1771995082781,
     "systemSent": true,
     "abortedLastRun": false,
     "chatType": "direct",
     "deliveryContext": {
-      "channel": "telegram",
-      "to": "telegram:7304053733",
-      "accountId": "xulinyi"
+      "channel": "webchat"
     },
     "origin": {
-      "provider": "telegram",
-      "surface": "telegram",
-      "chatType": "direct",
-      "label": "LY id:7304053733",
-      "from": "telegram:7304053733",
-      "to": "telegram:7304053733",
-      "accountId": "xulinyi"
+      "provider": "webchat",
+      "surface": "webchat",
+      "chatType": "direct"
     },
-    "sessionFile": "/Users/acelin/Documents/Next/AIGC/openclaw/.openclaw-local/agents/agent_xulinyi/sessions/058b9807-0bcb-4c56-909b-2ca8b1422962.jsonl",
+    "sessionFile": "/Users/acelin/Documents/Next/AIGC/openclaw/.openclaw-local/agents/agent_xulinyi/sessions/c5412983-2b6b-4352-b141-82b802da14e3.jsonl",
     "compactionCount": 0,
     "skillsSnapshot": {
-      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>himalaya</name>\n    <description>CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/himalaya/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pm-docs</name>\n    <description>Product Manager skills for creating PRDs and technical specs.</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>product-manager</name>\n    <description>产品经理组合技能：执行市场需求分析、竞品调研与用户画像生成。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>project-manager</name>\n    <description>项目管理全流程：需求分析、任务拆解与进度跟踪。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>task-tracker</name>\n    <description>Manage tasks and issues using simple file-based system or CLI.</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>trae</name>\n    <description>Control Trae IDE chat and features via CLI.</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/trae/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts (no API key required).</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>project-collab</name>\n    <description>项目协同 MCP 工具，可创建项目、添加任务、生成项目看板等。调用后会返回结构化数据，由配套 UI 组件渲染为可视化看板。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-collab/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>autonomous-project-management</name>\n    <description>基于子代理的项目管理流程与去中心化协作。用于多工作流并行、子代理协作与状态管理场景。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/autonomous-project-management/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>calendar-assistant</name>\n    <description>面向交付团队的项目日历聚合与任务跟踪。用于需要汇总日历、同步任务并输出简报与预警时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/calendar-assistant/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>通过后台进程运行 Codex CLI、Claude Code、OpenCode 或 Pi Coding Agent 进行程序化控制。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>content-factory</name>\n    <description>基于 Telegram 的多代理内容流水线与结构化协作。用于选题、写作与视觉内容并行产出时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/content-factory/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>custom-morning-brief</name>\n    <description>定制晨间简报的收集、生成与投递流程。用于需要每日信息汇总并自动发送时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/custom-morning-brief/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>dynamic-dashboard</name>\n    <description>并行子代理采集指标并按计划发布仪表板。用于需要持续更新指标与告警时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/dynamic-dashboard/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>event-guest-confirmation</name>\n    <description>使用专用语音代理完成来宾确认与汇总。用于活动来宾逐一确认出席与备注时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/event-guest-confirmation/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>面向 OpenClaw 部署的主机安全加固与风险容忍度配置。用户请求安全审计、防火墙/SSH/更新加固、风险姿态与暴露面评估、OpenClaw 定期检查的 cron 计划，或检查运行 OpenClaw 的设备（笔记本/工作站/Pi/VPS）版本状态时使用。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>himalaya</name>\n    <description>通过 IMAP/SMTP 管理邮件的 CLI。使用 `himalaya` 在终端中列出、阅读、撰写、回复、转发、搜索与整理邮件，支持多账号与 MML（MIME Meta Language）撰写。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/himalaya/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>knowledge-base-rag</name>\n    <description>从保存内容构建可检索知识库。用于收集链接并支持语义检索与研究汇总时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/knowledge-base-rag/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>market-research-product-factory</name>\n    <description>发现真实痛点并转化为 MVP 机会。用于社媒调研与产品机会评估时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/market-research-product-factory/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>multi-agent-team</name>\n    <description>符合 MCP 的多智能体团队配置与协作流程。用于多角色协作与共享记忆管理时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/multi-agent-team/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>multi-channel-customer-service</name>\n    <description>统一收件箱、自动回复与人工升级。用于多渠道客服自动化与报表输出时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/multi-channel-customer-service/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>overnight-mini-app-builder</name>\n    <description>自主每日任务与夜间 MVP 交付。用于目标驱动的自动执行与夜间构建时。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/overnight-mini-app-builder/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pm-docs</name>\n    <description>用于撰写 PRD 与技术规格的产品经理技能。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>product-manager</name>\n    <description>产品经理组合技能：执行市场需求分析、竞品调研与用户画像生成。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>product-manager-skills</name>\n    <description>符合 MCP 规范的产品经理技能定义。用于需求调研、设计、迭代与管理流程。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager-skills/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>project-manager</name>\n    <description>项目管理全流程：需求分析、任务拆解与进度跟踪。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>project-state-management</name>\n    <description>看板的事件驱动替代方案。用于可追溯的项目状态记录与日报汇总。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-state-management/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>resume-job-application</name>\n    <description>LinkedIn、Boss直聘等平台的半自动化求职流程。用于登录后自动筛选岗位与投递。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/resume-job-application/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>创建或更新 AgentSkills，用于设计、组织或打包技能脚本、参考与资源。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>task-tracker</name>\n    <description>通过简单的基于文件的系统或 CLI 管理任务和问题。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>todoist-task-manager</name>\n    <description>通过 Todoist 提升代理任务可见性</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/todoist-task-manager/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>trae</name>\n    <description>通过 CLI 控制 Trae IDE 的聊天与功能。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/trae/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>获取当前天气和预测（无需 API 密钥）。</description>\n    <location>/Users/acelin/Documents/Next/AIGC/openclaw/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
       "skills": [
         {
+          "name": "project-collab"
+        },
+        {
+          "name": "autonomous-project-management"
+        },
+        {
+          "name": "calendar-assistant"
+        },
+        {
           "name": "coding-agent"
+        },
+        {
+          "name": "content-factory"
+        },
+        {
+          "name": "custom-morning-brief"
+        },
+        {
+          "name": "dynamic-dashboard"
+        },
+        {
+          "name": "event-guest-confirmation"
         },
         {
           "name": "healthcheck"
@@ -34,19 +49,46 @@
           "name": "himalaya"
         },
         {
+          "name": "knowledge-base-rag"
+        },
+        {
+          "name": "market-research-product-factory"
+        },
+        {
+          "name": "multi-agent-team"
+        },
+        {
+          "name": "multi-channel-customer-service"
+        },
+        {
+          "name": "overnight-mini-app-builder"
+        },
+        {
           "name": "pm-docs"
         },
         {
           "name": "product-manager"
         },
         {
+          "name": "product-manager-skills"
+        },
+        {
           "name": "project-manager"
+        },
+        {
+          "name": "project-state-management"
+        },
+        {
+          "name": "resume-job-application"
         },
         {
           "name": "skill-creator"
         },
         {
           "name": "task-tracker"
+        },
+        {
+          "name": "todoist-task-manager"
         },
         {
           "name": "trae"
@@ -57,16 +99,72 @@
       ],
       "resolvedSkills": [
         {
+          "name": "project-collab",
+          "description": "项目协同 MCP 工具，可创建项目、添加任务、生成项目看板等。调用后会返回结构化数据，由配套 UI 组件渲染为可视化看板。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-collab/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-collab",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "autonomous-project-management",
+          "description": "基于子代理的项目管理流程与去中心化协作。用于多工作流并行、子代理协作与状态管理场景。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/autonomous-project-management/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/autonomous-project-management",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "calendar-assistant",
+          "description": "面向交付团队的项目日历聚合与任务跟踪。用于需要汇总日历、同步任务并输出简报与预警时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/calendar-assistant/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/calendar-assistant",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
           "name": "coding-agent",
-          "description": "Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.",
+          "description": "通过后台进程运行 Codex CLI、Claude Code、OpenCode 或 Pi Coding Agent 进行程序化控制。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/coding-agent/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/coding-agent",
           "source": "openclaw-bundled",
           "disableModelInvocation": false
         },
         {
+          "name": "content-factory",
+          "description": "基于 Telegram 的多代理内容流水线与结构化协作。用于选题、写作与视觉内容并行产出时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/content-factory/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/content-factory",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "custom-morning-brief",
+          "description": "定制晨间简报的收集、生成与投递流程。用于需要每日信息汇总并自动发送时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/custom-morning-brief/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/custom-morning-brief",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "dynamic-dashboard",
+          "description": "并行子代理采集指标并按计划发布仪表板。用于需要持续更新指标与告警时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/dynamic-dashboard/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/dynamic-dashboard",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "event-guest-confirmation",
+          "description": "使用专用语音代理完成来宾确认与汇总。用于活动来宾逐一确认出席与备注时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/event-guest-confirmation/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/event-guest-confirmation",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
           "name": "healthcheck",
-          "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+          "description": "面向 OpenClaw 部署的主机安全加固与风险容忍度配置。用户请求安全审计、防火墙/SSH/更新加固、风险姿态与暴露面评估、OpenClaw 定期检查的 cron 计划，或检查运行 OpenClaw 的设备（笔记本/工作站/Pi/VPS）版本状态时使用。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/healthcheck/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/healthcheck",
           "source": "openclaw-bundled",
@@ -74,15 +172,55 @@
         },
         {
           "name": "himalaya",
-          "description": "CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).",
+          "description": "通过 IMAP/SMTP 管理邮件的 CLI。使用 `himalaya` 在终端中列出、阅读、撰写、回复、转发、搜索与整理邮件，支持多账号与 MML（MIME Meta Language）撰写。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/himalaya/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/himalaya",
           "source": "openclaw-bundled",
           "disableModelInvocation": false
         },
         {
+          "name": "knowledge-base-rag",
+          "description": "从保存内容构建可检索知识库。用于收集链接并支持语义检索与研究汇总时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/knowledge-base-rag/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/knowledge-base-rag",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "market-research-product-factory",
+          "description": "发现真实痛点并转化为 MVP 机会。用于社媒调研与产品机会评估时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/market-research-product-factory/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/market-research-product-factory",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "multi-agent-team",
+          "description": "符合 MCP 的多智能体团队配置与协作流程。用于多角色协作与共享记忆管理时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/multi-agent-team/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/multi-agent-team",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "multi-channel-customer-service",
+          "description": "统一收件箱、自动回复与人工升级。用于多渠道客服自动化与报表输出时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/multi-channel-customer-service/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/multi-channel-customer-service",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "overnight-mini-app-builder",
+          "description": "自主每日任务与夜间 MVP 交付。用于目标驱动的自动执行与夜间构建时。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/overnight-mini-app-builder/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/overnight-mini-app-builder",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
           "name": "pm-docs",
-          "description": "Product Manager skills for creating PRDs and technical specs.",
+          "description": "用于撰写 PRD 与技术规格的产品经理技能。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/pm-docs",
           "source": "openclaw-bundled",
@@ -97,6 +235,14 @@
           "disableModelInvocation": false
         },
         {
+          "name": "product-manager-skills",
+          "description": "符合 MCP 规范的产品经理技能定义。用于需求调研、设计、迭代与管理流程。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager-skills/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/product-manager-skills",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
           "name": "project-manager",
           "description": "项目管理全流程：需求分析、任务拆解与进度跟踪。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-manager/SKILL.md",
@@ -105,8 +251,24 @@
           "disableModelInvocation": false
         },
         {
+          "name": "project-state-management",
+          "description": "看板的事件驱动替代方案。用于可追溯的项目状态记录与日报汇总。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-state-management/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/project-state-management",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "resume-job-application",
+          "description": "LinkedIn、Boss直聘等平台的半自动化求职流程。用于登录后自动筛选岗位与投递。",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/resume-job-application/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/resume-job-application",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
           "name": "skill-creator",
-          "description": "Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.",
+          "description": "创建或更新 AgentSkills，用于设计、组织或打包技能脚本、参考与资源。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/skill-creator/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/skill-creator",
           "source": "openclaw-bundled",
@@ -114,15 +276,23 @@
         },
         {
           "name": "task-tracker",
-          "description": "Manage tasks and issues using simple file-based system or CLI.",
+          "description": "通过简单的基于文件的系统或 CLI 管理任务和问题。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/task-tracker",
           "source": "openclaw-bundled",
           "disableModelInvocation": false
         },
         {
+          "name": "todoist-task-manager",
+          "description": "通过 Todoist 提升代理任务可见性",
+          "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/todoist-task-manager/SKILL.md",
+          "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/todoist-task-manager",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
           "name": "trae",
-          "description": "Control Trae IDE chat and features via CLI.",
+          "description": "通过 CLI 控制 Trae IDE 的聊天与功能。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/trae/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/trae",
           "source": "openclaw-bundled",
@@ -130,7 +300,7 @@
         },
         {
           "name": "weather",
-          "description": "Get current weather and forecasts (no API key required).",
+          "description": "获取当前天气和预测（无需 API 密钥）。",
           "filePath": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/weather/SKILL.md",
           "baseDir": "/Users/acelin/Documents/Next/AIGC/openclaw/skills/weather",
           "source": "openclaw-bundled",
@@ -147,26 +317,26 @@
     "contextTokens": 200000,
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1771924649243,
-      "sessionId": "058b9807-0bcb-4c56-909b-2ca8b1422962",
+      "generatedAt": 1771995082351,
+      "sessionId": "c5412983-2b6b-4352-b141-82b802da14e3",
       "sessionKey": "agent:agent_xulinyi:main",
       "provider": "deepseek",
       "model": "deepseek-chat",
-      "workspaceDir": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi",
+      "workspaceDir": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi",
       "bootstrapMaxChars": 20000,
       "sandbox": {
         "mode": "off",
         "sandboxed": false
       },
       "systemPrompt": {
-        "chars": 25137,
+        "chars": 28041,
         "projectContextChars": 13368,
-        "nonProjectContextChars": 11769
+        "nonProjectContextChars": 14673
       },
       "injectedWorkspaceFiles": [
         {
           "name": "AGENTS.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/AGENTS.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/AGENTS.md",
           "missing": false,
           "rawChars": 7804,
           "injectedChars": 7804,
@@ -174,7 +344,7 @@
         },
         {
           "name": "SOUL.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/SOUL.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/SOUL.md",
           "missing": false,
           "rawChars": 1664,
           "injectedChars": 1664,
@@ -182,7 +352,7 @@
         },
         {
           "name": "TOOLS.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/TOOLS.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/TOOLS.md",
           "missing": false,
           "rawChars": 850,
           "injectedChars": 850,
@@ -190,7 +360,7 @@
         },
         {
           "name": "IDENTITY.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/IDENTITY.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/IDENTITY.md",
           "missing": false,
           "rawChars": 632,
           "injectedChars": 632,
@@ -198,7 +368,7 @@
         },
         {
           "name": "USER.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/USER.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/USER.md",
           "missing": false,
           "rawChars": 478,
           "injectedChars": 478,
@@ -206,7 +376,7 @@
         },
         {
           "name": "HEARTBEAT.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/HEARTBEAT.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/HEARTBEAT.md",
           "missing": false,
           "rawChars": 167,
           "injectedChars": 167,
@@ -214,7 +384,7 @@
         },
         {
           "name": "BOOTSTRAP.md",
-          "path": "/Users/acelin/.openclaw/workspace-agent_dev/workspace-xulinyi/BOOTSTRAP.md",
+          "path": "/Users/acelin/Documents/Next/AIGC/openclaw/workspace-xulinyi/BOOTSTRAP.md",
           "missing": false,
           "rawChars": 1449,
           "injectedChars": 1449,
@@ -222,47 +392,111 @@
         }
       ],
       "skills": {
-        "promptChars": 3170,
+        "promptChars": 6398,
         "entries": [
           {
+            "name": "project-collab",
+            "blockChars": 242
+          },
+          {
+            "name": "autonomous-project-management",
+            "blockChars": 253
+          },
+          {
+            "name": "calendar-assistant",
+            "blockChars": 231
+          },
+          {
             "name": "coding-agent",
-            "blockChars": 282
+            "blockChars": 243
+          },
+          {
+            "name": "content-factory",
+            "blockChars": 229
+          },
+          {
+            "name": "custom-morning-brief",
+            "blockChars": 228
+          },
+          {
+            "name": "dynamic-dashboard",
+            "blockChars": 221
+          },
+          {
+            "name": "event-guest-confirmation",
+            "blockChars": 236
           },
           {
             "name": "healthcheck",
-            "blockChars": 494
+            "blockChars": 303
           },
           {
             "name": "himalaya",
-            "blockChars": 386
+            "blockChars": 266
+          },
+          {
+            "name": "knowledge-base-rag",
+            "blockChars": 223
+          },
+          {
+            "name": "market-research-product-factory",
+            "blockChars": 248
+          },
+          {
+            "name": "multi-agent-team",
+            "blockChars": 223
+          },
+          {
+            "name": "multi-channel-customer-service",
+            "blockChars": 246
+          },
+          {
+            "name": "overnight-mini-app-builder",
+            "blockChars": 240
           },
           {
             "name": "pm-docs",
-            "blockChars": 228
+            "blockChars": 189
           },
           {
             "name": "product-manager",
             "blockChars": 213
           },
           {
+            "name": "product-manager-skills",
+            "blockChars": 234
+          },
+          {
             "name": "project-manager",
             "blockChars": 206
           },
           {
+            "name": "project-state-management",
+            "blockChars": 231
+          },
+          {
+            "name": "resume-job-application",
+            "blockChars": 240
+          },
+          {
             "name": "skill-creator",
-            "blockChars": 299
+            "blockChars": 218
           },
           {
             "name": "task-tracker",
-            "blockChars": 239
+            "blockChars": 203
+          },
+          {
+            "name": "todoist-task-manager",
+            "blockChars": 213
           },
           {
             "name": "trae",
-            "blockChars": 204
+            "blockChars": 187
           },
           {
             "name": "weather",
-            "blockChars": 223
+            "blockChars": 188
           }
         ]
       },
@@ -326,7 +560,7 @@
           },
           {
             "name": "message",
-            "summaryChars": 118,
+            "summaryChars": 110,
             "schemaChars": 3833,
             "propertiesCount": 84
           },
@@ -405,9 +639,7 @@
         ]
       }
     },
-    "lastChannel": "telegram",
-    "lastTo": "telegram:7304053733",
-    "lastAccountId": "xulinyi"
+    "lastChannel": "webchat"
   },
   "agent:agent_xulinyi:telegram:group:-5237085683": {
     "sessionId": "f4464f5a-1b1b-4fc3-8c65-8e7352639dbf",

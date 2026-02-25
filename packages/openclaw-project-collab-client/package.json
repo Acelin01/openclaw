@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "description": "OpenClaw project collaboration client helpers",
   "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
   "exports": {
     ".": "./index.js"
   }
