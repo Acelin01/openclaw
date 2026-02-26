@@ -7,6 +7,7 @@ metadata:
     "openclaw":
       {
         "emoji": "💡",
+        "ui": { "package": "openclaw-openhue-client", "version": "latest" },
         "requires": { "bins": ["openhue"] },
         "install":
           [
@@ -24,28 +25,28 @@ metadata:
 
 # OpenHue CLI
 
-Use `openhue` to control Hue lights and scenes via a Hue Bridge.
+使用 `openhue` 通过 Hue Bridge 控制灯光与场景。
 
-Setup
+配置
 
-- Discover bridges: `openhue discover`
-- Guided setup: `openhue setup`
+- 发现网桥：`openhue discover`
+- 引导式配置：`openhue setup`
 
-Read
+查询
 
 - `openhue get light --json`
 - `openhue get room --json`
 - `openhue get scene --json`
 
-Write
+控制
 
-- Turn on: `openhue set light <id-or-name> --on`
-- Turn off: `openhue set light <id-or-name> --off`
-- Brightness: `openhue set light <id> --on --brightness 50`
-- Color: `openhue set light <id> --on --rgb #3399FF`
-- Scene: `openhue set scene <scene-id>`
+- 开灯：`openhue set light <id-or-name> --on`
+- 关灯：`openhue set light <id-or-name> --off`
+- 亮度：`openhue set light <id> --on --brightness 50`
+- 颜色：`openhue set light <id> --on --rgb #3399FF`
+- 场景：`openhue set scene <scene-id>`
 
-Notes
+注意事项
 
-- You may need to press the Hue Bridge button during setup.
-- Use `--room "Room Name"` when light names are ambiguous.
+- 配置时可能需要按下 Hue Bridge 的按钮。
+- 灯名存在歧义时使用 `--room "Room Name"` 进行限定。

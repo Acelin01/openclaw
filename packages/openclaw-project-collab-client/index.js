@@ -72,7 +72,9 @@ export function parseProjectCollabArtifact(text) {
       for (const item of parsed.content) {
         if (item.type === "text" && item.text) {
           const nested = parseProjectCollabArtifact(item.text);
-          if (nested) return nested;
+          if (nested) {
+            return nested;
+          }
         }
       }
     }
@@ -90,7 +92,7 @@ export function parseProjectCollabArtifact(text) {
       sections: readSections(artifact.sections),
       links: readLinks(artifact.links),
     };
-  } catch (e) {
+  } catch {
     return null;
   }
 }

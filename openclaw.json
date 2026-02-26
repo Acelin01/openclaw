@@ -52,6 +52,17 @@
       }
     }
   },
+  "mcpServers": {
+    "uxin-mcp": {
+      "command": "npx",
+      "args": ["tsx", "/Users/acelin/Documents/Next/AIGC/uxin/apps/mcp/src/index.ts"],
+      "env": {
+        "UXIN_API_TOKEN": "${UXIN_API_TOKEN}",
+        "UXIN_USER_ID": "admin-user-id",
+        "API_BASE_URL": "http://localhost:8000"
+      }
+    }
+  },
   "agents": {
     "list": [
       {

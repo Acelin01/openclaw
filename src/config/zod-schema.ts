@@ -87,6 +87,16 @@ const MemorySchema = z
   .strict()
   .optional();
 
+const McpServerSchema = z
+  .object({
+    transport: z.literal("stdio").optional(),
+    command: z.string(),
+    args: z.array(z.string()).optional(),
+    env: z.record(z.string(), z.string()).optional(),
+    cwd: z.string().optional(),
+  })
+  .strict();
+
 export const OpenClawSchema = z
   .object({
     meta: z
@@ -270,6 +280,7 @@ export const OpenClawSchema = z
     nodeHost: NodeHostSchema,
     agents: AgentsSchema,
     tools: ToolsSchema,
+    mcpServers: z.record(z.string(), McpServerSchema).optional(),
     bindings: BindingsSchema,
     broadcast: BroadcastSchema,
     audio: AudioSchema,

@@ -1,4 +1,9 @@
+import type { AgentToolResult } from "@mariozechner/pi-agent-core";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { Type } from "@sinclair/typebox";
 import type { OpenClawConfig } from "../config/config.js";
+import type { McpServerConfig } from "../config/types.openclaw.js";
 import type { GatewayMessageChannel } from "../utils/message-channel.js";
 import type { AnyAgentTool } from "./tools/common.js";
 import { resolvePluginTools } from "../plugins/tools.js";
@@ -6,6 +11,7 @@ import { resolveSessionAgentId } from "./agent-scope.js";
 import { createAgentsListTool } from "./tools/agents-list-tool.js";
 import { createBrowserTool } from "./tools/browser-tool.js";
 import { createCanvasTool } from "./tools/canvas-tool.js";
+import { jsonResult } from "./tools/common.js";
 import { createCronTool } from "./tools/cron-tool.js";
 import { createGatewayTool } from "./tools/gateway-tool.js";
 import { createImageTool } from "./tools/image-tool.js";
@@ -18,6 +24,134 @@ import { createSessionsSendTool } from "./tools/sessions-send-tool.js";
 import { createSessionsSpawnTool } from "./tools/sessions-spawn-tool.js";
 import { createTtsTool } from "./tools/tts-tool.js";
 import { createWebFetchTool, createWebSearchTool } from "./tools/web-tools.js";
+
+const McpToolsListParamsSchema = Type.Object(
+  {
+    server: Type.String(),
+  },
+  { additionalProperties: false },
+);
+
+const McpToolCallParamsSchema = Type.Object(
+  {
+    server: Type.String(),
+    name: Type.String(),
+    args: Type.Optional(Type.Object({}, { additionalProperties: true })),
+  },
+  { additionalProperties: false },
+);
+
+const mcpClients = new Map<string, Promise<{ client: Client; transport: StdioClientTransport }>>();
+
+function normalizeMcpServerName(value: string) {
+  return value.trim();
+}
+
+function resolveMcpServer(config: OpenClawConfig | undefined, name: string): McpServerConfig {
+  const server = config?.mcpServers?.[name];
+  if (!server) {
+    throw new Error(`Unknown MCP server: ${name}`);
+  }
+  return server;
+}
+
+function toEnvRecord(env: NodeJS.ProcessEnv, overrides?: Record<string, string>) {
+  const resolved: Record<string, string> = {};
+  for (const [key, value] of Object.entries(env)) {
+    if (typeof value === "string") {
+      resolved[key] = value;
+    }
+  }
+  if (overrides) {
+    for (const [key, value] of Object.entries(overrides)) {
+      if (typeof value === "string") {
+        resolved[key] = value;
+      }
+    }
+  }
+  return resolved;
+}
+
+function isAgentToolResult(value: unknown): value is AgentToolResult<unknown> {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+  const record = value as { content?: unknown };
+  return Array.isArray(record.content);
+}
+
+async function getMcpClient(params: {
+  name: string;
+  config?: OpenClawConfig;
+}): Promise<{ client: Client; transport: StdioClientTransport }> {
+  const normalized = normalizeMcpServerName(params.name);
+  const existing = mcpClients.get(normalized);
+  if (existing) {
+    return existing;
+  }
+  const promise = (async () => {
+    const server = resolveMcpServer(params.config, normalized);
+    const transport = new StdioClientTransport({
+      command: server.command,
+      args: server.args ?? [],
+      env: toEnvRecord(process.env, server.env),
+      cwd: server.cwd,
+    });
+    const client = new Client(
+      {
+        name: `openclaw-mcp-${normalized}`,
+        version: "1.0.0",
+      },
+      {
+        capabilities: {},
+      },
+    );
+    await client.connect(transport);
+    return { client, transport };
+  })();
+  mcpClients.set(normalized, promise);
+  return promise;
+}
+
+function createMcpTools(options?: { config?: OpenClawConfig }): AnyAgentTool[] {
+  const servers = options?.config?.mcpServers;
+  if (!servers || Object.keys(servers).length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      label: "MCP Tools",
+      name: "mcp_tools_list",
+      description: "List tools from a configured MCP server.",
+      parameters: McpToolsListParamsSchema,
+      execute: async (_toolCallId, params) => {
+        const serverName = params.server;
+        const { client } = await getMcpClient({ name: serverName, config: options?.config });
+        const result = await client.listTools();
+        return jsonResult(result);
+      },
+    },
+    {
+      label: "MCP Tools",
+      name: "mcp_tool_call",
+      description: "Call a tool on a configured MCP server.",
+      parameters: McpToolCallParamsSchema,
+      execute: async (_toolCallId, params) => {
+        const serverName = params.server;
+        const { client } = await getMcpClient({ name: serverName, config: options?.config });
+        const result = await client.callTool({
+          name: params.name,
+          arguments: params.args ?? {},
+        });
+        if (isAgentToolResult(result)) {
+          return result;
+        }
+        return jsonResult(result);
+      },
+    },
+  ];
+}
 
 export function createOpenClawTools(options?: {
   sandboxBrowserBridgeUrl?: string;
@@ -70,6 +204,7 @@ export function createOpenClawTools(options?: {
     config: options?.config,
     sandboxed: options?.sandboxed,
   });
+  const mcpTools = createMcpTools({ config: options?.config });
   const tools: AnyAgentTool[] = [
     createBrowserTool({
       sandboxBridgeUrl: options?.sandboxBrowserBridgeUrl,
@@ -138,6 +273,7 @@ export function createOpenClawTools(options?: {
     ...(webSearchTool ? [webSearchTool] : []),
     ...(webFetchTool ? [webFetchTool] : []),
     ...(imageTool ? [imageTool] : []),
+    ...mcpTools,
   ];
 
   const pluginTools = resolvePluginTools({

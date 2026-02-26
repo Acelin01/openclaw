@@ -10,7 +10,6 @@ import {
   getTruncatedPreview,
   parseProjectCollabArtifact,
   renderProjectArtifact as renderProjectArtifactHelper,
-  type ProjectCollabArtifact,
 } from "./tool-helpers.ts";
 
 export function extractToolCards(message: unknown): ToolCard[] {
@@ -179,9 +178,16 @@ function extractToolText(item: Record<string, unknown>): string | undefined {
   }
   if (Array.isArray(item.content)) {
     return item.content
-      .map((c: any) => {
-        if (typeof c === "string") return c;
-        if (c && typeof c === "object" && typeof c.text === "string") return c.text;
+      .map((c: unknown) => {
+        if (typeof c === "string") {
+          return c;
+        }
+        if (c && typeof c === "object" && "text" in c) {
+          const record = c as { text?: unknown };
+          if (typeof record.text === "string") {
+            return record.text;
+          }
+        }
         return "";
       })
       .filter(Boolean)
