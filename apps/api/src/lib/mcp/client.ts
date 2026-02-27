@@ -24,21 +24,23 @@ export class MCPClientManager {
    */
   public static getMCPServerPath(): string {
     const srcCandidates = [
-      path.resolve(process.cwd(), "apps/mcp/src/index.ts"),
-      path.resolve(process.cwd(), "../mcp/src/index.ts")
+      path.resolve(process.cwd(), "apps/api/src/mcp-server/index.ts"),
+      path.resolve(process.cwd(), "src/mcp-server/index.ts"),
+      path.resolve(process.cwd(), "../api/src/mcp-server/index.ts"),
     ];
     const distCandidates = [
-      path.resolve(process.cwd(), "apps/mcp/dist/index.js"),
-      path.resolve(process.cwd(), "../mcp/dist/index.js")
+      path.resolve(process.cwd(), "apps/api/dist/mcp-server/index.js"),
+      path.resolve(process.cwd(), "dist/mcp-server/index.js"),
+      path.resolve(process.cwd(), "../api/dist/mcp-server/index.js"),
     ];
-    
-    const srcPath = srcCandidates.find(p => fs.existsSync(p));
-    const distPath = distCandidates.find(p => fs.existsSync(p));
-    
+
+    const srcPath = srcCandidates.find((candidate) => fs.existsSync(candidate));
+    const distPath = distCandidates.find((candidate) => fs.existsSync(candidate));
+
     if (srcPath) return srcPath;
     if (distPath) return distPath;
-    
-    return distCandidates[0] ?? path.resolve(process.cwd(), "apps/mcp/dist/index.js");
+
+    return distCandidates[0] ?? path.resolve(process.cwd(), "dist/mcp-server/index.js");
   }
 
   /**

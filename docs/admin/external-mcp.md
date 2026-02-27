@@ -55,6 +55,10 @@
 后台入口：`/admin/external`  
 支持创建 Client、生成 Token、配置白名单与默认范围、用量查询。
 
+## 环境变量
+
+- `UXIN_MCP_SERVER_PATH`：MCP Server 启动路径（stdio 模式）
+
 ## 配置示例
 
 请求头示例：

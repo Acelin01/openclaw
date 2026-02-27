@@ -23,16 +23,23 @@ export class MCPClientManager {
    * 获取项目协作与自由职业者 MCP 服务路径
    */
   public static getMCPServerPath(): string {
-    // 优先使用 src 下的源码，如果不存在则尝试 dist
-    const srcPath = path.resolve(process.cwd(), "../mcp/src/index.ts");
-    const distPath = path.resolve(process.cwd(), "../mcp/dist/index.js");
-    
-    // 在开发环境下，如果源码存在则使用 tsx 运行源码
-    if (process.env.NODE_ENV === 'development' && fs.existsSync(srcPath)) {
+    const srcCandidates = [
+      path.resolve(process.cwd(), "../api/src/mcp-server/index.ts"),
+      path.resolve(process.cwd(), "apps/api/src/mcp-server/index.ts"),
+    ];
+    const distCandidates = [
+      path.resolve(process.cwd(), "../api/dist/mcp-server/index.js"),
+      path.resolve(process.cwd(), "apps/api/dist/mcp-server/index.js"),
+    ];
+
+    const srcPath = srcCandidates.find((candidate) => fs.existsSync(candidate));
+    const distPath = distCandidates.find((candidate) => fs.existsSync(candidate));
+
+    if (process.env.NODE_ENV === 'development' && srcPath) {
       return srcPath;
     }
-    
-    return distPath;
+
+    return distPath ?? distCandidates[0];
   }
 
   /**

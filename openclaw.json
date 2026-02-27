@@ -55,7 +55,7 @@
   "mcpServers": {
     "uxin-mcp": {
       "command": "npx",
-      "args": ["tsx", "/Users/acelin/Documents/Next/AIGC/uxin/apps/mcp/src/index.ts"],
+      "args": ["tsx", "${UXIN_MCP_SERVER_PATH}"],
       "env": {
         "UXIN_API_TOKEN": "${UXIN_API_TOKEN}",
         "UXIN_USER_ID": "admin-user-id",

@@ -1,6 +1,9 @@
 import { CollaborationContext } from "@uxin/agent-lib/collaboration/index";
 
-export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: Partial<CollaborationContext>) => {
+export const getFreelancerServiceTools = (
+  freelancerSkills: any,
+  baseContext?: Partial<CollaborationContext>,
+) => {
   const context: CollaborationContext = {
     userId: baseContext?.userId || "mcp-system",
     token: baseContext?.token,
@@ -24,11 +27,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           hourly_rate: { type: "number" },
           availability: { type: "string", enum: ["full_time", "part_time", "project_basis"] },
           portfolio_links: { type: "array", items: { type: "string" } },
-          certifications: { type: "array", items: { type: "string" } }
+          certifications: { type: "array", items: { type: "string" } },
         },
-        required: ["freelancer_id", "title", "skills"]
+        required: ["freelancer_id", "title", "skills"],
       },
-      handler: async (args: any) => freelancerSkills.resumeManagement.createResume(args, context)
+      handler: async (args: any) => freelancerSkills.resumeManagement.createResume(args, context),
     },
     {
       name: "portfolio_create",
@@ -41,11 +44,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           description: { type: "string" },
           project_url: { type: "string" },
           images: { type: "array", items: { type: "string" } },
-          tags: { type: "array", items: { type: "string" } }
+          tags: { type: "array", items: { type: "string" } },
         },
-        required: ["freelancer_id", "title"]
+        required: ["freelancer_id", "title"],
       },
-      handler: async (args: any) => freelancerSkills.resumeManagement.createPortfolio(args, context)
+      handler: async (args: any) => freelancerSkills.resumeManagement.createPortfolio(args, context),
     },
     {
       name: "freelancer_register",
@@ -61,11 +64,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           preferred_languages: { type: "array", items: { type: "string" } },
           payment_methods: { type: "array", items: { type: "string" } },
           tax_id: { type: "string" },
-          verification_documents: { type: "array", items: { type: "string" } }
+          verification_documents: { type: "array", items: { type: "string" } },
         },
-        required: ["name", "email", "country"]
+        required: ["name", "email", "country"],
       },
-      handler: async (args: any) => freelancerSkills.freelancerManagement.register(args, context)
+      handler: async (args: any) => freelancerSkills.freelancerManagement.register(args, context),
     },
     {
       name: "service_create",
@@ -82,11 +85,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           delivery_time: { type: "string" },
           revisions: { type: "integer" },
           requirements: { type: "array", items: { type: "string" } },
-          tags: { type: "array", items: { type: "string" } }
+          tags: { type: "array", items: { type: "string" } },
         },
-        required: ["freelancer_id", "title", "description", "price_type"]
+        required: ["freelancer_id", "title", "description", "price_type"],
       },
-      handler: async (args: any) => freelancerSkills.serviceManagement.createService(args, context)
+      handler: async (args: any) => freelancerSkills.serviceManagement.createService(args, context),
     },
     {
       name: "transaction_create",
@@ -103,11 +106,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           terms: { type: "string" },
           milestones: { type: "array", items: { type: "object" } },
           start_date: { type: "string", format: "date" },
-          end_date: { type: "string", format: "date" }
+          end_date: { type: "string", format: "date" },
         },
-        required: ["client_id", "freelancer_id", "service_id", "amount"]
+        required: ["client_id", "freelancer_id", "service_id", "amount"],
       },
-      handler: async (args: any) => freelancerSkills.transactionManagement.createTransaction(args, context)
+      handler: async (args: any) => freelancerSkills.transactionManagement.createTransaction(args, context),
     },
     {
       name: "contract_create",
@@ -118,11 +121,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           transaction_id: { type: "string" },
           terms: { type: "string" },
           signatures: { type: "array", items: { type: "string" } },
-          attachments: { type: "array", items: { type: "string" } }
+          attachments: { type: "array", items: { type: "string" } },
         },
-        required: ["transaction_id", "terms"]
+        required: ["transaction_id", "terms"],
       },
-      handler: async (args: any) => freelancerSkills.transactionManagement.createContract(args, context)
+      handler: async (args: any) => freelancerSkills.transactionManagement.createContract(args, context),
     },
     {
       name: "quotation_create",
@@ -137,11 +140,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           description: { type: "string" },
           price: { type: "number" },
           delivery_time: { type: "string" },
-          items: { type: "array", items: { type: "object" } }
+          items: { type: "array", items: { type: "object" } },
         },
-        required: ["freelancer_id", "title", "price"]
+        required: ["freelancer_id", "title", "price"],
       },
-      handler: async (args: any) => freelancerSkills.transactionManagement.createQuotation(args, context)
+      handler: async (args: any) => freelancerSkills.transactionManagement.createQuotation(args, context),
     },
     {
       name: "inquiry_create",
@@ -155,11 +158,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           budget_min: { type: "number" },
           budget_max: { type: "number" },
           deadline: { type: "string", format: "date" },
-          category: { type: "string" }
+          category: { type: "string" },
         },
-        required: ["client_id", "title", "description"]
+        required: ["client_id", "title", "description"],
       },
-      handler: async (args: any) => freelancerSkills.transactionManagement.createInquiry(args, context)
+      handler: async (args: any) => freelancerSkills.transactionManagement.createInquiry(args, context),
     },
     {
       name: "review_create",
@@ -171,11 +174,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
           rating: { type: "integer", minimum: 1, maximum: 5 },
           content: { type: "string" },
           reviewer_id: { type: "string" },
-          reviewee_id: { type: "string" }
+          reviewee_id: { type: "string" },
         },
-        required: ["transaction_id", "rating", "content"]
+        required: ["transaction_id", "rating", "content"],
       },
-      handler: async (args: any) => freelancerSkills.performanceManagement.createReview(args, context)
+      handler: async (args: any) => freelancerSkills.performanceManagement.createReview(args, context),
     },
     {
       name: "talent_match",
@@ -185,11 +188,11 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
         properties: {
           skills: { type: "array", items: { type: "string" } },
           budget: { type: "number" },
-          duration: { type: "string" }
+          duration: { type: "string" },
         },
-        required: ["skills"]
+        required: ["skills"],
       },
-      handler: async (args: any) => freelancerSkills.talentMatching.matchTalent(args)
+      handler: async (args: any) => freelancerSkills.talentMatching.matchTalent(args),
     },
     {
       name: "skill_analyzer",
@@ -198,68 +201,42 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
         type: "object",
         properties: {
           project_description: { type: "string", description: "项目或任务的详细描述" },
-          industry: { type: "string", description: "所属行业（可选）" }
+          required_experience: { type: "string" },
+          budget_range: { type: "string" },
+          duration: { type: "string" },
         },
-        required: ["project_description"]
+        required: ["project_description"],
       },
-      handler: async (args: any) => {
-        // 模拟技能分析逻辑，实际应调用更复杂的分析引擎
-        const mockSkills = ["React", "TypeScript", "Node.js", "UI/UX", "Project Management"];
-        const extracted = mockSkills.filter(s => 
-          args.project_description.toLowerCase().includes(s.toLowerCase())
-        );
-        return {
-          success: true,
-          skills: extracted.length > 0 ? extracted : ["General Software Engineering"],
-          confidence: 0.85,
-          domain: args.industry || "Technology"
-        };
-      }
+      handler: async (args: any) => freelancerSkills.talentMatching.analyzeSkillRequirements(args),
     },
     {
       name: "marketplace_integrator",
-      description: "人才市场集成工具。跨平台同步人才数据，搜索第三方平台（如 Upwork, LinkedIn）的人才信息。",
+      description: "市场资源整合工具。根据项目需求匹配适合的自由职业者和服务资源。",
       inputSchema: {
         type: "object",
         properties: {
-          platforms: { type: "array", items: { type: "string" }, description: "目标平台列表" },
-          query: { type: "string", description: "搜索关键词" },
-          filters: { type: "object", description: "过滤条件" }
+          skills_needed: { type: "array", items: { type: "string" } },
+          budget: { type: "number" },
+          timeline: { type: "string" },
+          location: { type: "string" },
         },
-        required: ["query"]
+        required: ["skills_needed"],
       },
-      handler: async (args: any) => {
-        return {
-          success: true,
-          results: [
-            { id: "ext-001", name: "Marketplace Talent A", platform: args.platforms?.[0] || "Upwork", match: 0.92 },
-            { id: "ext-002", name: "Marketplace Talent B", platform: args.platforms?.[1] || "LinkedIn", match: 0.88 }
-          ],
-          sync_status: "completed"
-        };
-      }
+      handler: async (args: any) => freelancerSkills.marketplaceIntegration.findResources(args),
     },
     {
       name: "compliance_checker",
-      description: "合同合规性检查工具。验证合同条款是否符合法律法规、公司政策及特定项目要求。",
+      description: "合规检查工具。检查项目或合同是否符合相关法规和合规要求。",
       inputSchema: {
         type: "object",
         properties: {
-          contract_terms: { type: "string", description: "合同详细条款" },
-          region: { type: "string", description: "适用法律区域" },
-          compliance_type: { type: "array", items: { type: "string" }, description: "检查类型：legal, tax, policy" }
+          contract_text: { type: "string" },
+          jurisdiction: { type: "string" },
+          compliance_requirements: { type: "array", items: { type: "string" } },
         },
-        required: ["contract_terms"]
+        required: ["contract_text"],
       },
-      handler: async (args: any) => {
-        return {
-          success: true,
-          status: "compliant",
-          score: 0.98,
-          findings: [],
-          recommendations: ["Ensure dispute resolution clause matches regional standards."]
-        };
-      }
+      handler: async (args: any) => freelancerSkills.complianceManagement.checkCompliance(args),
     },
     {
       name: "growth_strategy_analyzer",
@@ -267,24 +244,13 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
       inputSchema: {
         type: "object",
         properties: {
-          metrics: { type: "object", description: "当前业务指标 (如转化率、留存率)" },
-          goal: { type: "string", description: "增长目标" },
-          platform: { type: "string", description: "目标平台" }
+          metrics: { type: "object" },
+          goal: { type: "string" },
+          platform: { type: "string" },
         },
-        required: ["goal"]
+        required: ["goal"],
       },
-      handler: async (args: any) => {
-        return {
-          success: true,
-          strategy: "Data-Driven Growth Optimization",
-          recommendations: [
-            "Implement multi-stage conversion funnel tracking.",
-            "Run A/B test on landing page value proposition.",
-            "Analyze churn reasons using cohort analysis."
-          ],
-          expected_impact: "Medium-High"
-        };
-      }
+      handler: async (args: any) => freelancerSkills.strategyManagement.analyzeGrowthStrategy(args),
     },
     {
       name: "ux_design_reviewer",
@@ -292,24 +258,13 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
       inputSchema: {
         type: "object",
         properties: {
-          prototype_link: { type: "string", description: "原型链接" },
-          user_persona: { type: "string", description: "目标用户画像" },
-          focus_areas: { type: "array", items: { type: "string" }, description: "重点评审领域" }
+          prototype_link: { type: "string" },
+          user_persona: { type: "string" },
+          focus_areas: { type: "array", items: { type: "string" } },
         },
-        required: ["prototype_link"]
+        required: ["prototype_link"],
       },
-      handler: async (args: any) => {
-        return {
-          success: true,
-          status: "reviewed",
-          score: 0.88,
-          findings: [
-            "Navigation depth exceeds 3 clicks for core tasks.",
-            "Consistency issues in primary action button styling."
-          ],
-          suggestions: ["Simplify user journey for checkout flow.", "Update design system tokens for better accessibility."]
-        };
-      }
+      handler: async (args: any) => freelancerSkills.designReview.reviewUXDesign(args),
     },
     {
       name: "devops_pipeline_optimizer",
@@ -317,22 +272,13 @@ export const getFreelancerServiceTools = (freelancerSkills: any, baseContext?: P
       inputSchema: {
         type: "object",
         properties: {
-          current_stack: { type: "array", items: { type: "string" }, description: "当前技术栈" },
-          deployment_frequency: { type: "string", description: "发布频率" },
-          automation_level: { type: "number", description: "自动化程度 (0-1)" }
-        }
+          current_stack: { type: "array", items: { type: "string" } },
+          deployment_frequency: { type: "string" },
+          automation_level: { type: "number" },
+        },
+        required: ["current_stack"],
       },
-      handler: async (args: any) => {
-        return {
-          success: true,
-          optimizations: [
-            "Introduce automated smoke tests in CI stage.",
-            "Migrate manual config to Terraform/IaC.",
-            "Implement blue-green deployment for zero downtime."
-          ],
-          estimated_efficiency_gain: "25-35%"
-        };
-      }
-    }
+      handler: async (args: any) => freelancerSkills.devopsOptimization.optimizePipeline(args),
+    },
   ];
 };

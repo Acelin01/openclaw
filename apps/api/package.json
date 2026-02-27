@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx --loader=esbuild-wasm src/index.ts",
+    "mcp:stdio": "tsx --loader=esbuild-wasm src/mcp-server/index.ts",
+    "mcp:sse": "tsx --loader=esbuild-wasm src/mcp-server/sse-server.ts",
+    "dev:with-mcp": "node scripts/run-dev-with-mcp.mjs",
     "build": "tsc && echo 'Build finished successfully' || (echo 'Build failed but trying fallback' && mkdir -p dist && cp -r src/* dist/ && find dist -name '*.ts' -delete && echo 'Fallback copy finished' && ls -R dist)",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
