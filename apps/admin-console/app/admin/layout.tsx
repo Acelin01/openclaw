@@ -2,17 +2,10 @@ import type { ReactNode } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      <aside
-        style={{
-          width: 220,
-          padding: 24,
-          borderRight: "1px solid #e5e7eb",
-          background: "#fafafa",
-        }}
-      >
-        <div style={{ fontWeight: 600, marginBottom: 16 }}>Admin Console</div>
-        <nav style={{ display: "grid", gap: 8 }}>
+    <div className="admin-shell">
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-title">Admin Console</div>
+        <nav className="admin-nav">
           <a href="/admin">概览</a>
           <a href="/admin/metrics">指标</a>
           <a href="/admin/tenants">租户</a>
@@ -26,7 +19,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <a href="/admin/external">对外MCP</a>
         </nav>
       </aside>
-      <main style={{ flex: 1, padding: 24 }}>{children}</main>
+      <main className="admin-main">{children}</main>
     </div>
   );
 }
