@@ -8,11 +8,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
   const date = resolveMetricDate();
-  const metrics = await computeDailyMetrics(prisma);
-  const record = await prisma.metricDaily.upsert({
-    where: { scope_date: { scope: "global", date } },
-    update: { metrics },
-    create: { scope: "global", date, metrics },
-  });
-  return NextResponse.json({ ok: true, record });
+  const metricsRows = await computeDailyMetrics(prisma);
+  const records = [];
+  for (const row of metricsRows) {
+    const record = await prisma.metricDaily.upsert({
+      where: {
+        scope_date_tenantId_projectId_channel: {
+          scope: row.scope,
+          date,
+          tenantId: row.tenantId ?? null,
+          projectId: row.projectId ?? null,
+          channel: row.channel ?? null,
+        },
+      },
+      update: { metrics: row.metrics, tenantId: row.tenantId ?? null, projectId: row.projectId ?? null, channel: row.channel ?? null },
+      create: {
+        scope: row.scope,
+        date,
+        tenantId: row.tenantId ?? null,
+        projectId: row.projectId ?? null,
+        channel: row.channel ?? null,
+        metrics: row.metrics,
+      },
+    });
+    records.push(record);
+  }
+  return NextResponse.json({ ok: true, records });
 }

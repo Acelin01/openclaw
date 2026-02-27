@@ -8,7 +8,8 @@
     "start": "next start",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "metrics:daily": "node scripts/metrics-daily.mjs"
+    "metrics:daily": "node scripts/metrics-daily.mjs",
+    "worker:run": "node scripts/worker.mjs"
   },
   "dependencies": {
     "@prisma/client": "6.4.1",

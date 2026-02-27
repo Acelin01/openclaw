@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../../../lib/db";
 import { isAdminAuthorized } from "../../../../../../lib/auth";
-import { callGatewayMethod } from "../../../../../../lib/gateway/client";
 import { isGatewayMethodAllowed } from "../../../../../../lib/gateway/allowlist";
 
 export async function POST(request: Request, context: { params: { id: string } }) {
@@ -23,38 +22,25 @@ export async function POST(request: Request, context: { params: { id: string } }
     });
     return NextResponse.json({ ok: false, error: "method_not_allowed" }, { status: 403 });
   }
-  try {
-    const result = await callGatewayMethod(record.method, record.params ?? undefined);
-    const updated = await prisma.gatewayCallRequest.update({
-      where: { id },
-      data: { status: "executed", result, executedAt: new Date() },
-    });
-    await prisma.auditLog.create({
-      data: {
-        tenantId: record.tenantId,
-        action: "gateway.execute",
-        resource: record.method,
-        metadata: { requestId: record.id, ok: true },
-      },
-    });
-    return NextResponse.json({ ok: true, request: updated });
-  } catch (err) {
-    const updated = await prisma.gatewayCallRequest.update({
-      where: { id },
-      data: {
-        status: "failed",
-        error: err instanceof Error ? err.message : String(err),
-        executedAt: new Date(),
-      },
-    });
-    await prisma.auditLog.create({
-      data: {
-        tenantId: record.tenantId,
-        action: "gateway.execute",
-        resource: record.method,
-        metadata: { requestId: record.id, ok: false },
-      },
-    });
-    return NextResponse.json({ ok: false, request: updated }, { status: 502 });
-  }
+  const job = await prisma.job.create({
+    data: {
+      type: "gateway.execute",
+      status: "pending",
+      tenantId: record.tenantId,
+      payload: { requestId: record.id },
+    },
+  });
+  const updated = await prisma.gatewayCallRequest.update({
+    where: { id },
+    data: { status: "queued", queuedAt: new Date() },
+  });
+  await prisma.auditLog.create({
+    data: {
+      tenantId: record.tenantId,
+      action: "gateway.queue",
+      resource: record.method,
+      metadata: { requestId: record.id, jobId: job.id },
+    },
+  });
+  return NextResponse.json({ ok: true, request: updated, jobId: job.id });
 }

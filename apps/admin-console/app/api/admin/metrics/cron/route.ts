@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/db";
-import { computeDailyMetrics, resolveMetricDate } from "../../../../../lib/metrics";
 
 export async function POST(request: Request) {
   const required = process.env.METRICS_CRON_KEY?.trim();
@@ -10,12 +9,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }
   }
-  const date = resolveMetricDate();
-  const metrics = await computeDailyMetrics(prisma);
-  const record = await prisma.metricDaily.upsert({
-    where: { scope_date: { scope: "global", date } },
-    update: { metrics },
-    create: { scope: "global", date, metrics },
+  const job = await prisma.job.create({
+    data: { type: "metrics.daily", status: "pending" },
   });
-  return NextResponse.json({ ok: true, record });
+  return NextResponse.json({ ok: true, jobId: job.id });
 }

@@ -2,8 +2,8 @@ import { prisma } from "../../../lib/db";
 
 export default async function MetricsPage() {
   const metrics = await prisma.metricDaily.findMany({
-    orderBy: { date: "desc" },
-    take: 14,
+    orderBy: [{ date: "desc" }, { scope: "asc" }],
+    take: 50,
   });
   return (
     <section>
@@ -16,6 +16,9 @@ export default async function MetricsPage() {
           <tr>
             <th style={{ textAlign: "left" }}>日期</th>
             <th style={{ textAlign: "left" }}>范围</th>
+            <th style={{ textAlign: "left" }}>租户</th>
+            <th style={{ textAlign: "left" }}>项目</th>
+            <th style={{ textAlign: "left" }}>渠道</th>
             <th style={{ textAlign: "left" }}>指标</th>
           </tr>
         </thead>
@@ -24,6 +27,9 @@ export default async function MetricsPage() {
             <tr key={row.id}>
               <td>{row.date.toISOString().slice(0, 10)}</td>
               <td>{row.scope}</td>
+              <td>{row.tenantId ?? "-"}</td>
+              <td>{row.projectId ?? "-"}</td>
+              <td>{row.channel ?? "-"}</td>
               <td>{JSON.stringify(row.metrics)}</td>
             </tr>
           ))}
