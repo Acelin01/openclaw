@@ -129,6 +129,35 @@ router.get('/clients/:id/tokens', async (req: AuthenticatedRequest, res: Respons
   res.json({ success: true, data: tokens });
 });
 
+router.get('/clients/:id/usage', async (req: AuthenticatedRequest, res: Response) => {
+  if (!prisma) {
+    res.status(503).json({ success: false, message: '数据库连接不可用' });
+    return;
+  }
+  const limit = Math.min(Number(req.query.limit ?? '50'), 200);
+  const from = req.query.from ? new Date(String(req.query.from)) : undefined;
+  const to = req.query.to ? new Date(String(req.query.to)) : undefined;
+  const tool = typeof req.query.tool === 'string' ? req.query.tool : undefined;
+  const where: Record<string, unknown> = { clientId: req.params.id };
+  if (tool) {
+    where.tool = tool;
+  }
+  if (from || to) {
+    where.createdAt = {};
+    if (from) (where.createdAt as Record<string, unknown>).gte = from;
+    if (to) (where.createdAt as Record<string, unknown>).lte = to;
+  }
+  const [logs, total] = await Promise.all([
+    prisma.apiUsageLog.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    }),
+    prisma.apiUsageLog.count({ where }),
+  ]);
+  res.json({ success: true, data: { total, logs } });
+});
+
 router.post('/clients/:id/tokens', async (req: AuthenticatedRequest, res: Response) => {
   if (!prisma) {
     res.status(503).json({ success: false, message: '数据库连接不可用' });

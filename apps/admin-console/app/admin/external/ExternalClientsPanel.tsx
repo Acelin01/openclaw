@@ -22,9 +22,20 @@ type ApiToken = {
   revokedAt: string | null;
 };
 
+type ApiUsage = {
+  id: string;
+  tool: string | null;
+  endpoint: string;
+  statusCode: number;
+  latencyMs: number | null;
+  createdAt: string;
+};
+
 export default function ExternalClientsPanel() {
   const [clients, setClients] = useState<ApiClient[]>([]);
   const [tokens, setTokens] = useState<ApiToken[]>([]);
+  const [usage, setUsage] = useState<ApiUsage[]>([]);
+  const [usageTotal, setUsageTotal] = useState<number>(0);
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [rawToken, setRawToken] = useState<string>("");
@@ -38,6 +49,12 @@ export default function ExternalClientsPanel() {
     permissionAllowlist: "",
   });
   const [tokenForm, setTokenForm] = useState({ name: "default", expiresAt: "" });
+  const [usageFilter, setUsageFilter] = useState({
+    from: "",
+    to: "",
+    tool: "",
+    limit: "50",
+  });
 
   const selectedClient = useMemo(
     () => clients.find((client) => client.id === selectedClientId),
@@ -62,6 +79,23 @@ export default function ExternalClientsPanel() {
     setTokens(payload.data ?? []);
   };
 
+  const refreshUsage = async (clientId: string) => {
+    if (!clientId) {
+      return;
+    }
+    const params = new URLSearchParams();
+    if (usageFilter.from) params.set("from", usageFilter.from);
+    if (usageFilter.to) params.set("to", usageFilter.to);
+    if (usageFilter.tool) params.set("tool", usageFilter.tool);
+    if (usageFilter.limit) params.set("limit", usageFilter.limit);
+    const res = await fetch(
+      `/api/admin/external/clients/${clientId}/usage?${params.toString()}`,
+    );
+    const payload = (await res.json()) as { data?: { total?: number; logs?: ApiUsage[] } };
+    setUsage(payload.data?.logs ?? []);
+    setUsageTotal(payload.data?.total ?? 0);
+  };
+
   useEffect(() => {
     void refreshClients();
   }, []);
@@ -69,6 +103,7 @@ export default function ExternalClientsPanel() {
   useEffect(() => {
     if (selectedClientId) {
       void refreshTokens(selectedClientId);
+      void refreshUsage(selectedClientId);
     }
   }, [selectedClientId]);
 
@@ -311,6 +346,62 @@ export default function ExternalClientsPanel() {
                   <td>{token.name}</td>
                   <td>{token.lastUsedAt ?? "-"}</td>
                   <td>{token.expiresAt ?? "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h2>用量统计</h2>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!selectedClientId) {
+                return;
+              }
+              void refreshUsage(selectedClientId);
+            }}
+            style={{ display: "grid", gap: 8, maxWidth: 480 }}
+          >
+            <input
+              placeholder="开始时间(ISO)"
+              value={usageFilter.from}
+              onChange={(event) => setUsageFilter({ ...usageFilter, from: event.target.value })}
+            />
+            <input
+              placeholder="结束时间(ISO)"
+              value={usageFilter.to}
+              onChange={(event) => setUsageFilter({ ...usageFilter, to: event.target.value })}
+            />
+            <input
+              placeholder="工具名筛选"
+              value={usageFilter.tool}
+              onChange={(event) => setUsageFilter({ ...usageFilter, tool: event.target.value })}
+            />
+            <input
+              placeholder="条数"
+              value={usageFilter.limit}
+              onChange={(event) => setUsageFilter({ ...usageFilter, limit: event.target.value })}
+            />
+            <button type="submit">查询</button>
+          </form>
+          <div style={{ marginTop: 8 }}>总调用: {usageTotal}</div>
+          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 12 }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: "left" }}>时间</th>
+                <th style={{ textAlign: "left" }}>工具</th>
+                <th style={{ textAlign: "left" }}>状态</th>
+                <th style={{ textAlign: "left" }}>耗时</th>
+              </tr>
+            </thead>
+            <tbody>
+              {usage.map((row) => (
+                <tr key={row.id}>
+                  <td>{row.createdAt}</td>
+                  <td>{row.tool ?? "-"}</td>
+                  <td>{row.statusCode}</td>
+                  <td>{row.latencyMs ?? "-"}</td>
                 </tr>
               ))}
             </tbody>

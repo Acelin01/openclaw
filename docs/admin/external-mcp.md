@@ -38,6 +38,8 @@
   `PUT /api/v1/admin/external/clients/:id`
 - 生成 Token  
   `POST /api/v1/admin/external/clients/:id/tokens`
+- 查询用量  
+  `GET /api/v1/admin/external/clients/:id/usage?from=&to=&tool=&limit=`
 
 ### 外部调用
 
@@ -51,7 +53,7 @@
 ## Admin Console
 
 后台入口：`/admin/external`  
-支持创建 Client、生成 Token、配置白名单与默认范围。
+支持创建 Client、生成 Token、配置白名单与默认范围、用量查询。
 
 ## 配置示例
 
