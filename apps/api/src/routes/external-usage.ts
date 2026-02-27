@@ -16,7 +16,9 @@ router.get(
     const limit = Math.min(Number(req.query.limit ?? '50'), 200);
     const from = req.query.from ? new Date(String(req.query.from)) : undefined;
     const to = req.query.to ? new Date(String(req.query.to)) : undefined;
-    const where: any = { clientId: req.apiClient.id };
+    const tool = typeof req.query.tool === 'string' ? req.query.tool : undefined;
+    const where: Record<string, unknown> = { clientId: req.apiClient.id };
+    if (tool) where.tool = tool;
     if (from || to) {
       where.createdAt = {};
       if (from) where.createdAt.gte = from;

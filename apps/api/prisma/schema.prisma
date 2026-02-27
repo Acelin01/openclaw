@@ -1581,6 +1581,10 @@ model ApiClient {
   description     String?
   status          String           @default("ACTIVE")
   rateLimitPerMin Int              @default(60)
+  defaultProjectId String?
+  defaultTeamId   String?
+  toolAllowlist   Json?
+  permissionAllowlist Json?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   owner           User?            @relation(fields: [ownerUserId], references: [id])

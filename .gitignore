@@ -80,5 +80,6 @@ workspace-xulinyi/
 /.corepack/
 /.npm/
 /.openclaw/
+/.openclaw_state/
 /.openclaw-state/
 /Library/

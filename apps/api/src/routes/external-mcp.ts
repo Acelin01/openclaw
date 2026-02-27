@@ -3,6 +3,7 @@ import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp';
 import { ACPCoordinationMessage } from '@uxin/types';
 import { DatabaseService } from '../lib/db/service.js';
 import { ApiTokenRequest, apiRateLimit, authenticateApiToken, recordApiUsage } from '../middleware/api-token.js';
+import { resolveDefaultAllowlist, resolveMcpPermission } from '../lib/mcp/permissions.js';
 
 const router: Router = express.Router();
 const mcpServer = new UnifiedMCPServer();
@@ -25,6 +26,31 @@ router.post(
         res.status(400).json({ success: false, error: 'Invalid ACP message structure' });
         return;
       }
+      const tool = message.body.action;
+      const toolAllowlist = Array.isArray(req.apiClient?.toolAllowlist)
+        ? (req.apiClient?.toolAllowlist as string[])
+        : resolveDefaultAllowlist();
+      if (toolAllowlist.length > 0 && !toolAllowlist.includes(tool)) {
+        res.status(403).json({ success: false, error: 'Tool not allowed' });
+        return;
+      }
+      const permissionKey = resolveMcpPermission(tool);
+      const permissionAllowlist = Array.isArray(req.apiClient?.permissionAllowlist)
+        ? (req.apiClient?.permissionAllowlist as string[])
+        : [];
+      if (permissionAllowlist.length > 0 && !permissionAllowlist.includes(permissionKey)) {
+        res.status(403).json({ success: false, error: 'Permission denied' });
+        return;
+      }
+      const defaultProjectId = req.apiClient?.defaultProjectId;
+      const defaultTeamId = req.apiClient?.defaultTeamId;
+      message.body.context = message.body.context || {};
+      if (!message.body.context.project_id && defaultProjectId) {
+        message.body.context.project_id = defaultProjectId;
+      }
+      if (!message.body.context.team_id && defaultTeamId) {
+        message.body.context.team_id = defaultTeamId;
+      }
       const securityContext: SecurityContext = {
         userId: `api:${req.apiClient?.id || 'external'}`,
         role: UserRole.DEVELOPER,
@@ -32,10 +58,12 @@ router.post(
       };
       const result = await mcpServer.handleMessage(message, securityContext);
       res.json({ success: true, data: result });
-    } catch (error: any) {
-      res.status(error.message?.includes('Permission denied') ? 403 : 500).json({
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : typeof error === 'string' ? error : 'Internal Server Error';
+      res.status(String(message).includes('Permission denied') ? 403 : 500).json({
         success: false,
-        error: error.message || 'Internal Server Error',
+        error: message,
       });
     }
   },
