@@ -1,0 +1,46 @@
+
+> @uxin/agent-lib@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/agent-lib
+> eslint "src/**/*.ts*"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/agent-lib/src/components/AgentCards.tsx[24m[0m
+[0m  [2m4:17[22m  [33mwarning[39m  'MCPTool' is defined but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:10[22m  [33mwarning[39m  'Card' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:16[22m  [33mwarning[39m  'CardHeader' is defined but never used       [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:28[22m  [33mwarning[39m  'CardTitle' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:39[22m  [33mwarning[39m  'CardDescription' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:56[22m  [33mwarning[39m  'CardContent' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:69[22m  [33mwarning[39m  'CardFooter' is defined but never used       [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:10[22m  [33mwarning[39m  'Avatar' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:18[22m  [33mwarning[39m  'AvatarImage' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:31[22m  [33mwarning[39m  'AvatarFallback' is defined but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:47[22m  [33mwarning[39m  'Badge' is defined but never used            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:54[22m  [33mwarning[39m  'Button' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:15[22m  [33mwarning[39m  'Wrench' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:23[22m  [33mwarning[39m  'Star' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:29[22m  [33mwarning[39m  'User' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:35[22m  [33mwarning[39m  'ExternalLink' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:49[22m  [33mwarning[39m  'LayoutGrid' is defined but never used       [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:61[22m  [33mwarning[39m  'Rocket' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/agent-lib/src/skills/collaboration.ts[24m[0m
+[0m  [2m159:48[22m  [33mwarning[39m  'projectLeadId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/agent-lib/src/skills/freelancer.ts[24m[0m
+[0m  [2m1:10[22m  [33mwarning[39m  'ACPCoordinationMessage' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 20 problems (0 errors, 20 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

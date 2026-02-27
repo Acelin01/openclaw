@@ -1,0 +1,10 @@
+
+> @uxin/mcp-server@1.0.0 dev /Users/acelin/Documents/Next/AIGC/uxin/apps/mcp
+> tsx --watch src/index.ts
+
+[Mocks] Successfully set up mocks for Next.js components
+Initializing tools with userId: mcp-system, hasToken: true, apiUrl: http://127.0.0.1:8000
+Uxin MCP server running on stdio
+/Users/acelin/Documents/Next/AIGC/uxin/apps/mcp:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @uxin/mcp-server@1.0.0 dev: `tsx --watch src/index.ts`
+Command failed with signal "SIGHUP"

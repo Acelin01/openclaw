@@ -1,0 +1,29 @@
+
+> @uxin/subscription@1.0.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/subscription
+> eslint "src/**/*.{ts,tsx}"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/subscription/src/services/packageService.ts[24m[0m
+[0m  [2m1:55[22m  [33mwarning[39m  'PackageType' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/subscription/src/services/subscriptionService.ts[24m[0m
+[0m  [2m3:3[22m  [33mwarning[39m  'SubscriptionStatus' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/subscription/src/utils/quotaCalculator.ts[24m[0m
+[0m  [2m1:15[22m  [33mwarning[39m  'SubscriptionPackage' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 3 problems (0 errors, 3 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

@@ -1,0 +1,36 @@
+
+> @uxin/requirement-lib@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/requirement-lib
+> eslint "src/**/*.{ts,tsx}"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/requirement-lib/src/components/RequirementLinks.tsx[24m[0m
+[0m  [2m3:17[22m  [33mwarning[39m  'useState' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/requirement-lib/src/components/RequirementListView.tsx[24m[0m
+[0m  [2m4:30[22m  [33mwarning[39m  'RequirementPriority' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:51[22m  [33mwarning[39m  'RequirementStatus' is defined but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:27[22m  [33mwarning[39m  'AlertCircle' is defined but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/requirement-lib/src/components/SubItems.tsx[24m[0m
+[0m  [2m6:39[22m  [33mwarning[39m  'MoreHorizontal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:69[22m  [33mwarning[39m  'Edit2' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/requirement-lib/src/components/WorkLogView.tsx[24m[0m
+[0m  [2m3:17[22m  [33mwarning[39m  'useState' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:10[22m  [33mwarning[39m  'cn' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 8 problems (0 errors, 8 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

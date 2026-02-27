@@ -1,0 +1,43 @@
+{
+  "name": "@uxin/requirement-lib",
+  "version": "0.1.0",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/lib/api-config.d.ts",
+      "import": "./dist/lib/api-config.mjs",
+      "require": "./dist/lib/api-config.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/lib/api-config.ts --format cjs,esm --clean",
+    "dev": "tsup src/index.ts src/lib/api-config.ts --format cjs,esm --watch",
+    "lint": "eslint \"src/**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@uxin/utils": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.454.0",
+    "react": "^18.2.0",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "@types/react": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "eslint": "^8.57.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}

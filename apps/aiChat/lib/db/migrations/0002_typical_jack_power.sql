@@ -1,0 +1,1 @@
+ALTER TABLE `Document` ADD `chatId` varchar(36);

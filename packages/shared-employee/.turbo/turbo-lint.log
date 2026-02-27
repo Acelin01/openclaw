@@ -1,0 +1,45 @@
+
+> @uxin/shared-employee@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee
+> eslint "src/**/*.ts*"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee/src/components/ProjectAssignments.tsx[24m[0m
+[0m  [2m3:38[22m  [33mwarning[39m  'User' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee/src/components/ScheduleView.tsx[24m[0m
+[0m  [2m3:36[22m  [33mwarning[39m  'Clock' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:63[22m  [33mwarning[39m  'isSameDay' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee/src/components/SharedEmployeeCard.tsx[24m[0m
+[0m  [2m3:35[22m  [33mwarning[39m  'Clock' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee/src/components/SharedEmployeeDetail.tsx[24m[0m
+[0m   [2m2:26[22m  [33mwarning[39m  'SharedEmployeeSkill' is defined but never used                              [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m2:47[22m  [33mwarning[39m  'SharedEmployeeAssignment' is defined but never used                         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m11:3[22m   [33mwarning[39m  'Globe' is defined but never used                                            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m12:3[22m   [33mwarning[39m  'Award' is defined but never used                                            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m13:3[22m   [33mwarning[39m  'Clock' is defined but never used                                            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m41:3[22m   [33mwarning[39m  'className' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee/src/components/SharedEmployeeStatsGrid.tsx[24m[0m
+[0m  [2m3:17[22m  [33mwarning[39m  'Briefcase' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m3:28[22m  [33mwarning[39m  'Star' is defined but never used       [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/shared-employee/src/components/SkillMatrix.tsx[24m[0m
+[0m  [2m3:10[22m  [33mwarning[39m  'Layers' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 13 problems (0 errors, 13 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

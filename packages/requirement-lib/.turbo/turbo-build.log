@@ -1,0 +1,18 @@
+
+> @uxin/requirement-lib@0.1.0 build /Users/acelin/Documents/Next/AIGC/uxin/packages/requirement-lib
+> tsup src/index.ts src/lib/api-config.ts --format cjs,esm --clean
+
+[34mCLI[39m Building entry: src/index.ts, src/lib/api-config.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: esnext
+[34mCLI[39m Cleaning output folder
+[34mCJS[39m Build start
+[34mESM[39m Build start
+[32mCJS[39m [1mdist/index.js          [22m[32m39.30 KB[39m
+[32mCJS[39m [1mdist/lib/api-config.js [22m[32m1.54 KB[39m
+[32mCJS[39m ⚡️ Build success in 64ms
+[32mESM[39m [1mdist/lib/api-config.mjs [22m[32m311.00 B[39m
+[32mESM[39m [1mdist/index.mjs          [22m[32m32.57 KB[39m
+[32mESM[39m [1mdist/chunk-QMYA3FBR.mjs [22m[32m313.00 B[39m
+[32mESM[39m ⚡️ Build success in 65ms

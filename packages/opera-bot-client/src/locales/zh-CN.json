@@ -1,0 +1,16 @@
+{
+  "operaBot": {
+    "widgetTitle": "OperaBot AI助手",
+    "online": "在线",
+    "offline": "离线",
+    "widgetWelcome": "您好！我是OperaBot，有什么可以帮助您的吗？",
+    "inputPlaceholder": "输入您的消息...",
+    "enterToSend": "按Enter发送消息，Shift+Enter换行",
+    "quickReplies": "快捷回复",
+    "voiceInput": "语音输入",
+    "fileUpload": "文件上传",
+    "errors": {
+      "configurationError": "OperaBot配置错误：缺少API密钥"
+    }
+  }
+}
