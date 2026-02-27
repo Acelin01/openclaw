@@ -1,0 +1,62 @@
+{
+  "a6b82a4d3acb5adf45ac54cb5361639946ff7eeaa6d7777bbd4c74e97b30a6e3": {
+    "deviceId": "a6b82a4d3acb5adf45ac54cb5361639946ff7eeaa6d7777bbd4c74e97b30a6e3",
+    "publicKey": "DN10V8U7q-Rtl5lJOxZnh6VifaeZKoxEadbz0hVzwSo",
+    "platform": "MacIntel",
+    "clientId": "openclaw-control-ui",
+    "clientMode": "webchat",
+    "role": "operator",
+    "roles": [
+      "operator"
+    ],
+    "scopes": [
+      "operator.admin",
+      "operator.approvals",
+      "operator.pairing"
+    ],
+    "tokens": {
+      "operator": {
+        "token": "952d04eb92634443baa4bf3b4229c7dc",
+        "role": "operator",
+        "scopes": [
+          "operator.admin",
+          "operator.approvals",
+          "operator.pairing"
+        ],
+        "createdAtMs": 1772152682755
+      }
+    },
+    "createdAtMs": 1772152682755,
+    "approvedAtMs": 1772152682755
+  },
+  "4c2ab504e2a1db56d92d85a814a2605872ac6da38b4a02255125dbcfe1c6cc6d": {
+    "deviceId": "4c2ab504e2a1db56d92d85a814a2605872ac6da38b4a02255125dbcfe1c6cc6d",
+    "publicKey": "gn_Jd8ol6_iPMO0-WsP6rIciWwqbFTi42Rma27ekvMI",
+    "platform": "MacIntel",
+    "clientId": "openclaw-control-ui",
+    "clientMode": "webchat",
+    "role": "operator",
+    "roles": [
+      "operator"
+    ],
+    "scopes": [
+      "operator.admin",
+      "operator.approvals",
+      "operator.pairing"
+    ],
+    "tokens": {
+      "operator": {
+        "token": "52a425d29dfe411f971a84e5a9ad245a",
+        "role": "operator",
+        "scopes": [
+          "operator.admin",
+          "operator.approvals",
+          "operator.pairing"
+        ],
+        "createdAtMs": 1772153195925
+      }
+    },
+    "createdAtMs": 1772153195925,
+    "approvedAtMs": 1772153195925
+  }
+}

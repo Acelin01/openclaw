@@ -8,6 +8,7 @@
   },
   "ignorePatterns": [
     ".openclaw-local/",
+    ".openclaw_state/",
     ".project/",
     "apps/",
     "assets/",

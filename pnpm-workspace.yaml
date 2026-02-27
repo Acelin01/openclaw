@@ -1,6 +1,7 @@
 packages:
   - .
   - ui
+  - apps/admin-console
   - packages/*
   - extensions/*
 

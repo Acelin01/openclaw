@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String       @id @default(cuid())
+  name      String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  members   Membership[]
+  roles     Role[]
+  projects  Project[]
+  gateways  GatewayInstance[]
+  auditLogs AuditLog[]
+  metrics   MetricDaily[]
+  requests  GatewayCallRequest[]
+}
+
+model User {
+  id        String       @id @default(cuid())
+  email     String       @unique
+  name      String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  memberships Membership[]
+  auditLogs  AuditLog[]
+  requests   GatewayCallRequest[]
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  tenantId  String
+  userId    String
+  roleId    String?
+  createdAt DateTime @default(now())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  role      Role?    @relation(fields: [roleId], references: [id])
+
+  @@unique([tenantId, userId])
+}
+
+model Role {
+  id        String           @id @default(cuid())
+  tenantId  String
+  name      String
+  createdAt DateTime         @default(now())
+  tenant    Tenant           @relation(fields: [tenantId], references: [id])
+  members   Membership[]
+  grants    RolePermission[]
+
+  @@unique([tenantId, name])
+}
+
+model Permission {
+  id        String           @id @default(cuid())
+  key       String           @unique
+  group     String           @default("general")
+  grants    RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role        @relation(fields: [roleId], references: [id])
+  permission   Permission  @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tasks     Task[]
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  projectId String
+  title     String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model GatewayInstance {
+  id        String           @id @default(cuid())
+  tenantId  String
+  name      String
+  wsUrl     String
+  status    String           @default("unknown")
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  tenant    Tenant           @relation(fields: [tenantId], references: [id])
+  snapshots GatewaySnapshot[]
+  requests  GatewayCallRequest[]
+}
+
+model GatewaySnapshot {
+  id          String          @id @default(cuid())
+  instanceId  String
+  capturedAt  DateTime        @default(now())
+  health      Json
+  channels    Json?
+  instance    GatewayInstance @relation(fields: [instanceId], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  actorId   String?
+  action    String
+  resource  String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  actor     User?    @relation(fields: [actorId], references: [id])
+}
+
+model GatewayCallRequest {
+  id          String          @id @default(cuid())
+  tenantId    String
+  actorId     String?
+  gatewayId   String?
+  method      String
+  params      Json?
+  status      String          @default("pending")
+  requestedAt DateTime        @default(now())
+  approvedAt  DateTime?
+  executedAt  DateTime?
+  result      Json?
+  error       String?
+  tenant      Tenant          @relation(fields: [tenantId], references: [id])
+  actor       User?           @relation(fields: [actorId], references: [id])
+  gateway     GatewayInstance? @relation(fields: [gatewayId], references: [id])
+}
+
+model MetricDaily {
+  id        String   @id @default(cuid())
+  scope     String   @default("global")
+  tenantId  String?
+  date      DateTime
+  metrics   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+
+  @@unique([scope, date])
+}
