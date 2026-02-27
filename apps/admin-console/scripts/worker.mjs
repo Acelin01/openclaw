@@ -13,16 +13,40 @@ const resolveGatewayUrl = () =>
 const resolveGatewayToken = () =>
   process.env.OPENCLAW_GATEWAY_TOKEN || process.env.GATEWAY_TOKEN || "";
 
-const sendAlert = async (message, payload) => {
-  const url = process.env.ALERT_WEBHOOK_URL?.trim();
-  if (!url) {
+const sendAlert = async (message, payload, tenantId) => {
+  const alertChannels = await prisma.alertChannel.findMany({
+    where: {
+      enabled: true,
+      ...(tenantId
+        ? {
+            OR: [{ tenantId }, { tenantId: null }],
+          }
+        : {}),
+    },
+  });
+  if (!alertChannels.length) {
     return;
   }
-  await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ message, payload }),
-  }).catch(() => {});
+  await Promise.all(
+    alertChannels.map(async (channel) => {
+      const target = channel.target?.trim();
+      if (!target) {
+        return;
+      }
+      let body = { text: `${channel.name}: ${message}`, payload };
+      if (channel.type === "feishu") {
+        body = { msg_type: "text", content: { text: `${channel.name}: ${message}` } };
+      }
+      if (channel.type === "email") {
+        body = { subject: channel.name, text: message, payload };
+      }
+      await fetch(target, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      }).catch(() => {});
+    }),
+  );
 };
 
 const resolveMetricDate = (date = new Date()) => {
@@ -274,7 +298,7 @@ const main = async () => {
       },
     });
     if (shouldFail) {
-      await sendAlert("job failed", { jobId: locked.id, type: locked.type });
+      await sendAlert("job failed", { jobId: locked.id, type: locked.type }, locked.tenantId);
     }
   } finally {
     await prisma.$disconnect();

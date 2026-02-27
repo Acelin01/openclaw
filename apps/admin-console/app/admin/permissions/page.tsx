@@ -6,7 +6,9 @@ export default async function PermissionsPage() {
     include: { grants: { include: { permission: true } }, tenant: true },
     orderBy: { createdAt: "desc" },
   });
-  const permissions = await prisma.permission.findMany({ orderBy: [{ group: "asc" }, { key: "asc" }] });
+  const permissions = await prisma.permission.findMany({
+    orderBy: [{ group: "asc" }, { key: "asc" }],
+  });
   return (
     <section>
       <h1>权限管理</h1>
@@ -16,6 +18,7 @@ export default async function PermissionsPage() {
           <form method="post" action="/api/admin/permissions">
             <input name="group" placeholder="分组 (如 gateway)" />
             <input name="key" placeholder="权限 key" style={{ marginLeft: 8 }} />
+            <input name="level" placeholder="审批级别" style={{ marginLeft: 8 }} />
             <button type="submit" style={{ marginLeft: 8 }}>
               新建
             </button>
@@ -53,7 +56,7 @@ export default async function PermissionsPage() {
               <option value="">选择权限</option>
               {permissions.map((permission) => (
                 <option key={permission.id} value={permission.id}>
-                  {permission.group}:{permission.key}
+                  {permission.group}:{permission.key} (L{permission.level})
                 </option>
               ))}
             </select>

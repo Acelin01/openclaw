@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/db";
 import { isAdminAuthorized, resolveDefaultTenantId } from "../../../../lib/auth";
 import { isGatewayMethodAllowed } from "../../../../lib/gateway/allowlist";
-import { resolveMethodPermission, roleHasPermission } from "../../../../lib/permissions";
+import { resolveApprovalLevel, resolveMethodPermission, roleHasPermission } from "../../../../lib/permissions";
 
 export async function GET(request: Request) {
   if (!isAdminAuthorized(request)) {
@@ -51,6 +51,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "permission_denied" }, { status: 403 });
     }
   }
+  const approvalLevelRequired =
+    typeof payload.approvalLevelRequired === "number"
+      ? payload.approvalLevelRequired
+      : resolveApprovalLevel(method);
   const params = payload.params ?? null;
   const projectId = typeof payload.projectId === "string" ? payload.projectId.trim() : null;
   const channel = typeof payload.channel === "string" ? payload.channel.trim() : null;
@@ -62,6 +66,8 @@ export async function POST(request: Request) {
       method,
       params: params ?? undefined,
       status: "pending",
+      approvalLevelRequired,
+      approvalLevelCurrent: 0,
     },
   });
   return NextResponse.json({ ok: true, request: requestRecord });

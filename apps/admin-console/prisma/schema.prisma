@@ -20,6 +20,7 @@ model Tenant {
   metrics   MetricDaily[]
   requests  GatewayCallRequest[]
   jobs      Job[]
+  alertChannels AlertChannel[]
 }
 
 model User {
@@ -62,6 +63,7 @@ model Permission {
   id        String           @id @default(cuid())
   key       String           @unique
   group     String           @default("general")
+  level     Int              @default(1)
   grants    RolePermission[]
 }
 
@@ -140,8 +142,12 @@ model GatewayCallRequest {
   method      String
   params      Json?
   status      String          @default("pending")
+  approvalLevelRequired Int   @default(1)
+  approvalLevelCurrent  Int   @default(0)
   requestedAt DateTime        @default(now())
   approvedAt  DateTime?
+  firstApprovedAt DateTime?
+  secondApprovedAt DateTime?
   queuedAt    DateTime?
   executedAt  DateTime?
   result      Json?
@@ -165,6 +171,18 @@ model MetricDaily {
   tenant    Tenant?  @relation(fields: [tenantId], references: [id])
 
   @@unique([scope, date, tenantId, projectId, channel])
+}
+
+model AlertChannel {
+  id        String   @id @default(cuid())
+  tenantId  String?
+  name      String
+  type      String
+  target    String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
 }
 
 model Job {

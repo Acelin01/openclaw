@@ -17,6 +17,17 @@ export function resolveMethodPermission(method: string) {
   return METHOD_PERMISSIONS[method] ?? "gateway.write";
 }
 
+export function resolveApprovalLevel(method: string) {
+  const perm = resolveMethodPermission(method);
+  if (perm === "gateway.read") {
+    return 1;
+  }
+  if (perm === "gateway.approval") {
+    return 1;
+  }
+  return 2;
+}
+
 export async function roleHasPermission(
   prisma: PrismaClient,
   roleId: string,

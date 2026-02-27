@@ -1,7 +1,7 @@
 {
   "agent:main:main": {
     "sessionId": "fbb3b49a-6328-4ca5-8bd8-325d8b835cca",
-    "updatedAt": 1772154477454,
+    "updatedAt": 1772161676756,
     "systemSent": true,
     "abortedLastRun": false,
     "chatType": "direct",
@@ -300,15 +300,15 @@
       ],
       "version": 0
     },
-    "inputTokens": 101,
-    "outputTokens": 49,
-    "totalTokens": 14053,
+    "inputTokens": 59,
+    "outputTokens": 47,
+    "totalTokens": 14267,
     "modelProvider": "deepseek",
     "model": "deepseek-chat",
     "contextTokens": 128000,
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772154471443,
+      "generatedAt": 1772161670911,
       "sessionId": "fbb3b49a-6328-4ca5-8bd8-325d8b835cca",
       "sessionKey": "agent:main:main",
       "provider": "deepseek",

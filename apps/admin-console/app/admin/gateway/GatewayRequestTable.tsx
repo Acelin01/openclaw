@@ -9,6 +9,8 @@ type RequestRow = {
   tenantId: string;
   projectId: string | null;
   channel: string | null;
+  approvalLevelRequired: number;
+  approvalLevelCurrent: number;
   requestedAt: string;
   approvedAt: string | null;
   executedAt: string | null;
@@ -28,6 +30,20 @@ export default function GatewayRequestTable({
   const [rows, setRows] = useState<RequestRow[]>(initial);
   const [error, setError] = useState<string>("");
   const [tenantId, setTenantId] = useState<string>(defaultTenantId ?? "");
+  const normalizeRows = (input: RequestRow[]) =>
+    input.map((row) => ({
+      id: row.id,
+      method: row.method,
+      status: row.status,
+      tenantId: row.tenantId,
+      projectId: row.projectId ?? null,
+      channel: row.channel ?? null,
+      approvalLevelRequired: row.approvalLevelRequired ?? 1,
+      approvalLevelCurrent: row.approvalLevelCurrent ?? 0,
+      requestedAt: row.requestedAt,
+      approvedAt: row.approvedAt ?? null,
+      executedAt: row.executedAt ?? null,
+    }));
 
   const action = async (id: string, kind: "approve" | "reject" | "execute") => {
     setError("");
@@ -41,7 +57,7 @@ export default function GatewayRequestTable({
       `/api/admin/gateway-requests?limit=20&tenantId=${encodeURIComponent(tenantId)}`,
     );
     const payload = (await updated.json()) as { requests?: RequestRow[] };
-    setRows(payload.requests ?? []);
+    setRows(normalizeRows(payload.requests ?? []));
   };
 
   return (
@@ -62,7 +78,7 @@ export default function GatewayRequestTable({
               `/api/admin/gateway-requests?limit=20&tenantId=${encodeURIComponent(tenantId)}`,
             );
             const payload = (await updated.json()) as { requests?: RequestRow[] };
-            setRows(payload.requests ?? []);
+            setRows(normalizeRows(payload.requests ?? []));
           }}
           style={{ marginLeft: 8 }}
         >
@@ -79,6 +95,7 @@ export default function GatewayRequestTable({
             <th style={{ textAlign: "left" }}>租户</th>
             <th style={{ textAlign: "left" }}>项目</th>
             <th style={{ textAlign: "left" }}>渠道</th>
+            <th style={{ textAlign: "left" }}>审批</th>
             <th style={{ textAlign: "left" }}>请求时间</th>
             <th style={{ textAlign: "left" }}>审批时间</th>
             <th style={{ textAlign: "left" }}>执行时间</th>
@@ -94,13 +111,18 @@ export default function GatewayRequestTable({
               <td>{row.tenantId}</td>
               <td>{row.projectId ?? "-"}</td>
               <td>{row.channel ?? "-"}</td>
+              <td>
+                {row.approvalLevelCurrent}/{row.approvalLevelRequired}
+              </td>
               <td>{row.requestedAt}</td>
               <td>{row.approvedAt ?? "-"}</td>
               <td>{row.executedAt ?? "-"}</td>
               <td>
-                {row.status === "pending" ? (
+                {row.status === "pending" || row.status === "second_pending" ? (
                   <>
-                    <button onClick={() => action(row.id, "approve")}>批准</button>
+                    <button onClick={() => action(row.id, "approve")}>
+                      {row.approvalLevelCurrent === 0 ? "一级通过" : "二级通过"}
+                    </button>
                     <button onClick={() => action(row.id, "reject")} style={{ marginLeft: 8 }}>
                       拒绝
                     </button>

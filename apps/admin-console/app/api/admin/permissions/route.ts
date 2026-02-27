@@ -21,9 +21,17 @@ export async function POST(request: Request) {
       : Object.fromEntries((await request.formData()).entries());
   const key = typeof payload.key === "string" ? payload.key.trim() : "";
   const group = typeof payload.group === "string" ? payload.group.trim() : "general";
+  const level =
+    typeof payload.level === "string" && payload.level.trim()
+      ? Number(payload.level)
+      : typeof payload.level === "number"
+        ? payload.level
+        : 1;
   if (!key) {
     return NextResponse.json({ ok: false, error: "key_required" }, { status: 400 });
   }
-  const permission = await prisma.permission.create({ data: { key, group: group || "general" } });
+  const permission = await prisma.permission.create({
+    data: { key, group: group || "general", level: Number.isFinite(level) ? level : 1 },
+  });
   return NextResponse.json({ ok: true, permission });
 }

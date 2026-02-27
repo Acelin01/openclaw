@@ -45,6 +45,8 @@ export default async function GatewayPage() {
           tenantId: req.tenantId,
           projectId: req.projectId ?? null,
           channel: req.channel ?? null,
+          approvalLevelRequired: req.approvalLevelRequired,
+          approvalLevelCurrent: req.approvalLevelCurrent,
           requestedAt: req.requestedAt.toISOString(),
           approvedAt: req.approvedAt ? req.approvedAt.toISOString() : null,
           executedAt: req.executedAt ? req.executedAt.toISOString() : null,
