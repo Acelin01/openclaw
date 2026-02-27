@@ -1,0 +1,85 @@
+
+> @uxin/mcp-server@1.0.0 type-check /Users/acelin/Documents/Next/AIGC/uxin/apps/mcp
+> tsc --noEmit
+
+[96msrc/index.ts[0m:[93m13[0m:[93m34[0m - [91merror[0m[90m TS2835: [0mRelative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../../../packages/agent-lib/src/skills/freelancer.js'?
+
+[7m13[0m import { FreelancerSkills } from "../../../packages/agent-lib/src/skills/freelancer";
+[7m  [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/sse-server.ts[0m:[93m9[0m:[93m34[0m - [91merror[0m[90m TS2835: [0mRelative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../../../packages/agent-lib/src/skills/freelancer.js'?
+
+[7m9[0m import { FreelancerSkills } from "../../../packages/agent-lib/src/skills/freelancer";
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/tools/agent-collaboration/index.ts[0m:[93m230[0m:[93m25[0m - [91merror[0m[90m TS2339: [0mProperty 'data' does not exist on type '{ success: boolean; status: string; message: string; proposal: { kind: string; action: string; params: any; }; }'.
+
+[7m230[0m       const task = resp.data;
+[7m   [0m [91m                        ~~~~[0m
+
+[96msrc/tools/agent-collaboration/index.ts[0m:[93m252[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'success' does not exist on type '{}'.
+
+[7m252[0m       if (!resp?.success) {
+[7m   [0m [91m                 ~~~~~~~[0m
+
+[96msrc/tools/freelancer/index.ts[0m:[93m1[0m:[93m38[0m - [91merror[0m[90m TS2307: [0mCannot find module '@uxin/agent-lib/collaboration/index' or its corresponding type declarations.
+
+[7m1[0m import { CollaborationContext } from "@uxin/agent-lib/collaboration/index";
+[7m [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/tools/project-collaboration/index.ts[0m:[93m248[0m:[93m37[0m - [91merror[0m[90m TS2339: [0mProperty 'milestones' does not exist on type '{}'.
+
+[7m248[0m         const milestones = project?.milestones || [];
+[7m   [0m [91m                                    ~~~~~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m10[0m:[93m8[0m - [91merror[0m[90m TS2834: [0mRelative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+
+[7m10[0m } from '../types';
+[7m  [0m [91m       ~~~~~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m11[0m:[93m33[0m - [91merror[0m[90m TS2835: [0mRelative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './api.js'?
+
+[7m11[0m import { constructApiUrl } from "./api";
+[7m  [0m [91m                                ~~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m61[0m:[93m23[0m - [91merror[0m[90m TS18046: [0m'error' is of type 'unknown'.
+
+[7m61[0m       throw new Error(error.message || `Request failed with status ${response.status}`);
+[7m  [0m [91m                      ~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m193[0m:[93m9[0m - [91merror[0m[90m TS18046: [0m'result' is of type 'unknown'.
+
+[7m193[0m     if (result.success) {
+[7m   [0m [91m        ~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m194[0m:[93m60[0m - [91merror[0m[90m TS18046: [0m'result' is of type 'unknown'.
+
+[7m194[0m       context.onEvent?.({ type: 'data-task-updated', data: result.data, transient: false });
+[7m   [0m [91m                                                           ~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m467[0m:[93m9[0m - [91merror[0m[90m TS18046: [0m'result' is of type 'unknown'.
+
+[7m467[0m     if (result.success && result.suggestions) {
+[7m   [0m [91m        ~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m467[0m:[93m27[0m - [91merror[0m[90m TS18046: [0m'result' is of type 'unknown'.
+
+[7m467[0m     if (result.success && result.suggestions) {
+[7m   [0m [91m                          ~~~~~~[0m
+
+[96m../../packages/projects/src/lib/project-app.ts[0m:[93m468[0m:[93m32[0m - [91merror[0m[90m TS18046: [0m'result' is of type 'unknown'.
+
+[7m468[0m       for (const suggestion of result.suggestions) {
+[7m   [0m [91m                               ~~~~~~[0m
+
+
+Found 14 errors in 6 files.
+
+Errors  Files
+     1  src/index.ts[90m:13[0m
+     1  src/sse-server.ts[90m:9[0m
+     2  src/tools/agent-collaboration/index.ts[90m:230[0m
+     1  src/tools/freelancer/index.ts[90m:1[0m
+     1  src/tools/project-collaboration/index.ts[90m:248[0m
+     8  ../../packages/projects/src/lib/project-app.ts[90m:10[0m
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

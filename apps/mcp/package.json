@@ -1,0 +1,31 @@
+{
+  "name": "@uxin/mcp-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --loader=esbuild-wasm src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsx src/test-client.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "@prisma/client": "^6.4.1",
+    "@uxin/agent-lib": "workspace:*",
+    "@uxin/projects": "workspace:*",
+    "@uxin/types": "workspace:*",
+    "dotenv": "^16.3.1",
+    "esbuild-wasm": "0.27.3",
+    "express": "^4.18.2",
+    "zod": "^3.21.4",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.3.1",
+    "prisma": "^6.4.1",
+    "typescript": "^5.4.5"
+  }
+}
