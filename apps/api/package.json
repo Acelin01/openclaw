@@ -15,6 +15,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "verify:flow": "tsx scripts/verify-uxin-full-flow.ts",
+    "verify:mcp:min": "tsx scripts/verify-mcp-tools-minimal.ts",
     "deploy:admin": "pnpm --filter @uxin/admin build:static && rm -rf public/admin && mkdir -p public/admin && cp -r ../admin/out/* public/admin/"
   },
   "prisma": {

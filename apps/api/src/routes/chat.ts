@@ -15,8 +15,9 @@ import {
 } from 'resumable-stream';
 import { myProvider } from '../lib/ai/providers.js';
 import { systemPrompt } from '../lib/ai/prompts.js';
-import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp';
+import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp/server';
 import { getRegisteredTools } from '../lib/ai/tools/mcp/registry.js';
+import { loadSkillToolIndex } from '../lib/ai/tools/skills/skill-tool-index.js';
 import { createDocument } from '../lib/ai/tools/create-document.js';
 import { updateDocument } from '../lib/ai/tools/update-document.js';
 import { updateTasks } from '../lib/ai/tools/update-tasks.js';
@@ -364,15 +365,23 @@ router.post('/', optionalAuthenticateToken, async (req: AuthenticatedRequest, re
 
                 // Determine which tools to enable
                 const mcpTools = getRegisteredTools();
+                const skillToolIndex = loadSkillToolIndex();
+                const skillDefinedTools = skillToolIndex.toolNames;
+                const filteredMcpTools = skillDefinedTools.length > 0
+                    ? Object.fromEntries(
+                        Object.entries(mcpTools).filter(([name]) => skillDefinedTools.includes(name))
+                    )
+                    : mcpTools;
                 console.log(`[Chat Debug] Registered tools count: ${Object.keys(mcpTools).length}`);
+                console.log(`[Chat Debug] Skill tools count: ${Object.keys(filteredMcpTools).length}`);
                 
                 // 检查 project_create 工具的详情
-                if (mcpTools.project_create) {
+                if (filteredMcpTools.project_create) {
                     console.log(`[Chat Debug] project_create tool info:`, {
-                        description: (mcpTools.project_create as any).description,
-                        hasParameters: !!(mcpTools.project_create as any).parameters,
-                        parametersType: typeof (mcpTools.project_create as any).parameters,
-                        isZod: !!((mcpTools.project_create as any).parameters && ((mcpTools.project_create as any).parameters as any)._def)
+                        description: (filteredMcpTools.project_create as any).description,
+                        hasParameters: !!(filteredMcpTools.project_create as any).parameters,
+                        parametersType: typeof (filteredMcpTools.project_create as any).parameters,
+                        isZod: !!((filteredMcpTools.project_create as any).parameters && ((filteredMcpTools.project_create as any).parameters as any)._def)
                     });
                 }
 
@@ -459,7 +468,7 @@ router.post('/', optionalAuthenticateToken, async (req: AuthenticatedRequest, re
                     };
                 };
                 const wrappedMcpTools = Object.fromEntries(
-                    Object.entries(mcpTools).map(([name, toolDef]) => [name, wrapMcpToolWithArtifact(name, toolDef)])
+                    Object.entries(filteredMcpTools).map(([name, toolDef]) => [name, wrapMcpToolWithArtifact(name, toolDef)])
                 );
 
                 const allTools: any = {
@@ -562,7 +571,7 @@ router.post('/', optionalAuthenticateToken, async (req: AuthenticatedRequest, re
                     'createDocument',
                     'updateDocument',
                     'requestSuggestions',
-                    ...Object.keys(mcpTools)
+                    ...Object.keys(filteredMcpTools)
                 ];
                 
                 // If agent has selectedTools, filter them

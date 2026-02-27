@@ -1,12 +1,16 @@
 import express, { Router, Response } from 'express';
-import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp';
+import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp/server';
 import { ACPCoordinationMessage } from '@uxin/types';
 import { DatabaseService } from '../lib/db/service.js';
+import { toolRegistry } from '../lib/ai/tools/mcp/registry.js';
 import { ApiTokenRequest, apiRateLimit, authenticateApiToken, recordApiUsage } from '../middleware/api-token.js';
 import { resolveDefaultAllowlist, resolveMcpPermission } from '../lib/mcp/permissions.js';
 
 const router: Router = express.Router();
 const mcpServer = new UnifiedMCPServer();
+toolRegistry.getAllTools().forEach((tool) => {
+  mcpServer.getRegistry().register(tool);
+});
 
 router.post(
   '/route',
@@ -44,16 +48,20 @@ router.post(
       }
       const defaultProjectId = req.apiClient?.defaultProjectId;
       const defaultTeamId = req.apiClient?.defaultTeamId;
-      message.body.context = message.body.context || {};
-      if (!message.body.context.project_id && defaultProjectId) {
-        message.body.context.project_id = defaultProjectId;
+      const context = (message.body.context ?? ({} as unknown)) as {
+        project_id?: string;
+        team_id?: string;
+      } & Record<string, unknown>;
+      message.body.context = context as unknown as typeof message.body.context;
+      if (!context.project_id && defaultProjectId) {
+        context.project_id = defaultProjectId;
       }
-      if (!message.body.context.team_id && defaultTeamId) {
-        message.body.context.team_id = defaultTeamId;
+      if (!context.team_id && defaultTeamId) {
+        context.team_id = defaultTeamId;
       }
       const securityContext: SecurityContext = {
         userId: `api:${req.apiClient?.id || 'external'}`,
-        role: UserRole.DEVELOPER,
+        role: UserRole.PROJECT_MANAGER,
         projectId: message.body.context?.project_id,
       };
       const result = await mcpServer.handleMessage(message, securityContext);

@@ -22,6 +22,9 @@
         },
         "rrvccn": {
           "botToken": "8706082084:AAEqO7rusfOXIDuOevP20ZffZYaTacyMHM4"
+        },
+        "openclaw1": {
+          "botToken": "${OPENCLAW1_TELEGRAM_BOT_TOKEN}"
         }
       }
     },
@@ -145,6 +148,13 @@
         "accountId": "rrvccn"
       },
       "agentId": "agent_rrvccn"
+    },
+    {
+      "match": {
+        "channel": "telegram",
+        "accountId": "openclaw1"
+      },
+      "agentId": "agent_xulinyi"
     }
   ],
   "models": {
@@ -177,6 +187,8 @@
       "mentionPatterns": [
         "\\b@xulinyi_bot\\b",
         "\\b@rrvccn_bot\\b",
+        "\\b@openclaw1\\b",
+        "\\b@openclaw1_bot\\b",
         "\\b@milo\\b",
         "\\b@josh\\b",
         "\\b@marketing\\b",

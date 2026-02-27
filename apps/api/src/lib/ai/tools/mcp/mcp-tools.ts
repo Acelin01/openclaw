@@ -16,6 +16,14 @@ export const projectCollaborationMCPTools = {
     }),
     execute: async (args: any) => executeMCPTool('uxin-mcp', 'project_create', args)
   },
+  project_query: {
+    description: "查询项目。参数：project_id(项目ID), filter(筛选条件)",
+    parameters: z.object({
+      project_id: z.string().optional(),
+      filter: z.record(z.any()).optional()
+    }),
+    execute: async (args: any) => executeMCPTool('uxin-mcp', 'project_query', args)
+  },
   milestone_create: {
     description: "为项目创建里程碑。需要参数：project_id, title, description, due_date",
     parameters: z.object({
@@ -63,6 +71,17 @@ export const projectCollaborationMCPTools = {
       status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'BLOCKED'])
     }),
     execute: async (args: any) => executeMCPTool('uxin-mcp', 'task_update_status', args)
+  },
+  task_list: {
+    description: "获取任务列表。参数：project_id(项目ID), status(状态筛选), assignee_id(负责人筛选)",
+    parameters: z.object({
+      project_id: z.string().optional(),
+      status: z.string().optional(),
+      assignee_id: z.string().optional(),
+      limit: z.number().optional(),
+      offset: z.number().optional()
+    }),
+    execute: async (args: any) => executeMCPTool('uxin-mcp', 'task_list', args)
   },
   collaboration_dispatch: {
     description: "调度智能体协作。需要参数：project_id, task_description, required_capabilities(能力列表)",

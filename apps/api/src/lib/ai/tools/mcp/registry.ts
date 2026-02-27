@@ -1,4 +1,4 @@
-import { ToolRegistry, UserRole } from "@uxin/mcp";
+import { ToolRegistry, UserRole } from "@uxin/mcp/server";
 import { tool } from "ai";
 import { 
   projectCollaborationMCPTools, 

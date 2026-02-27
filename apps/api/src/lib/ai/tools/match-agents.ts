@@ -1,7 +1,7 @@
 import { tool, type UIMessageStreamWriter } from "ai";
 import { z } from "zod";
 import { AgentMatcher } from "@uxin/agent-lib";
-import { UserRole } from "@uxin/mcp";
+import { UserRole } from "@uxin/mcp/server";
 
 const requirementSchema = z.object({
   requirement: z.string().describe("详细的需求描述"),

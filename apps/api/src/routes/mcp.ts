@@ -1,6 +1,6 @@
 import express, { Router, Response } from 'express';
 import { authenticateToken, AuthenticatedRequest } from '../middleware/auth.js';
-import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp';
+import { UnifiedMCPServer, UserRole, SecurityContext } from '@uxin/mcp/server';
 import { ACPCoordinationMessage } from '@uxin/types';
 import { DatabaseService } from '../lib/db/service.js';
 
