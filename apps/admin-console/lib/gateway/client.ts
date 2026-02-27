@@ -76,7 +76,7 @@ async function connect(ws: WebSocket) {
     minProtocol: 3,
     maxProtocol: 3,
     client: {
-      id: "openclaw-admin-console",
+      id: "openclaw-control-ui",
       version: "0.1.0",
       platform: "server",
       mode: "webchat",
