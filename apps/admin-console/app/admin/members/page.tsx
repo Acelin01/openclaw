@@ -13,7 +13,7 @@ export default async function MembersPage() {
   return (
     <section>
       <h1>成员绑定</h1>
-      <form method="post" action="/api/admin/memberships" style={{ margin: "16px 0" }}>
+      <form method="post" action="/api/admin/memberships" className="form-inline my-16">
         <select name="tenantId">
           <option value="">选择租户</option>
           {tenants.map((tenant) => (
@@ -22,7 +22,7 @@ export default async function MembersPage() {
             </option>
           ))}
         </select>
-        <select name="userId" style={{ marginLeft: 8 }}>
+        <select name="userId">
           <option value="">选择用户</option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>
@@ -30,7 +30,7 @@ export default async function MembersPage() {
             </option>
           ))}
         </select>
-        <select name="roleId" style={{ marginLeft: 8 }}>
+        <select name="roleId">
           <option value="">选择角色</option>
           {roles.map((role) => (
             <option key={role.id} value={role.id}>
@@ -38,17 +38,17 @@ export default async function MembersPage() {
             </option>
           ))}
         </select>
-        <button type="submit" style={{ marginLeft: 8 }}>
+        <button type="submit" className="btn btn-primary">
           绑定
         </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="table-striped table-compact">
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>租户</th>
-            <th style={{ textAlign: "left" }}>用户</th>
-            <th style={{ textAlign: "left" }}>角色</th>
-            <th style={{ textAlign: "left" }}>绑定时间</th>
+            <th>租户</th>
+            <th>用户</th>
+            <th>角色</th>
+            <th>绑定时间</th>
           </tr>
         </thead>
         <tbody>

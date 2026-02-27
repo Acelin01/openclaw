@@ -6,10 +6,17 @@ export default async function TasksPage() {
     orderBy: { createdAt: "desc" },
   });
   const projects = await prisma.project.findMany({ orderBy: { createdAt: "desc" } });
+  const statusBadge = (status: string) => {
+    const value = status.toLowerCase();
+    if (value === "completed") return "badge badge-success";
+    if (value === "in_progress") return "badge badge-warning";
+    if (value === "blocked") return "badge badge-danger";
+    return "badge";
+  };
   return (
     <section>
       <h1>任务</h1>
-      <form method="post" action="/api/admin/tasks" style={{ margin: "16px 0" }}>
+      <form method="post" action="/api/admin/tasks" className="form-inline my-16">
         <select name="projectId">
           <option value="">选择项目</option>
           {projects.map((project) => (
@@ -18,19 +25,19 @@ export default async function TasksPage() {
             </option>
           ))}
         </select>
-        <input name="title" placeholder="任务标题" style={{ marginLeft: 8 }} />
-        <input name="status" placeholder="状态" style={{ marginLeft: 8 }} />
-        <button type="submit" style={{ marginLeft: 8 }}>
+        <input name="title" placeholder="任务标题" />
+        <input name="status" placeholder="状态" />
+        <button type="submit" className="btn btn-primary">
           新建
         </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="table-striped table-compact">
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>ID</th>
-            <th style={{ textAlign: "left" }}>标题</th>
-            <th style={{ textAlign: "left" }}>项目</th>
-            <th style={{ textAlign: "left" }}>状态</th>
+            <th>ID</th>
+            <th>标题</th>
+            <th>项目</th>
+            <th>状态</th>
           </tr>
         </thead>
         <tbody>
@@ -39,7 +46,9 @@ export default async function TasksPage() {
               <td>{task.id}</td>
               <td>{task.title}</td>
               <td>{task.project?.name ?? task.projectId}</td>
-              <td>{task.status}</td>
+              <td>
+                <span className={statusBadge(task.status)}>{task.status}</span>
+              </td>
             </tr>
           ))}
         </tbody>

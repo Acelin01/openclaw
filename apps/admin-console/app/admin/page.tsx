@@ -11,14 +11,12 @@ export default async function AdminHome() {
   return (
     <section>
       <h1>概览</h1>
-      <div style={{ marginTop: 16 }}>
+      <div className="stack mt-16">
         <h2>网关健康</h2>
         {error ? (
-          <div style={{ color: "#b91c1c" }}>{error}</div>
+          <div className="text-error">{error}</div>
         ) : (
-          <pre style={{ background: "#111", color: "#eee", padding: 16, borderRadius: 8 }}>
-            {JSON.stringify(health, null, 2)}
-          </pre>
+          <pre>{JSON.stringify(health, null, 2)}</pre>
         )}
       </div>
     </section>

@@ -61,7 +61,7 @@ export default function GatewayCallForm(props: {
   };
 
   return (
-    <form onSubmit={submit} style={{ display: "grid", gap: 12, maxWidth: 720 }}>
+    <form onSubmit={submit} className="form-stack-wide">
       <label>
         租户
         <select value={tenantId} onChange={(event) => setTenantId(event.target.value)}>
@@ -109,16 +109,14 @@ export default function GatewayCallForm(props: {
           rows={8}
           value={params}
           onChange={(event) => setParams(event.target.value)}
-          style={{ width: "100%" }}
+          className="input-full"
         />
       </label>
-      <button type="submit">提交审批</button>
-      {error ? <div style={{ color: "#b91c1c" }}>{error}</div> : null}
-      {result ? (
-        <pre style={{ background: "#111", color: "#eee", padding: 16, borderRadius: 8 }}>
-          {result}
-        </pre>
-      ) : null}
+      <button type="submit" className="btn btn-primary">
+        提交审批
+      </button>
+      {error ? <div className="text-error">{error}</div> : null}
+      {result ? <pre>{result}</pre> : null}
     </form>
   );
 }

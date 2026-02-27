@@ -52,14 +52,14 @@ export default async function GatewayPage() {
           executedAt: req.executedAt ? req.executedAt.toISOString() : null,
         }))}
       />
-      <div style={{ marginTop: 24 }}>
+      <div className="mt-24">
         <h2>最近审计记录</h2>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table className="table-striped table-compact">
           <thead>
             <tr>
-              <th style={{ textAlign: "left" }}>时间</th>
-              <th style={{ textAlign: "left" }}>动作</th>
-              <th style={{ textAlign: "left" }}>资源</th>
+              <th>时间</th>
+              <th>动作</th>
+              <th>资源</th>
             </tr>
           </thead>
           <tbody>

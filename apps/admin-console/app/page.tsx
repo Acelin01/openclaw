@@ -1,6 +1,6 @@
 export default function Page() {
   return (
-    <main style={{ padding: 24 }}>
+    <main className="page-shell stack">
       <h1>OpenClaw Admin Console</h1>
       <p>
         进入后台管理：<a href="/admin">控制台</a>

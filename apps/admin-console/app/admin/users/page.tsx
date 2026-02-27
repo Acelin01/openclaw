@@ -5,20 +5,20 @@ export default async function UsersPage() {
   return (
     <section>
       <h1>用户</h1>
-      <form method="post" action="/api/admin/users" style={{ margin: "16px 0" }}>
+      <form method="post" action="/api/admin/users" className="form-inline my-16">
         <input name="email" placeholder="邮箱" />
-        <input name="name" placeholder="姓名" style={{ marginLeft: 8 }} />
-        <button type="submit" style={{ marginLeft: 8 }}>
+        <input name="name" placeholder="姓名" />
+        <button type="submit" className="btn btn-primary">
           新建
         </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="table-striped table-compact">
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>ID</th>
-            <th style={{ textAlign: "left" }}>邮箱</th>
-            <th style={{ textAlign: "left" }}>姓名</th>
-            <th style={{ textAlign: "left" }}>创建时间</th>
+            <th>ID</th>
+            <th>邮箱</th>
+            <th>姓名</th>
+            <th>创建时间</th>
           </tr>
         </thead>
         <tbody>

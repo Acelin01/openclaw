@@ -5,18 +5,18 @@ export default async function TenantsPage() {
   return (
     <section>
       <h1>租户</h1>
-      <form method="post" action="/api/admin/tenants" style={{ margin: "16px 0" }}>
+      <form method="post" action="/api/admin/tenants" className="form-inline my-16">
         <input name="name" placeholder="租户名称" />
-        <button type="submit" style={{ marginLeft: 8 }}>
+        <button type="submit" className="btn btn-primary">
           新建
         </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="table-striped table-compact">
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>ID</th>
-            <th style={{ textAlign: "left" }}>名称</th>
-            <th style={{ textAlign: "left" }}>创建时间</th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>创建时间</th>
           </tr>
         </thead>
         <tbody>
