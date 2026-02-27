@@ -67,6 +67,9 @@ import iterationsRoutes from './routes/iterations.js';
 import aiAppRoutes from './routes/ai-apps.js';
 import mcpRoutes from './routes/mcp.js';
 import collaborationRoutes from './routes/collaboration.js';
+import externalMcpRoutes from './routes/external-mcp.js';
+import externalUsageRoutes from './routes/external-usage.js';
+import externalAdminRoutes from './routes/external-admin.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -282,6 +285,9 @@ app.use('/api/v1/agents', optionalAuthenticateToken, agentRoutes);
 app.use('/api/v1/mcp-tools', optionalAuthenticateToken, mcpToolRoutes);
 app.use('/api/v1/skills', optionalAuthenticateToken, skillsRoutes);
 app.use('/api/v1/mcp', optionalAuthenticateToken, mcpRoutes);
+app.use('/api/v1/external/mcp', externalMcpRoutes);
+app.use('/api/v1/external', externalUsageRoutes);
+app.use('/api/v1/admin/external', authenticateToken, authorizeRoles('ADMIN'), externalAdminRoutes);
 app.use('/api/v1/iterations', authenticateToken, iterationsRoutes);
 app.use('/api/v1/ai-apps', optionalAuthenticateToken, aiAppRoutes);
 app.use('/api/v1/devtools', authenticateToken, devtoolsRoutes);

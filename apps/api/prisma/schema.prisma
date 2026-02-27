@@ -80,6 +80,7 @@ model User {
   userTasks               UserTask[]
   wallet                  Wallet?
   workerProfile           WorkerProfile?
+  apiClients              ApiClient[]
 
   @@index([departmentId], map: "users_departmentId_fkey")
   @@index([teamId], map: "users_teamId_fkey")
@@ -1571,6 +1572,58 @@ model MCPTool {
 
   @@index([creatorId])
   @@map("mcp_tools")
+}
+
+model ApiClient {
+  id              String           @id @default(uuid())
+  ownerUserId     String?
+  name            String
+  description     String?
+  status          String           @default("ACTIVE")
+  rateLimitPerMin Int              @default(60)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  owner           User?            @relation(fields: [ownerUserId], references: [id])
+  tokens          ApiToken[]
+  usageLogs       ApiUsageLog[]
+
+  @@index([ownerUserId])
+  @@index([status])
+  @@map("api_clients")
+}
+
+model ApiToken {
+  id         String     @id @default(uuid())
+  clientId   String
+  name       String
+  tokenHash  String     @db.VarChar(128)
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime   @default(now())
+  client     ApiClient  @relation(fields: [clientId], references: [id])
+  usageLogs  ApiUsageLog[]
+
+  @@index([clientId])
+  @@index([tokenHash])
+  @@map("api_tokens")
+}
+
+model ApiUsageLog {
+  id         String    @id @default(uuid())
+  clientId   String
+  tokenId    String?
+  tool       String?
+  endpoint   String
+  statusCode Int
+  latencyMs  Int?
+  createdAt  DateTime  @default(now())
+  client     ApiClient @relation(fields: [clientId], references: [id])
+  token      ApiToken? @relation(fields: [tokenId], references: [id])
+
+  @@index([clientId, createdAt])
+  @@index([tokenId])
+  @@map("api_usage_logs")
 }
 
 model Skill {
