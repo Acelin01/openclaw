@@ -12,21 +12,21 @@ export default async function PermissionsPage() {
   return (
     <section>
       <h1>权限管理</h1>
-      <div style={{ display: "grid", gap: 20 }}>
+      <div className="stack-lg">
         <div>
           <h2>新增权限</h2>
-          <form method="post" action="/api/admin/permissions">
+          <form method="post" action="/api/admin/permissions" className="form-inline">
             <input name="group" placeholder="分组 (如 gateway)" />
-            <input name="key" placeholder="权限 key" style={{ marginLeft: 8 }} />
-            <input name="level" placeholder="审批级别" style={{ marginLeft: 8 }} />
-            <button type="submit" style={{ marginLeft: 8 }}>
+            <input name="key" placeholder="权限 key" />
+            <input name="level" placeholder="审批级别" />
+            <button type="submit" className="btn btn-primary">
               新建
             </button>
           </form>
         </div>
         <div>
           <h2>新增角色</h2>
-          <form method="post" action="/api/admin/roles">
+          <form method="post" action="/api/admin/roles" className="form-inline">
             <select name="tenantId">
               <option value="">选择租户</option>
               {tenants.map((tenant) => (
@@ -35,15 +35,15 @@ export default async function PermissionsPage() {
                 </option>
               ))}
             </select>
-            <input name="name" placeholder="角色名称" style={{ marginLeft: 8 }} />
-            <button type="submit" style={{ marginLeft: 8 }}>
+            <input name="name" placeholder="角色名称" />
+            <button type="submit" className="btn btn-primary">
               新建
             </button>
           </form>
         </div>
         <div>
           <h2>角色授权</h2>
-          <form method="post" action="/api/admin/role-permissions">
+          <form method="post" action="/api/admin/role-permissions" className="form-inline">
             <select name="roleId">
               <option value="">选择角色</option>
               {roles.map((role) => (
@@ -52,7 +52,7 @@ export default async function PermissionsPage() {
                 </option>
               ))}
             </select>
-            <select name="permissionId" style={{ marginLeft: 8 }}>
+            <select name="permissionId">
               <option value="">选择权限</option>
               {permissions.map((permission) => (
                 <option key={permission.id} value={permission.id}>
@@ -60,20 +60,20 @@ export default async function PermissionsPage() {
                 </option>
               ))}
             </select>
-            <button type="submit" style={{ marginLeft: 8 }}>
+            <button type="submit" className="btn btn-primary">
               授权
             </button>
           </form>
         </div>
       </div>
-      <div style={{ marginTop: 24 }}>
+      <div className="mt-24">
         <h2>角色列表</h2>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table className="table-striped table-compact">
           <thead>
             <tr>
-              <th style={{ textAlign: "left" }}>角色</th>
-              <th style={{ textAlign: "left" }}>租户</th>
-              <th style={{ textAlign: "left" }}>权限</th>
+              <th>角色</th>
+              <th>租户</th>
+              <th>权限</th>
             </tr>
           </thead>
           <tbody>

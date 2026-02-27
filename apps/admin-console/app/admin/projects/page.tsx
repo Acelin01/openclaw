@@ -6,10 +6,18 @@ export default async function ProjectsPage() {
     orderBy: { createdAt: "desc" },
   });
   const tenants = await prisma.tenant.findMany({ orderBy: { createdAt: "desc" } });
+  const statusBadge = (status: string) => {
+    const value = status.toLowerCase();
+    if (value === "active" || value === "in_progress") return "badge badge-success";
+    if (value === "paused" || value === "on_hold") return "badge badge-warning";
+    if (value === "completed") return "badge badge-success";
+    if (value === "cancelled" || value === "canceled") return "badge badge-danger";
+    return "badge";
+  };
   return (
     <section>
       <h1>项目</h1>
-      <form method="post" action="/api/admin/projects" style={{ margin: "16px 0" }}>
+      <form method="post" action="/api/admin/projects" className="form-inline my-16">
         <select name="tenantId">
           <option value="">选择租户</option>
           {tenants.map((tenant) => (
@@ -18,20 +26,20 @@ export default async function ProjectsPage() {
             </option>
           ))}
         </select>
-        <input name="name" placeholder="项目名称" style={{ marginLeft: 8 }} />
-        <input name="status" placeholder="状态" style={{ marginLeft: 8 }} />
-        <button type="submit" style={{ marginLeft: 8 }}>
+        <input name="name" placeholder="项目名称" />
+        <input name="status" placeholder="状态" />
+        <button type="submit" className="btn btn-primary">
           新建
         </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="table-striped table-compact">
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>ID</th>
-            <th style={{ textAlign: "left" }}>名称</th>
-            <th style={{ textAlign: "left" }}>租户</th>
-            <th style={{ textAlign: "left" }}>状态</th>
-            <th style={{ textAlign: "left" }}>任务数</th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>租户</th>
+            <th>状态</th>
+            <th>任务数</th>
           </tr>
         </thead>
         <tbody>
@@ -40,7 +48,9 @@ export default async function ProjectsPage() {
               <td>{project.id}</td>
               <td>{project.name}</td>
               <td>{project.tenant?.name ?? project.tenantId}</td>
-              <td>{project.status}</td>
+              <td>
+                <span className={statusBadge(project.status)}>{project.status}</span>
+              </td>
               <td>{project.tasks.length}</td>
             </tr>
           ))}

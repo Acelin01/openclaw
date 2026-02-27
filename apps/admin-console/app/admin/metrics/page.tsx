@@ -8,18 +8,20 @@ export default async function MetricsPage() {
   return (
     <section>
       <h1>指标看板</h1>
-      <form method="post" action="/api/admin/metrics/refresh" style={{ margin: "16px 0" }}>
-        <button type="submit">刷新今日指标</button>
+      <form method="post" action="/api/admin/metrics/refresh" className="my-16">
+        <button type="submit" className="btn btn-primary">
+          刷新今日指标
+        </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="table-striped table-compact">
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>日期</th>
-            <th style={{ textAlign: "left" }}>范围</th>
-            <th style={{ textAlign: "left" }}>租户</th>
-            <th style={{ textAlign: "left" }}>项目</th>
-            <th style={{ textAlign: "left" }}>渠道</th>
-            <th style={{ textAlign: "left" }}>指标</th>
+            <th>日期</th>
+            <th>范围</th>
+            <th>租户</th>
+            <th>项目</th>
+            <th>渠道</th>
+            <th>指标</th>
           </tr>
         </thead>
         <tbody>

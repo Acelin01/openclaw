@@ -23,9 +23,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main style={{ padding: 24, maxWidth: 420 }}>
+    <main className="page-shell page-narrow stack">
       <h1>管理员登录</h1>
-      <form onSubmit={submit} style={{ display: "grid", gap: 12 }}>
+      <form onSubmit={submit} className="form-stack">
         <input
           placeholder="管理员密钥"
           value={key}
@@ -33,7 +33,7 @@ export default function LoginPage() {
         />
         <button type="submit">登录</button>
       </form>
-      {status ? <div style={{ color: "#b91c1c", marginTop: 12 }}>{status}</div> : null}
+      {status ? <div className="text-error mt-12">{status}</div> : null}
     </main>
   );
 }

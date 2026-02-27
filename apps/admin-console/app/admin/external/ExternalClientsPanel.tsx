@@ -61,6 +61,17 @@ export default function ExternalClientsPanel() {
     [clients, selectedClientId],
   );
 
+  const statusBadge = (value?: string | null) => {
+    const normalized = (value ?? "").toLowerCase();
+    if (!normalized) return "badge";
+    if (["active", "enabled", "approved"].includes(normalized)) return "badge badge-success";
+    if (["paused", "pending", "warning"].includes(normalized)) return "badge badge-warning";
+    if (["disabled", "revoked", "suspended", "blocked"].includes(normalized)) {
+      return "badge badge-danger";
+    }
+    return "badge";
+  };
+
   const refreshClients = async () => {
     const res = await fetch("/api/admin/external/clients");
     const payload = (await res.json()) as { data?: ApiClient[] };
@@ -199,10 +210,10 @@ export default function ExternalClientsPanel() {
   return (
     <section>
       <h1>对外 MCP 管理</h1>
-      <div style={{ display: "grid", gap: 20, maxWidth: 960 }}>
-        <div>
+      <div className="panel-grid">
+        <div className="panel-card">
           <h2>创建 Client</h2>
-          <form onSubmit={createClient} style={{ display: "grid", gap: 8 }}>
+          <form onSubmit={createClient} className="form-stack">
             <input
               placeholder="名称"
               value={form.name}
@@ -238,14 +249,16 @@ export default function ExternalClientsPanel() {
               value={form.permissionAllowlist}
               onChange={(event) => setForm({ ...form, permissionAllowlist: event.target.value })}
             />
-            <button type="submit">创建</button>
+            <button type="submit" className="btn btn-primary">
+              创建
+            </button>
           </form>
-          {status ? <div style={{ color: "#2563eb" }}>{status}</div> : null}
+          {status ? <div className="text-info">{status}</div> : null}
         </div>
 
-        <div>
+        <div className="panel-card">
           <h2>现有 Clients</h2>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div className="toolbar-row">
             <select
               value={selectedClientId}
               onChange={(event) => setSelectedClientId(event.target.value)}
@@ -257,21 +270,23 @@ export default function ExternalClientsPanel() {
                 </option>
               ))}
             </select>
-            <button type="button" onClick={fillFromSelected}>
+            <button type="button" onClick={fillFromSelected} className="btn">
               回填配置
             </button>
-            <button type="button" onClick={refreshClients}>
+            <button type="button" onClick={refreshClients} className="btn">
               刷新
             </button>
           </div>
           {selectedClient ? (
-            <div style={{ marginTop: 12 }}>
+            <div className="stack-sm mt-12">
               <div>ID: {selectedClient.id}</div>
-              <div>状态: {selectedClient.status}</div>
+              <div>
+                状态: <span className={statusBadge(selectedClient.status)}>{selectedClient.status}</span>
+              </div>
               <div>限流: {selectedClient.rateLimitPerMin}/min</div>
             </div>
           ) : null}
-          <form onSubmit={updateClient} style={{ display: "grid", gap: 8, marginTop: 12 }}>
+          <form onSubmit={updateClient} className="form-stack mt-12">
             <input
               placeholder="名称"
               value={form.name}
@@ -307,13 +322,15 @@ export default function ExternalClientsPanel() {
               value={form.permissionAllowlist}
               onChange={(event) => setForm({ ...form, permissionAllowlist: event.target.value })}
             />
-            <button type="submit">更新</button>
+            <button type="submit" className="btn btn-primary">
+              更新
+            </button>
           </form>
         </div>
 
-        <div>
+        <div className="panel-card">
           <h2>Token 管理</h2>
-          <form onSubmit={createToken} style={{ display: "grid", gap: 8, maxWidth: 480 }}>
+          <form onSubmit={createToken} className="form-stack form-stack-mid">
             <input
               placeholder="Token 名称"
               value={tokenForm.name}
@@ -324,20 +341,22 @@ export default function ExternalClientsPanel() {
               value={tokenForm.expiresAt}
               onChange={(event) => setTokenForm({ ...tokenForm, expiresAt: event.target.value })}
             />
-            <button type="submit">生成 Token</button>
+            <button type="submit" className="btn btn-primary">
+              生成 Token
+            </button>
           </form>
           {rawToken ? (
-            <div style={{ marginTop: 8 }}>
+            <div className="mt-8">
               <div>新 Token</div>
-              <pre style={{ background: "#111", color: "#eee", padding: 12 }}>{rawToken}</pre>
+              <pre className="token-box">{rawToken}</pre>
             </div>
           ) : null}
-          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 12 }}>
+          <table className="mt-12 table-striped table-compact">
             <thead>
               <tr>
-                <th style={{ textAlign: "left" }}>名称</th>
-                <th style={{ textAlign: "left" }}>上次使用</th>
-                <th style={{ textAlign: "left" }}>过期</th>
+                <th>名称</th>
+                <th>上次使用</th>
+                <th>过期</th>
               </tr>
             </thead>
             <tbody>
@@ -345,13 +364,19 @@ export default function ExternalClientsPanel() {
                 <tr key={token.id}>
                   <td>{token.name}</td>
                   <td>{token.lastUsedAt ?? "-"}</td>
-                  <td>{token.expiresAt ?? "-"}</td>
+                  <td>
+                    {token.expiresAt ? (
+                      <span className="badge badge-warning">{token.expiresAt}</span>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div>
+        <div className="panel-card">
           <h2>用量统计</h2>
           <form
             onSubmit={(event) => {
@@ -361,7 +386,7 @@ export default function ExternalClientsPanel() {
               }
               void refreshUsage(selectedClientId);
             }}
-            style={{ display: "grid", gap: 8, maxWidth: 480 }}
+            className="form-stack form-stack-mid"
           >
             <input
               placeholder="开始时间(ISO)"
@@ -383,16 +408,18 @@ export default function ExternalClientsPanel() {
               value={usageFilter.limit}
               onChange={(event) => setUsageFilter({ ...usageFilter, limit: event.target.value })}
             />
-            <button type="submit">查询</button>
+            <button type="submit" className="btn">
+              查询
+            </button>
           </form>
-          <div style={{ marginTop: 8 }}>总调用: {usageTotal}</div>
-          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 12 }}>
+          <div className="mt-8">总调用: {usageTotal}</div>
+          <table className="mt-12 table-striped table-compact">
             <thead>
               <tr>
-                <th style={{ textAlign: "left" }}>时间</th>
-                <th style={{ textAlign: "left" }}>工具</th>
-                <th style={{ textAlign: "left" }}>状态</th>
-                <th style={{ textAlign: "left" }}>耗时</th>
+                <th>时间</th>
+                <th>工具</th>
+                <th>状态</th>
+                <th>耗时</th>
               </tr>
             </thead>
             <tbody>
