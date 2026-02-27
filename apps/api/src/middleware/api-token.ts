@@ -4,7 +4,15 @@ import { prisma } from '../lib/db/index.js';
 import { getRedis } from '../services/redis.js';
 
 export interface ApiTokenRequest extends Request {
-  apiClient?: { id: string; name: string; rateLimitPerMin: number };
+  apiClient?: {
+    id: string;
+    name: string;
+    rateLimitPerMin: number;
+    defaultProjectId?: string | null;
+    defaultTeamId?: string | null;
+    toolAllowlist?: unknown;
+    permissionAllowlist?: unknown;
+  };
   apiToken?: { id: string; name: string };
 }
 
@@ -12,7 +20,9 @@ const hashToken = (token: string) => crypto.createHash('sha256').update(token).d
 
 const extractToken = (req: Request) => {
   const headerKey = req.headers['x-api-key'];
-  if (typeof headerKey === 'string' && headerKey.trim()) return headerKey.trim();
+  if (typeof headerKey === 'string' && headerKey.trim()) {
+    return headerKey.trim();
+  }
   const auth = req.headers['authorization'];
   if (typeof auth === 'string') {
     const parts = auth.split(' ');
@@ -50,6 +60,10 @@ export const authenticateApiToken = async (req: ApiTokenRequest, res: Response, 
     id: record.client.id,
     name: record.client.name,
     rateLimitPerMin: record.client.rateLimitPerMin ?? 60,
+    defaultProjectId: record.client.defaultProjectId ?? null,
+    defaultTeamId: record.client.defaultTeamId ?? null,
+    toolAllowlist: record.client.toolAllowlist ?? undefined,
+    permissionAllowlist: record.client.permissionAllowlist ?? undefined,
   };
   req.apiToken = { id: record.id, name: record.name };
   prisma.apiToken
@@ -68,7 +82,9 @@ export const apiRateLimit = () => async (req: ApiTokenRequest, res: Response, ne
     const bucket = `rate:api:${clientId}:${Math.floor(now / windowMs)}`;
     try {
       const count = await redis.incr(bucket);
-      if (count === 1) await redis.pexpire(bucket, windowMs);
+      if (count === 1) {
+        await redis.pexpire(bucket, windowMs);
+      }
       if (count > max) {
         res.status(429).json({ success: false, message: '请求过多，请稍后再试' });
         return;
@@ -76,12 +92,14 @@ export const apiRateLimit = () => async (req: ApiTokenRequest, res: Response, ne
       next();
       return;
     } catch {
-      // fallback below
     }
   }
   const memKey = `rate:api:${clientId}`;
-  const memory = (globalThis as any).__apiRateLimit ?? new Map<string, { count: number; first: number }>();
-  (globalThis as any).__apiRateLimit = memory;
+  const globalStore = globalThis as unknown as {
+    __apiRateLimit?: Map<string, { count: number; first: number }>;
+  };
+  const memory = globalStore.__apiRateLimit ?? new Map<string, { count: number; first: number }>();
+  globalStore.__apiRateLimit = memory;
   const entry = memory.get(memKey);
   if (entry && now - entry.first < windowMs) {
     if (entry.count >= max) {
@@ -98,9 +116,21 @@ export const apiRateLimit = () => async (req: ApiTokenRequest, res: Response, ne
 export const recordApiUsage = () => async (req: ApiTokenRequest, res: Response, next: NextFunction) => {
   const start = Date.now();
   res.on('finish', () => {
-    if (!prisma || !req.apiClient) return;
-    const message: any = (req as any).body?.message;
-    const tool = message?.body?.action ?? undefined;
+    if (!prisma || !req.apiClient) {
+      return;
+    }
+    const rawBody = (req as unknown as { body?: unknown }).body;
+    const body = rawBody && typeof rawBody === 'object' ? (rawBody as Record<string, unknown>) : {};
+    const message = body.message && typeof body.message === 'object' ? body.message : undefined;
+    const messageBody =
+      message && typeof message === 'object' && 'body' in message
+        ? (message as Record<string, unknown>).body
+        : undefined;
+    const action =
+      messageBody && typeof messageBody === 'object' && 'action' in messageBody
+        ? (messageBody as Record<string, unknown>).action
+        : undefined;
+    const tool = typeof action === 'string' ? action : undefined;
     prisma.apiUsageLog
       .create({
         data: {

@@ -1,0 +1,35 @@
+const TOOL_PERMISSION_MAP: Record<string, string> = {
+  project_create: "project.write",
+  project_query: "project.read",
+  task_create: "task.write",
+  task_list: "task.read",
+  task_update_status: "task.write",
+  requirement_create: "requirement.write",
+  milestone_monitor: "milestone.read",
+  defect_create: "defect.write",
+  risk_create: "risk.write",
+  collaboration_dispatch: "collaboration.write",
+  collaboration_sync: "collaboration.write",
+  quotation_create: "quotation.write",
+  transaction_create: "transaction.write",
+  service_create: "service.write",
+  skill_analyzer: "analysis.read",
+  marketplace_integrator: "marketplace.read",
+  compliance_checker: "compliance.read",
+  growth_strategy_analyzer: "analysis.read",
+  ux_design_reviewer: "analysis.read",
+  devops_pipeline_optimizer: "analysis.read",
+};
+
+export const resolveMcpPermission = (tool: string) =>
+  TOOL_PERMISSION_MAP[tool] ?? "tool.execute";
+
+export const resolveDefaultAllowlist = () => [
+  "project_create",
+  "project_query",
+  "task_create",
+  "task_list",
+  "task_update_status",
+  "milestone_monitor",
+  "requirement_create",
+];
