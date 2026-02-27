@@ -1,0 +1,112 @@
+
+> @uxin/projects@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/projects
+> eslint "src/**/*.ts*"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/AgentCollaborationView.tsx[24m[0m
+[0m  [2m4:20[22m   [33mwarning[39m  'Shield' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:65[22m   [33mwarning[39m  'Clock' is defined but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:107[22m  [33mwarning[39m  'Server' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/AgentDetailModal.tsx[24m[0m
+[0m  [2m5:10[22m  [33mwarning[39m  'cn' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/ConversationList.tsx[24m[0m
+[0m  [2m3:33[22m  [33mwarning[39m  'Filter' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/CreateDefectModal.tsx[24m[0m
+[0m  [2m23:15[22m  [33mwarning[39m  'AlertCircle' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m23:34[22m  [33mwarning[39m  'ShieldAlert' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/CreateRequirementModal.tsx[24m[0m
+[0m  [2m2:51[22m  [33mwarning[39m  'Calendar' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m2:69[22m  [33mwarning[39m  'Plus' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m2:75[22m  [33mwarning[39m  'ChevronDown' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m3:10[22m  [33mwarning[39m  'cn' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/CreateRiskModal.tsx[24m[0m
+[0m  [2m23:39[22m  [33mwarning[39m  'Info' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/CreateTaskModal.tsx[24m[0m
+[0m  [2m2:73[22m  [33mwarning[39m  'Plus' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m2:79[22m  [33mwarning[39m  'ChevronDown' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/DefectList.tsx[24m[0m
+[0m  [2m14:3[22m  [33mwarning[39m  'User' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/DocumentEditorModal.tsx[24m[0m
+[0m   [2m9:3[22m   [33mwarning[39m  'Plus' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m22:3[22m   [33mwarning[39m  'CheckCircle2' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m38:11[22m  [33mwarning[39m  'DocumentVersion' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/MemberList.tsx[24m[0m
+[0m  [2m2:23[22m  [33mwarning[39m  'Phone' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/MilestoneList.tsx[24m[0m
+[0m  [2m4:45[22m  [33mwarning[39m  'ChevronRight' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/ProjectListView.tsx[24m[0m
+[0m  [2m6:24[22m  [33mwarning[39m  'Filter' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/ProjectModal.tsx[24m[0m
+[0m  [2m22:10[22m  [33mwarning[39m  'cn' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/ProjectTeam.tsx[24m[0m
+[0m    [2m7:21[22m  [33mwarning[39m  'Code' is defined but never used                    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m    [2m7:34[22m  [33mwarning[39m  'Wallet' is defined but never used                  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m465:7[22m   [33mwarning[39m  'WorkflowStep' is assigned a value but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m477:7[22m   [33mwarning[39m  'WorkflowArrow' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/RequirementDetailModal.tsx[24m[0m
+[0m  [2m4:3[22m  [33mwarning[39m  'Clock' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/RequirementLandscapeModal.tsx[24m[0m
+[0m   [2m3:27[22m  [33mwarning[39m  'useEffect' is defined but never used              [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m12:3[22m   [33mwarning[39m  'ArrowRight' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m64:11[22m  [33mwarning[39m  'CANVAS_WIDTH' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/RequirementList.tsx[24m[0m
+[0m  [2m4:30[22m  [33mwarning[39m  'RequirementPriority' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:51[22m  [33mwarning[39m  'RequirementStatus' is defined but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:27[22m  [33mwarning[39m  'AlertCircle' is defined but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:56[22m  [33mwarning[39m  'UserIcon' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/RiskDetailModal.tsx[24m[0m
+[0m  [2m4:3[22m  [33mwarning[39m  'Clock' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/RiskList.tsx[24m[0m
+[0m   [2m7:33[22m  [33mwarning[39m  'User' is defined but never used                      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m7:59[22m  [33mwarning[39m  'XCircle' is defined but never used                   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m7:68[22m  [33mwarning[39m  'AlertCircle' is defined but never used               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m24:24[22m  [33mwarning[39m  'setActiveFilter' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m26:9[22m   [33mwarning[39m  'filters' is assigned a value but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m33:9[22m   [33mwarning[39m  'filteredRisks' is assigned a value but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/components/TaskList.tsx[24m[0m
+[0m  [2m7:24[22m  [33mwarning[39m  'User' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/projects/src/lib/project-app.ts[24m[0m
+[0m  [2m2:3[22m  [33mwarning[39m  'Project' is defined but never used              [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m3:3[22m  [33mwarning[39m  'ProjectRequirement' is defined but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:3[22m  [33mwarning[39m  'ProjectTask' is defined but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m5:3[22m  [33mwarning[39m  'ProjectStatus' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m6:3[22m  [33mwarning[39m  'RequirementPriority' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:3[22m  [33mwarning[39m  'RequirementStatus' is defined but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m8:3[22m  [33mwarning[39m  'TaskPriority' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m9:3[22m  [33mwarning[39m  'TaskStatus' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 50 problems (0 errors, 50 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

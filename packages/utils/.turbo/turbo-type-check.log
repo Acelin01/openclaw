@@ -1,0 +1,63 @@
+
+> @uxin/utils@1.0.0 type-check /Users/acelin/Documents/Next/AIGC/uxin/packages/utils
+> tsc --noEmit
+
+[96msrc/api-config.ts[0m:[93m15[0m:[93m22[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m15[0m   const defaultUrl = process.env.NODE_ENV === 'development' ? LOCAL_API_URL : DEFAULT_API_URL;
+[7m  [0m [91m                     ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m16[0m:[93m18[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m16[0m   const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultUrl;
+[7m  [0m [91m                 ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m68[0m:[93m14[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m68[0m       return process.env.NEXT_PUBLIC_API_URL || LOCAL_API_URL;
+[7m  [0m [91m             ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m73[0m:[93m22[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m73[0m   const defaultUrl = process.env.NODE_ENV === 'development' ? LOCAL_API_URL : DEFAULT_API_URL;
+[7m  [0m [91m                     ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m74[0m:[93m10[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m74[0m   return process.env.SERVER_API_URL || process.env.NEXT_PUBLIC_API_URL || defaultUrl;
+[7m  [0m [91m         ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m74[0m:[93m40[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m74[0m   return process.env.SERVER_API_URL || process.env.NEXT_PUBLIC_API_URL || defaultUrl;
+[7m  [0m [91m                                       ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m92[0m:[93m14[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m92[0m       return process.env.NEXT_PUBLIC_WS_URL || `http://${hostname}:8000`;
+[7m  [0m [91m             ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m96[0m:[93m14[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m96[0m       return process.env.NEXT_PUBLIC_WS_URL || LOCAL_API_URL;
+[7m  [0m [91m             ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m101[0m:[93m18[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m101[0m   const apiUrl = process.env.NEXT_PUBLIC_WS_URL || process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'development' ? LOCAL_API_URL : DEFAULT_WS_URL);
+[7m   [0m [91m                 ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m101[0m:[93m52[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m101[0m   const apiUrl = process.env.NEXT_PUBLIC_WS_URL || process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'development' ? LOCAL_API_URL : DEFAULT_WS_URL);
+[7m   [0m [91m                                                   ~~~~~~~[0m
+
+[96msrc/api-config.ts[0m:[93m101[0m:[93m88[0m - [91merror[0m[90m TS2580: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+
+[7m101[0m   const apiUrl = process.env.NEXT_PUBLIC_WS_URL || process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'development' ? LOCAL_API_URL : DEFAULT_WS_URL);
+[7m   [0m [91m                                                                                       ~~~~~~~[0m
+
+
+Found 11 errors in the same file, starting at: src/api-config.ts[90m:15[0m
+
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

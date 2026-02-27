@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1765184630347,
+      "tag": "0000_sparkling_mockingbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1765515619514,
+      "tag": "0001_faithful_pestilence",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1765516972787,
+      "tag": "0002_typical_jack_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1766425827899,
+      "tag": "0003_sour_archangel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1767791461680,
+      "tag": "0004_simple_norman_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1767827369399,
+      "tag": "0005_complete_mindworm",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1769870792184,
+      "tag": "0006_freezing_tarot",
+      "breakpoints": true
+    }
+  ]
+}

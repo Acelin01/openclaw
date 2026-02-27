@@ -1,0 +1,16 @@
+{
+  "operaBot": {
+    "widgetTitle": "OperaBot AI Assistant",
+    "online": "Online",
+    "offline": "Offline",
+    "widgetWelcome": "Hello! I'm OperaBot, how can I help you?",
+    "inputPlaceholder": "Type your message...",
+    "enterToSend": "Press Enter to send message, Shift+Enter for new line",
+    "quickReplies": "Quick Replies",
+    "voiceInput": "Voice Input",
+    "fileUpload": "File Upload",
+    "errors": {
+      "configurationError": "OperaBot Configuration Error: Missing API Key"
+    }
+  }
+}

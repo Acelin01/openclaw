@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OperaBot 客户端示例</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .demo-section {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f9fafb;
+      }
+
+      .demo-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 20px 0;
+      }
+
+      .demo-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .demo-button:hover {
+        background: #0056b3;
+      }
+
+      .demo-button.secondary {
+        background: #6c757d;
+      }
+
+      .demo-button.secondary:hover {
+        background: #545b62;
+      }
+
+      .status {
+        padding: 10px;
+        border-radius: 6px;
+        margin: 10px 0;
+        font-family: monospace;
+        font-size: 14px;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .analytics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .analytics-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        text-align: center;
+      }
+
+      .analytics-card h4 {
+        margin: 0 0 10px 0;
+        color: #6b7280;
+        font-size: 14px;
+      }
+
+      .analytics-card .value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .code-example {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+      }
+
+      .warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🤖 OperaBot 客户端 SDK 演示</h1>
+
+      <div class="warning">
+        <strong>⚠️ 注意：</strong> 这是一个演示页面。要使用真实的 OperaBot，请替换为您的 API 密钥。
+      </div>
+
+      <div class="demo-section">
+        <h3>📋 基础配置</h3>
+        <div class="code-example">
+          const widget = createOperaBotWidget({ apiKey: 'your-api-key-here', position:
+          'bottom-right', language: 'zh-CN' });
+        </div>
+        <div class="demo-buttons">
+          <button class="demo-button" onclick="initializeBasic()">基础初始化</button>
+          <button class="demo-button" onclick="initializeAdvanced()">高级配置</button>
+          <button class="demo-button secondary" onclick="destroyWidget()">销毁小部件</button>
+        </div>
+        <div id="init-status" class="status info">准备初始化...</div>
+      </div>
+
+      <div class="demo-section">
+        <h3>💬 消息测试</h3>
+        <div class="demo-buttons">
+          <button class="demo-button" onclick="sendTestMessage()">发送测试消息</button>
+          <button class="demo-button" onclick="sendBusinessQuery()">业务查询</button>
+          <button class="demo-button" onclick="sendDatabaseQuery()">数据库查询</button>
+          <button class="demo-button secondary" onclick="clearMessages()">清空消息</button>
+        </div>
+        <div id="message-status" class="status info">等待发送消息...</div>
+      </div>
+
+      <div class="demo-section">
+        <h3>📊 分析数据</h3>
+        <div class="demo-buttons">
+          <button class="demo-button" onclick="getAnalytics()">获取分析数据</button>
+          <button class="demo-button secondary" onclick="resetAnalytics()">重置统计</button>
+        </div>
+        <div id="analytics-display" class="analytics"></div>
+      </div>
+
+      <div class="demo-section">
+        <h3>🎨 主题定制</h3>
+        <div class="demo-buttons">
+          <button class="demo-button" onclick="applyBlueTheme()">蓝色主题</button>
+          <button class="demo-button" onclick="applyGreenTheme()">绿色主题</button>
+          <button class="demo-button" onclick="applyPurpleTheme()">紫色主题</button>
+          <button class="demo-button secondary" onclick="applyCustomTheme()">自定义主题</button>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <h3>📍 位置切换</h3>
+        <div class="demo-buttons">
+          <button class="demo-button" onclick="setPosition('bottom-right')">右下角</button>
+          <button class="demo-button" onclick="setPosition('bottom-left')">左下角</button>
+          <button class="demo-button" onclick="setPosition('top-right')">右上角</button>
+          <button class="demo-button" onclick="setPosition('top-left')">左上角</button>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <h3>🔧 功能开关</h3>
+        <div class="demo-buttons">
+          <button class="demo-button" onclick="toggleQuickReplies()">切换快捷回复</button>
+          <button class="demo-button" onclick="toggleTypingIndicator()">切换输入指示</button>
+          <button class="demo-button" onclick="toggleVoice()">切换语音输入</button>
+          <button class="demo-button" onclick="toggleFileUpload()">切换文件上传</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { createOperaBotWidget, utils } from "../dist/index.mjs";
+
+      let currentWidget = null;
+      let messageCount = 0;
+
+      // 演示用的模拟 API 密钥
+      const DEMO_API_KEY = "demo-key-for-testing-only";
+
+      // 初始化基础版本
+      window.initializeBasic = function () {
+        try {
+          if (currentWidget) {
+            currentWidget.destroy();
+          }
+
+          currentWidget = createOperaBotWidget({
+            apiKey: DEMO_API_KEY,
+            position: "bottom-right",
+            language: "zh-CN",
+          });
+
+          updateStatus("init-status", "基础 OperaBot 已初始化成功！", "success");
+
+          // 监听事件
+          currentWidget.on("message", ({ message }) => {
+            updateStatus("message-status", `收到消息: ${message.content}`, "success");
+          });
+
+          currentWidget.on("error", (error) => {
+            updateStatus("init-status", `错误: ${error.message}`, "error");
+          });
+        } catch (error) {
+          updateStatus("init-status", `初始化失败: ${error.message}`, "error");
+        }
+      };
+
+      // 初始化高级版本
+      window.initializeAdvanced = function () {
+        try {
+          if (currentWidget) {
+            currentWidget.destroy();
+          }
+
+          currentWidget = createOperaBotWidget({
+            apiKey: DEMO_API_KEY,
+            serverUrl: "wss://demo-api.uxin.com/opera-bot",
+            userId: `demo-user-${Date.now()}`,
+            position: "bottom-right",
+            language: "zh-CN",
+            theme: {
+              primaryColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              backgroundColor: "#ffffff",
+              textColor: "#333333",
+              borderRadius: "16px",
+            },
+            features: {
+              enableVoice: false,
+              enableFileUpload: false,
+              enableQuickReplies: true,
+              showTypingIndicator: true,
+            },
+          });
+
+          updateStatus("init-status", "高级 OperaBot 已初始化成功！", "success");
+        } catch (error) {
+          updateStatus("init-status", `初始化失败: ${error.message}`, "error");
+        }
+      };
+
+      // 销毁小部件
+      window.destroyWidget = function () {
+        if (currentWidget) {
+          currentWidget.destroy();
+          currentWidget = null;
+          updateStatus("init-status", "OperaBot 已销毁", "info");
+          updateStatus("message-status", "小部件已销毁", "info");
+        }
+      };
+
+      // 发送测试消息
+      window.sendTestMessage = function () {
+        if (!currentWidget) {
+          updateStatus("message-status", "请先初始化 OperaBot", "error");
+          return;
+        }
+
+        const testMessages = [
+          "你好，OperaBot！",
+          "今天天气怎么样？",
+          "能帮我查询订单吗？",
+          "谢谢你的帮助！",
+        ];
+
+        const message = testMessages[messageCount % testMessages.length];
+        currentWidget.send(message);
+        messageCount++;
+
+        updateStatus("message-status", `发送消息: ${message}`, "success");
+      };
+
+      // 发送业务查询
+      window.sendBusinessQuery = function () {
+        if (!currentWidget) {
+          updateStatus("message-status", "请先初始化 OperaBot", "error");
+          return;
+        }
+
+        const businessQueries = [
+          "查询本月销售数据",
+          "显示最近的客户订单",
+          "统计网站访问量",
+          "生成月度报表",
+        ];
+
+        const query = businessQueries[Math.floor(Math.random() * businessQueries.length)];
+        currentWidget.send(query);
+
+        updateStatus("message-status", `业务查询: ${query}`, "success");
+      };
+
+      // 发送数据库查询
+      window.sendDatabaseQuery = function () {
+        if (!currentWidget) {
+          updateStatus("message-status", "请先初始化 OperaBot", "error");
+          return;
+        }
+
+        const dbQueries = [
+          "查询用户表中最近注册的用户",
+          "统计订单表中的订单数量",
+          "显示产品表中的热门商品",
+          "查询客户反馈表",
+        ];
+
+        const query = dbQueries[Math.floor(Math.random() * dbQueries.length)];
+        currentWidget.send(query);
+
+        updateStatus("message-status", `数据库查询: ${query}`, "success");
+      };
+
+      // 清空消息
+      window.clearMessages = function () {
+        if (!currentWidget) {
+          updateStatus("message-status", "请先初始化 OperaBot", "error");
+          return;
+        }
+
+        // 注意：这里需要访问内部 client 来清空消息
+        if (currentWidget.client) {
+          currentWidget.client.clearMessages();
+        }
+
+        updateStatus("message-status", "消息已清空", "success");
+      };
+
+      // 获取分析数据
+      window.getAnalytics = function () {
+        if (!currentWidget) {
+          updateStatus(
+            "analytics-display",
+            '<div class="status error">请先初始化 OperaBot</div>',
+            "error",
+          );
+          return;
+        }
+
+        try {
+          const analytics = currentWidget.getAnalytics();
+          displayAnalytics(analytics);
+        } catch (error) {
+          updateStatus(
+            "analytics-display",
+            `<div class="status error">获取分析数据失败: ${error.message}</div>`,
+            "error",
+          );
+        }
+      };
+
+      // 显示分析数据
+      function displayAnalytics(analytics) {
+        const display = document.getElementById("analytics-display");
+        display.innerHTML = `
+                <div class="analytics-card">
+                    <h4>总会话数</h4>
+                    <div class="value">${analytics.messages || 0}</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>用户ID</h4>
+                    <div class="value" style="font-size: 14px;">${analytics.userId || "N/A"}</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>会话ID</h4>
+                    <div class="value" style="font-size: 12px;">${analytics.sessionId ? analytics.sessionId.substring(0, 8) + "..." : "N/A"}</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>意图统计</h4>
+                    <div class="value" style="font-size: 14px;">
+                        ${Object.keys(analytics.intents || {}).length} 种
+                    </div>
+                </div>
+            `;
+      }
+
+      // 重置统计（模拟）
+      window.resetAnalytics = function () {
+        updateStatus("analytics-display", '<div class="status info">分析数据已重置</div>', "info");
+      };
+
+      // 主题定制函数
+      window.applyBlueTheme = function () {
+        if (!currentWidget) {
+          alert("请先初始化 OperaBot");
+          return;
+        }
+        // 主题切换需要重新初始化
+        initializeWithTheme({
+          primaryColor: "#007bff",
+          backgroundColor: "#ffffff",
+          textColor: "#333333",
+          borderRadius: "12px",
+        });
+      };
+
+      window.applyGreenTheme = function () {
+        if (!currentWidget) {
+          alert("请先初始化 OperaBot");
+          return;
+        }
+        initializeWithTheme({
+          primaryColor: "#28a745",
+          backgroundColor: "#f8fff8",
+          textColor: "#155724",
+          borderRadius: "12px",
+        });
+      };
+
+      window.applyPurpleTheme = function () {
+        if (!currentWidget) {
+          alert("请先初始化 OperaBot");
+          return;
+        }
+        initializeWithTheme({
+          primaryColor: "#6f42c1",
+          backgroundColor: "#f8f9fa",
+          textColor: "#333333",
+          borderRadius: "16px",
+        });
+      };
+
+      window.applyCustomTheme = function () {
+        if (!currentWidget) {
+          alert("请先初始化 OperaBot");
+          return;
+        }
+        initializeWithTheme({
+          primaryColor: "linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)",
+          backgroundColor: "#fff5f5",
+          textColor: "#c53030",
+          borderRadius: "20px",
+        });
+      };
+
+      function initializeWithTheme(theme) {
+        if (currentWidget) {
+          currentWidget.destroy();
+        }
+
+        currentWidget = createOperaBotWidget({
+          apiKey: DEMO_API_KEY,
+          position: "bottom-right",
+          language: "zh-CN",
+          theme: theme,
+          features: {
+            enableQuickReplies: true,
+            showTypingIndicator: true,
+          },
+        });
+
+        updateStatus("init-status", "主题已应用！", "success");
+      }
+
+      // 位置设置
+      window.setPosition = function (position) {
+        if (!currentWidget) {
+          alert("请先初始化 OperaBot");
+          return;
+        }
+
+        // 位置切换需要重新初始化
+        if (currentWidget) {
+          currentWidget.destroy();
+        }
+
+        currentWidget = createOperaBotWidget({
+          apiKey: DEMO_API_KEY,
+          position: position,
+          language: "zh-CN",
+          features: {
+            enableQuickReplies: true,
+            showTypingIndicator: true,
+          },
+        });
+
+        updateStatus("init-status", `位置已切换到: ${position}`, "success");
+      };
+
+      // 功能开关
+      window.toggleQuickReplies = function () {
+        alert("快捷回复功能开关演示");
+      };
+
+      window.toggleTypingIndicator = function () {
+        alert("输入指示器功能开关演示");
+      };
+
+      window.toggleVoice = function () {
+        alert("语音输入功能开关演示");
+      };
+
+      window.toggleFileUpload = function () {
+        alert("文件上传功能开关演示");
+      };
+
+      // 工具函数
+      function updateStatus(elementId, message, type) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.textContent = message;
+          element.className = `status ${type}`;
+        }
+      }
+
+      // 页面加载完成后的初始化
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("OperaBot 演示页面已加载");
+        updateStatus("init-status", "页面加载完成，可以开始初始化", "info");
+      });
+    </script>
+  </body>
+</html>

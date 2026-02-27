@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"],
+      "@uxin/artifact-ui": ["../../packages/artifact-ui/src/index.ts"],
+      "@uxin/artifact-ui/*": ["../../packages/artifact-ui/src/*"],
+      "@uxin/auth": ["../../packages/auth/src/index.ts"],
+      "@uxin/tasks": ["../../packages/tasks/src/index.ts"],
+      "@uxin/projects": ["../../packages/projects/src/index.ts"],
+      "@uxin/shared-employee": ["../../packages/shared-employee/src/index.ts"],
+      "@uxin/worker-service": ["../../packages/worker-service/src/index.ts"],
+      "@uxin/recruitment": ["../../packages/recruitment/src/index.ts"],
+      "@uxin/agent-lib": ["../../packages/agent-lib/src/index.ts"],
+      "@uxin/types": ["../../packages/types/src/index.ts"],
+      "@uxin/ui": ["../../packages/ui/src/index.ts"],
+      "@uxin/requirement-lib": ["../../packages/requirement-lib/src/index.ts"],
+      "@uxin/requirement-lib/*": ["../../packages/requirement-lib/src/*"],
+      "@uxin/utils": ["../../packages/utils/src/index.ts"],
+      "@uxin/utils/*": ["../../packages/utils/src/*"]
+    },
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.js",
+    ".next/dev/types/**/*.ts"
+, "../api/scripts/seed-uxin-platform.ts"  ],
+  "exclude": ["node_modules"]
+}

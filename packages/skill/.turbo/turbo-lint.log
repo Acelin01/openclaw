@@ -1,0 +1,142 @@
+
+> @uxin/skill@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/skill
+> eslint "src/**/*.ts*"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/collaboration/ExecutionEnvironment.ts[24m[0m
+[0m  [2m79:36[22m  [33mwarning[39m  'metrics' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/collaboration/OrchestrationEngine.ts[24m[0m
+[0m   [2m7:3[22m   [33mwarning[39m  'AgentRole' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m50:11[22m  [33mwarning[39m  'message' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/evolution/EvolutionEngine.ts[24m[0m
+[0m    [2m4:10[22m  [33mwarning[39m  'SkillRegistry' is defined but never used                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m54:11[22m  [33mwarning[39m  'evolvedRequirements' is assigned a value but never used                  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m167:37[22m  [33mwarning[39m  'taskId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m176:37[22m  [33mwarning[39m  'taskId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/evolution/FeedbackEngine.ts[24m[0m
+[0m  [2m285:32[22m  [33mwarning[39m  'req' is defined but never used. Allowed unused args must match /^_/u    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m285:42[22m  [33mwarning[39m  'agent' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/evolution/PreCheckEngine.ts[24m[0m
+[0m  [2m107:35[22m  [33mwarning[39m  'requirements' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m113:29[22m  [33mwarning[39m  'projectId' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m119:35[22m  [33mwarning[39m  'projectId' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m124:32[22m  [33mwarning[39m  'projectId' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m129:35[22m  [33mwarning[39m  'projectId' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m134:32[22m  [33mwarning[39m  'projectId' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m139:35[22m  [33mwarning[39m  'projectId' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/execution/SkillExecutor.ts[24m[0m
+[0m  [2m59:13[22m  [33mwarning[39m  'startTime' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/models/Skill.ts[24m[0m
+[0m    [2m3:3[22m   [33mwarning[39m  'SkillLevel' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m    [2m4:3[22m   [33mwarning[39m  'SkillInput' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m    [2m5:3[22m   [33mwarning[39m  'SkillOutput' is defined but never used       [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m145:58[22m  [33mwarning[39m  'results' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/orchestration/SkillOrchestrator.ts[24m[0m
+[0m  [2m27:11[22m  [33mwarning[39m  'results' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/orchestration/TaskFlowManager.ts[24m[0m
+[0m   [2m5:26[22m  [33mwarning[39m  'EvaluationResult' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m10:38[22m  [33mwarning[39m  'SkillExecutionResult' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m15:30[22m  [33mwarning[39m  'AdjustmentPlan' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/scenario-verify.ts[24m[0m
+[0m  [2m7:3[22m  [33mwarning[39m  'WorkflowStatus' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-ai-collaboration-platform.ts[24m[0m
+[0m   [2m34:37[22m  [33mwarning[39m  'inputs' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m71:37[22m  [33mwarning[39m  'inputs' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m141:11[22m  [33mwarning[39m  'report' is assigned a value but never used                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-executor-lifecycle.ts[24m[0m
+[0m  [2m5:3[22m  [33mwarning[39m  'ExecutionStatus' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-feedback-mechanism.ts[24m[0m
+[0m  [2m4:10[22m  [33mwarning[39m  'SkillLevel' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-full-arch.ts[24m[0m
+[0m  [2m48:39[22m  [33mwarning[39m  'inputs' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-learning-flow.ts[24m[0m
+[0m   [2m5:3[22m   [33mwarning[39m  'LearningStatus' is defined but never used                                [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m20:39[22m  [33mwarning[39m  'inputs' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-pm-skills.ts[24m[0m
+[0m  [2m6:3[22m  [33mwarning[39m  'SkillLevel' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-project-lifecycle.ts[24m[0m
+[0m   [2m3:22[22m  [33mwarning[39m  'SkillExecutionResult' is defined but never used                           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m16:66[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-registration.ts[24m[0m
+[0m  [2m15:39[22m  [33mwarning[39m  'inputs' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-self-evolution.ts[24m[0m
+[0m  [2m30:37[22m  [33mwarning[39m  'inputs' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/scripts/verify-task-flow.ts[24m[0m
+[0m  [2m3:22[22m  [33mwarning[39m  'SkillExecutionMode' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/services/SkillLearningSystem.ts[24m[0m
+[0m  [2m9:10[22m  [33mwarning[39m  'Skill' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/services/SkillMatcher.ts[24m[0m
+[0m  [2m3:10[22m  [33mwarning[39m  'SkillLevel' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/ArchitectureDesignSkill.ts[24m[0m
+[0m  [2m30:66[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m31:27[22m  [33mwarning[39m  'constraints' is assigned a value but never used                           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m67:58[22m  [33mwarning[39m  'results' is assigned a value but never used                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/CommunicationSkill.ts[24m[0m
+[0m  [2m24:63[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/MarketAnalysisSkill.ts[24m[0m
+[0m  [2m31:66[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m63:58[22m  [33mwarning[39m  'results' is assigned a value but never used                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/MeetingCoordinationSkill.ts[24m[0m
+[0m  [2m24:63[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/PerformanceOptimizationSkill.ts[24m[0m
+[0m  [2m24:63[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m25:13[22m  [33mwarning[39m  'system_architecture' is assigned a value but never used                   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/ProductPlanningSkill.ts[24m[0m
+[0m  [2m30:66[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m63:58[22m  [33mwarning[39m  'results' is assigned a value but never used                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/RequirementManagementSkill.ts[24m[0m
+[0m  [2m30:66[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m69:58[22m  [33mwarning[39m  'results' is assigned a value but never used                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/SecurityAuditSkill.ts[24m[0m
+[0m  [2m24:63[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m25:13[22m  [33mwarning[39m  'code_base' is assigned a value but never used                             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/skill/src/skills/TestDesignSkill.ts[24m[0m
+[0m  [2m30:66[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m31:27[22m  [33mwarning[39m  'architecture' is assigned a value but never used                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m61:58[22m  [33mwarning[39m  'results' is assigned a value but never used                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 60 problems (0 errors, 60 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

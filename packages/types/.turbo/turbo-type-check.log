@@ -1,0 +1,4 @@
+
+> @uxin/types@1.0.0 type-check /Users/acelin/Documents/Next/AIGC/uxin/packages/types
+> tsc --noEmit
+

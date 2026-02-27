@@ -1,0 +1,4 @@
+
+> @uxin/square@0.0.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/square
+> eslint "src/**/*.{ts,tsx}"
+

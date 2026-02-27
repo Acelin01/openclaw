@@ -1,0 +1,70 @@
+
+> @uxin/iteration-lib@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib
+> eslint "src/**/*.ts*"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.3.5 <5.4.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+Pages directory cannot be found at /Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/pages or /Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/pages. If using a custom path, please configure with the `no-html-link-for-pages` rule in your eslint config file.
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/components/CreateIterationModal.tsx[24m[0m
+[0m  [2m4:33[22m  [33mwarning[39m  'DialogHeader' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:47[22m  [33mwarning[39m  'DialogTitle' is defined but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m4:60[22m  [33mwarning[39m  'DialogFooter' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/components/IterationDetailView.tsx[24m[0m
+[0m   [2m12:3[22m  [33mwarning[39m  'BarChart3' is defined but never used                                                                                                                                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m19:3[22m  [33mwarning[39m  'Clock' is defined but never used                                                                                                                                                                   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m23:7[22m  [33mwarning[39m  'formatDate' is assigned a value but never used                                                                                                                                                     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m50:3[22m  [33mwarning[39m  'onUpdate' is defined but never used                                                                                                                                                                [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m59:3[22m  [33mwarning[39m  'readOnly' is assigned a value but never used                                                                                                                                                       [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m64:9[22m  [33mwarning[39m  The 'workItems' logical expression could make the dependencies of useMemo Hook (at line 79) change on every render. To fix this, wrap the initialization of 'workItems' in its own useMemo() Hook   [2mreact-hooks/exhaustive-deps[22m[0m
+[0m   [2m64:9[22m  [33mwarning[39m  The 'workItems' logical expression could make the dependencies of useMemo Hook (at line 80) change on every render. To fix this, wrap the initialization of 'workItems' in its own useMemo() Hook   [2mreact-hooks/exhaustive-deps[22m[0m
+[0m   [2m64:9[22m  [33mwarning[39m  The 'workItems' logical expression could make the dependencies of useMemo Hook (at line 98) change on every render. To fix this, wrap the initialization of 'workItems' in its own useMemo() Hook   [2mreact-hooks/exhaustive-deps[22m[0m
+[0m   [2m64:9[22m  [33mwarning[39m  The 'workItems' logical expression could make the dependencies of useMemo Hook (at line 116) change on every render. To fix this, wrap the initialization of 'workItems' in its own useMemo() Hook  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m   [2m75:9[22m  [33mwarning[39m  'completionRate' is assigned a value but never used                                                                                                                                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m81:9[22m  [33mwarning[39m  'remainingHours' is assigned a value but never used                                                                                                                                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m84:9[22m  [33mwarning[39m  'memberLoads' is assigned a value but never used                                                                                                                                                    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m101:9[22m  [33mwarning[39m  'typeDistribution' is assigned a value but never used                                                                                                                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m118:9[22m  [33mwarning[39m  'daysRemaining' is assigned a value but never used                                                                                                                                                  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/components/IterationListView.tsx[24m[0m
+[0m   [2m5:20[22m  [33mwarning[39m  'User' is defined but never used                     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m7:10[22m  [33mwarning[39m  'zhCN' is defined but never used                     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m32:9[22m   [33mwarning[39m  'getStatusColor' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/components/IterationOverview.tsx[24m[0m
+[0m   [2m6:3[22m   [33mwarning[39m  'BarChart3' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m87:11[22m  [33mwarning[39m  'completed' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/components/IterationPlanningView.tsx[24m[0m
+[0m   [2m14:3[22m  [33mwarning[39m  'DragOverEvent' is defined but never used                                                                                                                                                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m18:3[22m  [33mwarning[39m  'arrayMove' is defined but never used                                                                                                                                                                     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m77:9[22m  [33mwarning[39m  'formatDate' is assigned a value but never used                                                                                                                                                           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m156:3[22m  [33mwarning[39m  'members' is assigned a value but never used                                                                                                                                                              [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m191:9[22m  [33mwarning[39m  The 'plannedItems' logical expression could make the dependencies of useMemo Hook (at line 201) change on every render. To fix this, wrap the initialization of 'plannedItems' in its own useMemo() Hook  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m  [2m191:9[22m  [33mwarning[39m  The 'plannedItems' logical expression could make the dependencies of useMemo Hook (at line 205) change on every render. To fix this, wrap the initialization of 'plannedItems' in its own useMemo() Hook  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m  [2m191:9[22m  [33mwarning[39m  The 'plannedItems' logical expression could make the dependencies of useMemo Hook (at line 256) change on every render. To fix this, wrap the initialization of 'plannedItems' in its own useMemo() Hook  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/iteration-lib/src/components/IterationWorkItemsView.tsx[24m[0m
+[0m  [2m15:3[22m  [33mwarning[39m  'Settings2' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m18:3[22m  [33mwarning[39m  'UserPlus' is defined but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m19:3[22m  [33mwarning[39m  'ArrowRightLeft' is defined but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m20:3[22m  [33mwarning[39m  'FileDown' is defined but never used          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m21:3[22m  [33mwarning[39m  'FileUp' is defined but never used            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m23:3[22m  [33mwarning[39m  'Maximize2' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m25:3[22m  [33mwarning[39m  'CheckCircle2' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m42:3[22m  [33mwarning[39m  'members' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 37 problems (0 errors, 37 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

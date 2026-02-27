@@ -1,0 +1,127 @@
+
+> @uxin/opera-bot-shared@0.0.1 build /Users/acelin/Documents/Next/AIGC/uxin/packages/opera-bot-shared
+> tsup
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mThe condition "types" here will never be used as it comes after both "import" and "require"[0m [package.json]
+
+    package.json:13:6:
+[37m      13 │       [32m"types"[37m: "./dist/index.d.ts"
+         ╵       [32m~~~~~~~[0m
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:11:6:
+[37m      11 │       [32m"import"[37m: "./dist/index.mjs",
+         ╵       [32m~~~~~~~~[0m
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:12:6:
+[37m      12 │       [32m"require"[37m: "./dist/index.js",
+         ╵       [32m~~~~~~~~~[0m
+
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: /Users/acelin/Documents/Next/AIGC/uxin/packages/opera-bot-shared/tsup.config.ts
+[34mCLI[39m Target: es2020
+[34mCLI[39m Cleaning output folder
+[34mCJS[39m Build start
+[34mESM[39m Build start
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./types"[0m
+
+    src/index.ts:1:14:
+[37m      1 │ export * from [32m'./types'[37m;
+        ╵               [32m~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./types"[0m
+
+    src/index.ts:1:14:
+[37m      1 │ export * from [32m'./types'[37m;
+        ╵               [32m~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./engine"[0m
+
+    src/index.ts:2:14:
+[37m      2 │ export * from [32m'./engine'[37m;
+        ╵               [32m~~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./engine"[0m
+
+    src/index.ts:2:14:
+[37m      2 │ export * from [32m'./engine'[37m;
+        ╵               [32m~~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./database"[0m
+
+    src/index.ts:3:14:
+[37m      3 │ export * from [32m'./database'[37m;
+        ╵               [32m~~~~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./database"[0m
+
+    src/index.ts:3:14:
+[37m      3 │ export * from [32m'./database'[37m;
+        ╵               [32m~~~~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./api"[0m
+
+    src/index.ts:5:14:
+[37m      5 │ export * from [32m'./api'[37m;
+        ╵               [32m~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./api"[0m
+
+    src/index.ts:5:14:
+[37m      5 │ export * from [32m'./api'[37m;
+        ╵               [32m~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./utils"[0m
+
+    src/index.ts:6:14:
+[37m      6 │ export * from [32m'./utils'[37m;
+        ╵               [32m~~~~~~~~~[0m
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./utils"[0m
+
+    src/index.ts:6:14:
+[37m      6 │ export * from [32m'./utils'[37m;
+        ╵               [32m~~~~~~~~~[0m
+
+[31mCJS[39m [31mBuild failed[39m
+[31mESM[39m [31mBuild failed[39m
+[31mError: Build failed with 5 errors:
+src/index.ts:1:14: ERROR: Could not resolve "./types"
+src/index.ts:2:14: ERROR: Could not resolve "./engine"
+src/index.ts:3:14: ERROR: Could not resolve "./database"
+src/index.ts:5:14: ERROR: Could not resolve "./api"
+src/index.ts:6:14: ERROR: Could not resolve "./utils"
+    at failureErrorWithLog (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:1467:15)
+    at /Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:926:25
+    at runOnEndCallbacks (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:1307:45)
+    at buildResponseToResult (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:924:7)
+    at /Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:951:16
+    at responseCallbacks.<computed> (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:603:9)
+    at handleIncomingPacket (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:658:12)
+    at Socket.readFromStdout (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)[39m
+DTS Build start
+src/index.ts(1,15): error TS2307: Cannot find module './types' or its corresponding type declarations.
+src/index.ts(2,15): error TS2307: Cannot find module './engine' or its corresponding type declarations.
+src/index.ts(3,15): error TS2307: Cannot find module './database' or its corresponding type declarations.
+src/index.ts(5,15): error TS2307: Cannot find module './api' or its corresponding type declarations.
+src/index.ts(6,15): error TS2307: Cannot find module './utils' or its corresponding type declarations.
+
+DTS Build error
+RollupError: [plugin dts] src/index.ts: Failed to compile. Check the logs above.
+    at getRollupError (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/shared/parseAst.js:285:41)
+    at Object.error (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/shared/parseAst.js:281:42)
+    at Object.error (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/shared/rollup.js:913:32)
+    at Object.error (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/shared/rollup.js:22491:42)
+    at generateDtsFromTs (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/tsup@8.5.1_postcss@8.5.6_typescript@5.9.3/node_modules/tsup/dist/rollup.js:6429:22)
+    at /Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/tsup@8.5.1_postcss@8.5.6_typescript@5.9.3/node_modules/tsup/dist/rollup.js:6436:59
+    at _nullishCoalesce (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/tsup@8.5.1_postcss@8.5.6_typescript@5.9.3/node_modules/tsup/dist/rollup.js:1:472)
+    at Object.transform (/Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/tsup@8.5.1_postcss@8.5.6_typescript@5.9.3/node_modules/tsup/dist/rollup.js:6436:18)
+    at /Users/acelin/Documents/Next/AIGC/uxin/node_modules/.pnpm/rollup@4.56.0/node_modules/rollup/dist/shared/rollup.js:3392:40
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

@@ -1,0 +1,496 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "success": "Operation successful",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "next": "Next",
+    "previous": "Previous",
+    "page": "Page {page} of {totalPages}",
+    "noResults": "No results found",
+    "tryAgain": "Please try again",
+    "close": "Close",
+    "back": "Back",
+    "continue": "Continue",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "select": "Select",
+    "all": "All",
+    "category": "Category",
+    "status": "Status",
+    "date": "Date",
+    "price": "Price",
+    "views": "Views",
+    "actions": "Actions",
+    "retry": "Retry",
+    "app_name": "Uxin"
+  },
+  "navigation": {
+    "home": "Home",
+    "marketplace": "Marketplace",
+    "transactions": "My Transactions",
+    "aiAssistant": "AI Assistant",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "services": "My Services",
+    "customers": "Customers",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "auth": {
+    "login": "Sign in to your account",
+    "loginSubtitle": "Enter your email and password to sign in",
+    "email": "Email address",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create new account",
+    "register": "Create account",
+    "registerSubtitle": "Fill in the information below to create your account",
+    "name": "Name",
+    "confirmPassword": "Confirm password",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Sign in here",
+    "validation": {
+      "emailRequired": "Please enter your email address",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Please enter your password",
+      "passwordMin": "Password must be at least 8 characters",
+      "nameRequired": "Please enter your name",
+      "passwordMatch": "Passwords do not match"
+    },
+    "email_placeholder": "m@example.com",
+    "create_password_placeholder": "Create password",
+    "registering": "Registering...",
+    "register_success": "Registration successful!",
+    "or": "OR",
+    "register_with_google": "Sign up with Google",
+    "register_title": "Register",
+    "promo_title": "Freelancer AI Office Assistant",
+    "promo_feature_1": "Free Account",
+    "promo_feature_2": "Instant Access",
+    "promo_feature_3": "Community Support",
+    "error": {
+      "account_exists": "Account already exists!",
+      "create_failed": "Failed to create account!",
+      "validation_failed": "Failed validating your submission!"
+    },
+    "success": {
+      "account_created": "Account created successfully!"
+    }
+  },
+  "sidebar": {
+    "projects": {
+      "title": "Projects",
+      "untitled_chat": "Untitled Chat"
+    },
+    "ai_apps": {
+      "title": "My Apps",
+      "empty": "No apps found",
+      "discover": "Discover",
+      "default": "Default",
+      "view_details": "View Details",
+      "run_now": "Run Now"
+    },
+    "history": {
+      "pinning": "Pinning...",
+      "unpinning": "Unpinning...",
+      "pinned": "Pinned",
+      "unpinned": "Unpinned",
+      "pin_failed": "Operation failed",
+      "updating": "Updating...",
+      "updated": "Updated",
+      "update_failed": "Update failed",
+      "deleting": "Deleting chat...",
+      "deleted": "Chat deleted",
+      "delete_failed": "Delete failed",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "last_7_days": "Previous 7 Days",
+      "last_30_days": "Previous 30 Days",
+      "older": "Older",
+      "login_to_save": "Login to save and view history!",
+      "login_as_guest": "Login to view history (Guest mode)",
+      "empty_history": "History will appear here after you start chatting!",
+      "load_failed": "Failed to load history",
+      "pinned_chats": "Pinned Chats",
+      "loading_more": "Loading more...",
+      "no_more": "No more history"
+    }
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "subtitle": "Discover quality services and post project requirements",
+    "searchPlaceholder": "Search services or requirements...",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "sort": {
+      "label": "Sort by",
+      "latest": "Latest",
+      "mostViewed": "Most Viewed",
+      "title": "Title"
+    },
+    "type": {
+      "all": "All",
+      "quotations": "Service Quotations",
+      "inquiries": "Project Inquiries"
+    },
+    "card": {
+      "quotation": "Service Quotation",
+      "inquiry": "Project Inquiry",
+      "viewDetails": "View Details",
+      "respondNow": "Respond Now",
+      "favorite": "Favorite",
+      "unfavorite": "Remove Favorite",
+      "priceNegotiable": "Price negotiable",
+      "deliveryTime": "Delivery time",
+      "deadline": "Deadline",
+      "deadlineNegotiable": "Deadline negotiable",
+      "views": "{count} views"
+    },
+    "filter": {
+      "title": "Filter Options",
+      "close": "Close filter",
+      "apply": "Apply filters",
+      "search": "Search",
+      "category": "Category",
+      "sort": "Sort",
+      "type": "Type"
+    },
+    "empty": {
+      "title": "No results found",
+      "subtitle": "Try adjusting your search criteria or browse other categories"
+    }
+  },
+  "transactions": {
+    "title": "My Transactions",
+    "subtitle": "Manage your transaction records",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "paymentStatus": {
+      "pending": "Pending Payment",
+      "paid": "Paid",
+      "refunded": "Refunded"
+    },
+    "totalAmount": "Total Amount",
+    "transactionDate": "Transaction Date",
+    "noTransactions": "No transaction records"
+  },
+  "provider": {
+    "dashboard": {
+      "title": "Provider Dashboard",
+      "overview": "Overview",
+      "myServices": "My Services",
+      "receivedInquiries": "Received Inquiries",
+      "transactionManagement": "Transaction Management",
+      "analytics": "Analytics",
+      "totalQuotations": "Total Quotations",
+      "totalInquiries": "Total Inquiries",
+      "totalTransactions": "Total Transactions",
+      "totalRevenue": "Total Revenue",
+      "averagePrice": "Average Price",
+      "recentServices": "Recent Services",
+      "recentInquiries": "Recent Inquiries",
+      "recentTransactions": "Recent Transactions",
+      "viewAll": "View All",
+      "manage": "Manage",
+      "completeTransaction": "Complete Transaction",
+      "viewDetails": "View Details"
+    }
+  },
+  "notifications": {
+    "success": {
+      "title": "Success",
+      "logout": "You have successfully logged out"
+    },
+    "error": {
+      "title": "Error",
+      "generic": "Operation failed, please try again"
+    },
+    "info": {
+      "title": "Information"
+    }
+  },
+  "operaBot": {
+    "title": "OperaBot AI Assistant",
+    "online": "Online",
+    "offline": "Offline",
+    "welcomeMessage": "Hello! I'm OperaBot, your AI intelligent chat operations assistant. I can help you with various business operations, including data queries, order management, report analysis, and more. How can I assist you?",
+    "errorMessage": "Sorry, an error occurred while processing your message. Please try again later.",
+    "initializationError": "Sorry, an error occurred while initializing OperaBot. Please check the configuration or contact technical support.",
+    "inputPlaceholder": "Type your message...",
+    "sendButton": "Send",
+    "typingIndicator": "Typing...",
+    "enterToSend": "Press Enter to send message, Shift+Enter for new line",
+    "configuration": "OperaBot Configuration",
+    "apiKey": "OpenAI API Key",
+    "apiKeyPlaceholder": "sk-...",
+    "enableDatabase": "Enable Database Connection",
+    "enableApiConnectors": "Enable API Connectors",
+    "businessOperation": "Business Operation",
+    "databaseQuery": "Database Query",
+    "apiRequest": "API Request",
+    "intent": "Intent",
+    "confidence": "Confidence",
+    "quickReplies": "Quick Replies",
+    "widgetTitle": "OperaBot AI Assistant",
+    "widgetWelcome": "Hello! I'm OperaBot, how can I help you?",
+    "widgetOpen": "Open Chat",
+    "voiceInput": "Voice Input",
+    "fileUpload": "File Upload",
+    "quickReply": "Quick Reply",
+    "messageSent": "Message Sent",
+    "widgetOpened": "Chat Widget Opened",
+    "messageReceived": "Message Received",
+    "behaviorTracked": "Behavior Tracked",
+    "sessionStarted": "Session Started",
+    "sessionEnded": "Session Ended",
+    "connectionStatus": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "connecting": "Connecting",
+      "reconnecting": "Reconnecting"
+    },
+    "errors": {
+      "notConnected": "Not connected to OperaBot server",
+      "connectionFailed": "Connection failed",
+      "messageFailed": "Message sending failed",
+      "initializationFailed": "Initialization failed"
+    }
+  },
+  "settings": {
+    "general": "General",
+    "appearance": "Appearance",
+    "account": "Account",
+    "about": "About",
+    "generalSettings": "General Settings",
+    "appearanceSettings": "Appearance Settings",
+    "accountSettings": "Account Settings",
+    "aboutUxin": "About Uxin",
+    "settingsTitle": "Settings",
+    "interfaceLanguage": "Interface Language",
+    "selectLanguage": "Select your preferred display language",
+    "autoArchive": "Auto-archive Chats",
+    "autoArchiveDesc": "Inactive chats will be automatically archived",
+    "imeEnhance": "IME Enhancement",
+    "imeEnhanceDesc": "Optimize quick send experience for Chinese IME",
+    "themeMode": "Theme Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "accentColor": "Accent Color",
+    "default": "Default",
+    "purple": "Purple",
+    "blue": "Blue",
+    "pink": "Pink",
+    "orange": "Orange",
+    "notificationSettings": "Notification Settings",
+    "desktopNotify": "Desktop Notifications",
+    "desktopNotifyDesc": "Receive new message alerts on desktop",
+    "soundNotify": "Sound Alerts",
+    "soundNotifyDesc": "Play sound when new message arrives",
+    "emailNotify": "Email Subscription",
+    "emailNotifyDesc": "Receive product updates and weekly reports",
+    "dataControl": "Data Control",
+    "chatHistory": "Chat History & Training",
+    "chatHistoryDesc": "Save new chats in this browser and allow for model training",
+    "exportData": "Export Data",
+    "exportDataDesc": "Download all your chat history and personal data",
+    "export": "Export",
+    "deleteAll": "Delete All Chats",
+    "deleteAllDesc": "This action cannot be undone, please proceed with caution",
+    "deleteNow": "Delete Immediately",
+    "accessibilitySettings": "Accessibility Settings",
+    "highContrast": "High Contrast Mode",
+    "highContrastDesc": "Enhance visual clarity of the interface",
+    "screenReader": "Screen Reader Support",
+    "screenReaderDesc": "Optimize compatibility for assistive technologies",
+    "aboutUxin": "About Uxin",
+    "aboutDesc": "Uxin is a leading AI-driven collaboration and productivity tool. We are committed to making work more efficient and intelligent through AI technology.",
+    "version": "Version: v1.2.0",
+    "daoDesc": "We operate all product lines as a DAO (public governance model), and all data is transparent and open.",
+    "userAgreement": "User Agreement",
+    "userAgreementDesc": "Read and understand our terms of service",
+    "privacyPolicy": "Privacy Policy",
+    "privacyPolicyDesc": "Understand how we collect, use, and protect your personal information",
+    "contactUs": "Contact Us",
+    "saved": "Settings saved",
+    "agreement": {
+      "termsTitle": "User Agreement",
+      "terms1Title": "1. Acceptance of Terms",
+      "terms1Content": "Welcome to Uxin. By accessing or using our services, you agree to be bound by this agreement.",
+      "terms2Title": "2. Service Description",
+      "terms2Content": "Uxin provides AI-based conversation, collaboration, and automation tool services.",
+      "terms3Title": "3. User Responsibility",
+      "terms3Content": "You are responsible for all activities that occur under your account. You may not use the service for any illegal activities.",
+      "privacyTitle": "Privacy Policy",
+      "privacy1Title": "1. Information Collection",
+      "privacy1Content": "We collect information you provide when using the service, as well as automatically generated log information.",
+      "privacy2Title": "2. Information Usage",
+      "privacy2Content": "We use the collected information to provide, maintain, and improve our services.",
+      "privacy3Title": "3. Information Protection",
+      "privacy3Content": "We take reasonable security measures to protect your personal information from unauthorized access or disclosure."
+    }
+  },
+  "profile": {
+    "accountInfo": "Account Info",
+    "accountInfoDesc": "View your account details and current plan",
+    "currentPlan": "Current Plan",
+    "upgradeToPro": "Upgrade to Pro",
+    "editProfile": "Edit Profile",
+    "editProfileDesc": "Update your profile information here, including display name and avatar",
+    "displayName": "Display Name",
+    "enterDisplayName": "Enter your display name",
+    "bio": "Bio",
+    "bioPlaceholder": "e.g. Explorer & Creator",
+    "intro": "Introduction",
+    "introPlaceholder": "Briefly introduce yourself...",
+    "skills": "Skills (comma separated)",
+    "skillsPlaceholder": "e.g. AI, Design, Development",
+    "isFreelancer": "I am a freelancer",
+    "freelancerDesc": "When enabled, you can showcase and offer professional services on your profile",
+    "teamName": "Team Name",
+    "teamAdmin": "Team Admin",
+    "teamMember": "Team Member",
+    "leaveTeam": "Leave Team",
+    "admin": "Admin",
+    "adminCanEdit": "As a team admin, you can change the team name",
+    "memberCannotEdit": "You are a team member and cannot change the team name",
+    "saveChanges": "Save Changes",
+    "profileUpdated": "Profile updated",
+    "updateFailed": "Update failed, please try again",
+    "avatarUploaded": "Avatar uploaded successfully",
+    "avatarUploadFailed": "Avatar upload failed, please try again",
+    "manageProfile": "Manage Profile",
+    "upgradePlan": "Upgrade Plan",
+    "twoFactor": "Two-factor Authentication",
+    "twoFactorDesc": "Add extra security to your account",
+    "configure": "Configure",
+    "clickToEdit": "Click to edit profile",
+    "home": "Profile",
+    "help": "Help",
+    "checkingLogin": "Checking login status, please try again later!",
+    "plan": {
+      "free": "Free Plan",
+      "pro": "Pro Plan"
+    },
+    "defaultTeamName": "Lin Yi's Team"
+  },
+  "chat": {
+    "newChat": "New Chat",
+    "expandSidebar": "Expand Sidebar",
+    "linkedProject": "Linked Project",
+    "aiSkills": "AI Skills Center",
+    "renameChat": "Rename Chat",
+    "enterNewName": "Enter a new name for the chat.",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "addToProject": "Add to Project",
+    "deleteChat": "Delete Chat",
+    "deleteConfirmTitle": "Delete this chat?",
+    "deleteConfirmDesc": "This action cannot be undone. This will permanently delete the chat and all its messages.",
+    "selectProjectDesc": "Select a project to add this chat to.",
+    "noProjectsFound": "No projects found."
+  },
+  "discover": {
+    "title": "Discover Documents",
+    "subtitle": "Browse high-quality documents and artifacts from the community",
+    "view_document": "View Document",
+    "no_documents": "No public documents found",
+    "no_preview": "No content preview",
+    "common": {
+      "user": "User",
+      "system_coordinator": "System Coordinator",
+      "thinking": "Thinking",
+      "request": "Request",
+      "response": "Response",
+      "thinking_detail": "Thinking and organizing response...",
+      "analyzing": "Analyzing",
+      "analyzing_detail": "Analyzing project requirements...",
+      "searching": "Searching",
+      "searching_detail": "Searching knowledge base...",
+      "generating": "Generating",
+      "generating_detail": "Drafting content for you...",
+      "noResults": "No results found",
+      "match_score": "Match Score",
+      "no_candidates": "No candidates found",
+      "analysis": "Analysis",
+      "suggested_skills": "Suggested Skills",
+      "analyzing_skills": "Analyzing skills...",
+      "project_lead": "Project Lead"
+    },
+    "kind": {
+      "text": "Text",
+      "code": "Code",
+      "image": "Image",
+      "sheet": "Sheet",
+      "unknown": "Unknown"
+    }
+  },
+  "tools": {
+    "getWeather": {
+      "label": "Get Weather",
+      "description": "Get weather for {location}"
+    },
+    "createDocument": {
+      "label": "Create Document",
+      "description": "Create document: {title}"
+    },
+    "updateDocument": {
+      "label": "Update Document",
+      "description": "Update document: {title}"
+    },
+    "createTasks": {
+      "label": "Create Tasks",
+      "description": "Create {count} tasks"
+    },
+    "updateTasks": {
+      "label": "Update Tasks",
+      "description": "Update {count} tasks"
+    },
+    "searchResources": {
+      "label": "Search Resources",
+      "description": "Search: {query}"
+    },
+    "talent_match": {
+      "label": "Talent Match",
+      "description": "Match skills: {skills}"
+    },
+    "skill_analyzer": {
+      "label": "Skill Analyzer",
+      "description": "Analyze required skills"
+    },
+    "matchAgents": {
+      "label": "Match Agents",
+      "description": "Match requirement: {requirement}"
+    },
+    "startCollaboration": {
+      "label": "Start Collaboration",
+      "description": "Start full-link collaboration workflow"
+    },
+    "unknown": {
+      "label": "Tool Call",
+      "description": "Call tool: {toolName}"
+    },
+    "status": {
+      "input": "Input Arguments",
+      "result": "Execution Result"
+    }
+  }
+}

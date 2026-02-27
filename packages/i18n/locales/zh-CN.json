@@ -1,0 +1,506 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "出错了",
+    "success": "操作成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "next": "下一页",
+    "previous": "上一页",
+    "page": "第 {page} 页，共 {totalPages} 页",
+    "noResults": "没有找到相关结果",
+    "tryAgain": "请重试",
+    "close": "关闭",
+    "back": "返回",
+    "continue": "继续",
+    "submit": "提交",
+    "reset": "重置",
+    "clear": "清空",
+    "select": "选择",
+    "all": "全部",
+    "category": "分类",
+    "status": "状态",
+    "date": "日期",
+    "price": "价格",
+    "views": "浏览量",
+    "actions": "操作",
+    "rename": "重命名",
+    "retry": "重试",
+    "app_name": "优薪"
+  },
+  "navigation": {
+    "home": "首页",
+    "marketplace": "市场广场",
+    "transactions": "我的交易",
+    "aiAssistant": "AI助手",
+    "profile": "我的",
+    "dashboard": "仪表盘",
+    "services": "我的服务",
+    "customers": "客户管理",
+    "settings": "设置",
+    "logout": "退出登录",
+    "login": "登录",
+    "register": "注册"
+  },
+  "auth": {
+    "login": "登录您的账户",
+    "loginSubtitle": "输入您的邮箱地址和密码来登录",
+    "email": "邮箱地址",
+    "password": "密码",
+    "rememberMe": "记住我",
+    "forgotPassword": "忘记密码？",
+    "noAccount": "还没有账户？",
+    "createAccount": "创建新账户",
+    "register": "创建账户",
+    "registerSubtitle": "填写以下信息来创建您的账户",
+    "name": "姓名",
+    "confirmPassword": "确认密码",
+    "alreadyHaveAccount": "已经有账户了？",
+    "loginHere": "立即登录",
+    "validation": {
+      "emailRequired": "请输入邮箱地址",
+      "emailInvalid": "请输入有效的邮箱地址",
+      "passwordRequired": "请输入密码",
+      "passwordMin": "密码至少需要8个字符",
+      "nameRequired": "请输入姓名",
+      "passwordMatch": "两次输入的密码不一致"
+    },
+    "appName": "优薪",
+    "slogan": "自由工作者AI办公助手",
+    "welcome": "欢迎体验",
+    "features": {
+      "aiAssistant": "先进的 AI 助手",
+      "seamlessChat": "无缝的对话体验",
+      "security": "安全和隐私保护"
+    },
+    "signInWithGoogle": "使用 Google 登录",
+    "or": "或者",
+    "enterPassword": "输入密码",
+    "email_placeholder": "m@example.com",
+    "create_password_placeholder": "创建密码",
+    "registering": "注册中...",
+    "register_success": "注册成功!",
+    "register_with_google": "通过 Google 注册",
+    "register_title": "注册",
+    "promo_title": "自由工作者AI办公助手",
+    "promo_feature_1": "免费账号",
+    "promo_feature_2": "即时访问",
+    "promo_feature_3": "社区支持",
+    "error": {
+      "account_exists": "账户已存在！",
+      "create_failed": "创建账户失败！",
+      "validation_failed": "提交验证失败！"
+    },
+    "success": {
+      "account_created": "账户创建成功！"
+    }
+  },
+  "sidebar": {
+    "projects": {
+      "title": "项目",
+      "untitled_chat": "未命名对话"
+    },
+    "ai_apps": {
+      "title": "我的应用",
+      "empty": "暂无应用",
+      "discover": "去发现",
+      "default": "默认",
+      "view_details": "查看详情",
+      "run_now": "立即运行"
+    },
+    "history": {
+      "pinning": "置顶中...",
+      "unpinning": "取消置顶中...",
+      "pinned": "已置顶",
+      "unpinned": "已取消置顶",
+      "pin_failed": "操作失败",
+      "updating": "更新中...",
+      "updated": "已更新",
+      "update_failed": "更新失败",
+      "deleting": "正在删除对话...",
+      "deleted": "对话已删除",
+      "delete_failed": "删除失败",
+      "today": "今天",
+      "yesterday": "昨天",
+      "last_7_days": "最近 7 天",
+      "last_30_days": "最近 30 天",
+      "older": "更早",
+      "login_to_save": "登录后可保存并查看历史对话！",
+      "login_as_guest": "登录后可查看历史记录（当前为游客身份）",
+      "empty_history": "开始对话后，历史记录将显示在这里！",
+      "load_failed": "历史记录加载失败",
+      "pinned_chats": "置顶对话",
+      "loading_more": "正在加载更多...",
+      "no_more": "已到底了"
+    }
+  },
+  "marketplace": {
+    "title": "市场广场",
+    "subtitle": "发现优质服务，发布项目需求",
+    "searchPlaceholder": "搜索服务或需求...",
+    "category": "分类",
+    "allCategories": "全部分类",
+    "sort": {
+      "label": "排序",
+      "latest": "最新发布",
+      "mostViewed": "最多浏览",
+      "title": "标题排序"
+    },
+    "type": {
+      "all": "全部",
+      "quotations": "服务报价",
+      "inquiries": "项目需求"
+    },
+    "card": {
+      "quotation": "服务报价",
+      "inquiry": "项目需求",
+      "viewDetails": "查看详情",
+      "respondNow": "立即响应",
+      "favorite": "收藏",
+      "unfavorite": "取消收藏",
+      "priceNegotiable": "价格面议",
+      "deliveryTime": "交付时间",
+      "deadline": "截止时间",
+      "deadlineNegotiable": "截止时间面议",
+      "views": "{count} 浏览"
+    },
+    "filter": {
+      "title": "筛选条件",
+      "close": "关闭筛选",
+      "apply": "应用筛选",
+      "search": "搜索",
+      "category": "分类",
+      "sort": "排序",
+      "type": "类型"
+    },
+    "empty": {
+      "title": "没有找到相关结果",
+      "subtitle": "尝试调整搜索条件或浏览其他分类"
+    }
+  },
+  "transactions": {
+    "title": "我的交易",
+    "subtitle": "管理您的交易记录",
+    "status": {
+      "pending": "待处理",
+      "confirmed": "已确认",
+      "completed": "已完成",
+      "cancelled": "已取消"
+    },
+    "paymentStatus": {
+      "pending": "待付款",
+      "paid": "已付款",
+      "refunded": "已退款"
+    },
+    "totalAmount": "总金额",
+    "transactionDate": "交易日期",
+    "noTransactions": "暂无交易记录"
+  },
+  "provider": {
+    "dashboard": {
+      "title": "服务商仪表盘",
+      "overview": "概览",
+      "myServices": "我的服务",
+      "receivedInquiries": "收到询价",
+      "transactionManagement": "交易管理",
+      "analytics": "数据分析",
+      "totalQuotations": "总报价数",
+      "totalInquiries": "总询价数",
+      "totalTransactions": "总交易数",
+      "totalRevenue": "总收入",
+      "averagePrice": "平均价格",
+      "recentServices": "最近服务",
+      "recentInquiries": "最近询价",
+      "recentTransactions": "最近交易",
+      "viewAll": "查看全部",
+      "manage": "管理",
+      "completeTransaction": "完成交易",
+      "viewDetails": "查看详情"
+    }
+  },
+  "notifications": {
+    "success": {
+      "title": "操作成功",
+      "logout": "您已成功退出登录"
+    },
+    "error": {
+      "title": "操作失败",
+      "generic": "操作失败，请重试"
+    },
+    "info": {
+      "title": "提示信息"
+    }
+  },
+  "operaBot": {
+    "title": "OperaBot AI助手",
+    "online": "在线",
+    "offline": "离线",
+    "welcomeMessage": "您好！我是OperaBot，您的AI智聊运营助手。我可以帮助您处理各种业务操作，包括查询数据、管理订单、分析报表等。有什么可以帮助您的吗？",
+    "errorMessage": "抱歉，处理您的消息时出现了错误。请稍后重试。",
+    "initializationError": "抱歉，初始化OperaBot时出现了错误。请检查配置或联系客服。",
+    "inputPlaceholder": "输入您的消息...",
+    "sendButton": "发送",
+    "typingIndicator": "正在输入...",
+    "enterToSend": "按Enter发送消息，Shift+Enter换行",
+    "configuration": "OperaBot配置",
+    "apiKey": "OpenAI API密钥",
+    "apiKeyPlaceholder": "sk-...",
+    "enableDatabase": "启用数据库连接",
+    "enableApiConnectors": "启用API连接器",
+    "businessOperation": "业务操作",
+    "databaseQuery": "数据库查询",
+    "apiRequest": "API请求",
+    "intent": "意图",
+    "confidence": "置信度",
+    "quickReplies": "快捷回复",
+    "widgetTitle": "OperaBot AI助手",
+    "widgetWelcome": "您好！我是OperaBot，有什么可以帮助您的吗？",
+    "widgetOpen": "展开聊天",
+    "voiceInput": "语音输入",
+    "fileUpload": "文件上传",
+    "quickReply": "快捷回复",
+    "messageSent": "消息已发送",
+    "widgetOpened": "聊天窗口已打开",
+    "messageReceived": "消息已接收",
+    "behaviorTracked": "行为已追踪",
+    "sessionStarted": "会话已开始",
+    "sessionEnded": "会话已结束",
+    "connectionStatus": {
+      "connected": "已连接",
+      "disconnected": "已断开",
+      "connecting": "连接中",
+      "reconnecting": "重新连接中"
+    },
+    "errors": {
+      "notConnected": "未连接到OperaBot服务器",
+      "connectionFailed": "连接失败",
+      "messageFailed": "消息发送失败",
+      "initializationFailed": "初始化失败"
+    }
+  },
+  "settings": {
+    "general": "常规",
+    "appearance": "外观",
+    "account": "账户",
+    "about": "关于",
+    "generalSettings": "常规设置",
+    "appearanceSettings": "外观设置",
+    "accountSettings": "账户设置",
+    "aboutUxin": "关于柚信",
+    "settingsTitle": "设置",
+    "interfaceLanguage": "界面语言",
+    "selectLanguage": "选择您偏好的显示语言",
+    "autoArchive": "自动归档对话",
+    "autoArchiveDesc": "长时间未活动的对话将自动移至归档",
+    "imeEnhance": "输入法增强",
+    "imeEnhanceDesc": "优化中文输入法的快速发送体验",
+    "themeMode": "主题模式",
+    "light": "明亮",
+    "dark": "暗黑",
+    "system": "跟随系统",
+    "accentColor": "重点色",
+    "default": "默认",
+    "purple": "紫色",
+    "blue": "蓝色",
+    "pink": "粉色",
+    "orange": "橙色",
+    "notificationSettings": "通知设置",
+    "desktopNotify": "桌面通知",
+    "desktopNotifyDesc": "在桌面接收新消息提醒",
+    "soundNotify": "声音提醒",
+    "soundNotifyDesc": "收到新消息时播放提示音",
+    "emailNotify": "邮件订阅",
+    "emailNotifyDesc": "接收产品更新和周报",
+    "dataControl": "数据控制",
+    "chatHistory": "聊天记录与训练",
+    "chatHistoryDesc": "在此浏览器中保存新对话并允许用于模型训练",
+    "exportData": "导出数据",
+    "exportDataDesc": "下载您的所有聊天记录和个人数据",
+    "export": "导出",
+    "deleteAll": "删除所有聊天",
+    "deleteAllDesc": "此操作不可撤销，请谨慎操作",
+    "deleteNow": "立即删除",
+    "accessibilitySettings": "无障碍设置",
+    "highContrast": "高对比度模式",
+    "highContrastDesc": "增强界面的视觉清晰度",
+    "screenReader": "屏幕阅读器支持",
+    "screenReaderDesc": "优化对辅助技术的兼容性",
+    "aboutDesc": "柚信（Uxin）是一款领先的 AI 驱动的协作与生产力工具。我们致力于通过人工智能技术，让工作更高效、更智能。",
+    "version": "版本：v1.2.0",
+    "daoDesc": "我们以 DAO（公共治理模式）运作所有产品线，所有数据透明开放。",
+    "userAgreement": "用户协议",
+    "userAgreementDesc": "阅读并了解我们的服务条款",
+    "privacyPolicy": "隐私协议",
+    "privacyPolicyDesc": "了解我们如何收集、使用和保护您的个人信息",
+    "contactUs": "联系我们",
+    "saved": "设置已保存",
+    "agreement": {
+      "termsTitle": "用户协议",
+      "terms1Title": "1. 接受条款",
+      "terms1Content": "欢迎使用柚信。通过访问或使用我们的服务，您同意受本协议的约束。",
+      "terms2Title": "2. 服务说明",
+      "terms2Content": "柚信提供基于 AI 的对话、协作和自动化工具服务。",
+      "terms3Title": "3. 用户责任",
+      "terms3Content": "您应对使用您的账户进行的所有活动负责。您不得利用本服务从事非法活动。",
+      "privacyTitle": "隐私协议",
+      "privacy1Title": "1. 信息收集",
+      "privacy1Content": "我们收集您在使用服务时提供的信息，以及自动生成的日志信息。",
+      "privacy2Title": "2. 信息使用",
+      "privacy2Content": "我们使用收集的信息来提供、维护和改进我们的服务。",
+      "privacy3Title": "3. 信息保护",
+      "privacy3Content": "我们采取合理的安全措施来保护您的个人信息免受未经授权的访问或泄露。"
+    }
+  },
+  "profile": {
+    "accountInfo": "账户信息",
+    "accountInfoDesc": "查看您的账户详细信息和当前计划",
+    "currentPlan": "当前计划",
+    "upgradeToPro": "升级到 Pro",
+    "editProfile": "编辑个人资料",
+    "editProfileDesc": "在此更新您的个人资料信息，包括显示名称和头像",
+    "displayName": "显示名称",
+    "enterDisplayName": "请输入您的显示名称",
+    "bio": "一句话简介",
+    "bioPlaceholder": "例如：探索者 & 创造者",
+    "intro": "自我介绍",
+    "introPlaceholder": "简单介绍一下您自己...",
+    "skills": "技能特长 (以逗号分隔)",
+    "skillsPlaceholder": "例如：AI, 设计, 开发",
+    "isFreelancer": "我是自由职业者",
+    "freelancerDesc": "开启后，您可以在个人主页展示并提供专业服务",
+    "teamName": "企业名称",
+    "teamAdmin": "企业管理员",
+    "teamMember": "企业成员",
+    "leaveTeam": "退出企业",
+    "admin": "管理员",
+    "adminCanEdit": "作为企业管理员，您可以修改企业名称",
+    "memberCannotEdit": "您是企业成员，无法修改企业名称",
+    "saveChanges": "保存更改",
+    "profileUpdated": "个人资料已更新",
+    "updateFailed": "更新失败，请重试",
+    "avatarUploaded": "头像上传成功",
+    "avatarUploadFailed": "头像上传失败，请重试",
+    "manageProfile": "管理个人资料",
+    "upgradePlan": "升级套餐",
+    "twoFactor": "两步验证",
+    "twoFactorDesc": "为您的账户添加额外的安全保障",
+    "configure": "配置",
+    "clickToEdit": "点击编辑个人资料",
+    "home": "个人主页",
+    "help": "帮助",
+    "checkingLogin": "正在检查登录状态，请稍后重试！",
+    "plan": {
+      "free": "免费版",
+      "pro": "专业版"
+    },
+    "defaultTeamName": "林一的企业"
+  },
+  "chat": {
+    "newChat": "新对话",
+    "expandSidebar": "展开侧边栏",
+    "linkedProject": "关联项目",
+    "aiSkills": "AI 技能中心",
+    "renameChat": "重命名对话",
+    "enterNewName": "请输入新的对话名称。",
+    "pin": "置顶",
+    "unpin": "取消置顶",
+    "addToProject": "添加到项目",
+    "deleteChat": "删除对话",
+    "deleteConfirmTitle": "确认删除此对话吗？",
+    "deleteConfirmDesc": "此操作无法撤销。这将永久删除该对话及其所有消息。",
+    "selectProjectDesc": "选择要将此对话添加到的项目。",
+    "noProjectsFound": "未找到项目。"
+  },
+  "discover": {
+    "title": "发现文档",
+    "subtitle": "浏览社区公开的优质文档和工件",
+    "view_document": "查看文档",
+    "no_documents": "暂无公开文档",
+    "no_preview": "无内容预览",
+    "common": {
+      "user": "产品经理 (用户)",
+      "system_coordinator": "系统协调器",
+      "thinking": "思考中",
+      "request": "需求提出",
+      "response": "智能回复",
+      "thinking_detail": "正在思考并组织回复...",
+      "analyzing": "分析中",
+      "analyzing_detail": "正在分析项目需求...",
+      "searching": "检索中",
+      "searching_detail": "正在检索相关知识库...",
+      "generating": "生成中",
+      "generating_detail": "正在为您编写内容...",
+      "noResults": "未找到相关需求",
+      "match_score": "匹配度",
+      "no_candidates": "未找到匹配的候选人",
+      "analysis": "分析建议",
+      "suggested_skills": "建议技能",
+      "analyzing_skills": "正在分析技能需求...",
+      "project_lead": "项目负责人"
+    },
+    "kind": {
+      "text": "文本",
+      "code": "代码",
+      "image": "图片",
+      "sheet": "表格",
+      "unknown": "未知"
+    }
+  },
+  "tools": {
+    "getWeather": {
+      "label": "查询天气",
+      "description": "查询 {location} 的天气"
+    },
+    "createDocument": {
+      "label": "创建文档",
+      "description": "创建文档: {title}"
+    },
+    "updateDocument": {
+      "label": "更新文档",
+      "description": "更新文档: {title}"
+    },
+    "createTasks": {
+      "label": "创建任务",
+      "description": "创建 {count} 个任务"
+    },
+    "updateTasks": {
+      "label": "更新任务",
+      "description": "更新 {count} 个任务"
+    },
+    "searchResources": {
+      "label": "搜索资源",
+      "description": "搜索: {query}"
+    },
+    "talent_match": {
+      "label": "人才匹配",
+      "description": "匹配技能: {skills}"
+    },
+    "skill_analyzer": {
+      "label": "技能分析",
+      "description": "分析项目所需技能"
+    },
+    "matchAgents": {
+      "label": "匹配智能体",
+      "description": "匹配需求: {requirement}"
+    },
+    "startCollaboration": {
+      "label": "启动协作",
+      "description": "启动全链路协作流程"
+    },
+    "unknown": {
+      "label": "工具调用",
+      "description": "调用工具: {toolName}"
+    },
+    "status": {
+      "input": "输入参数",
+      "result": "执行结果"
+    }
+  }
+}

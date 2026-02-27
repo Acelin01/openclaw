@@ -1,0 +1,36 @@
+
+> @uxin/ai-chat@1.0.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/ai-chat
+> eslint "src/**/*.{ts,tsx}"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.3.5 <5.4.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/ai-chat/src/components/AIChatDialog.tsx[24m[0m
+[0m  [2m11:50[22m  [33mwarning[39m  'loadingAgents' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/ai-chat/src/services/chatService.ts[24m[0m
+[0m  [2m352:17[22m  [33mwarning[39m  'providerId' is assigned a value but never used                            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m388:54[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m410:11[22m  [33mwarning[39m  'today' is assigned a value but never used                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/ai-chat/src/services/openAIService.ts[24m[0m
+[0m  [2m62:5[22m  [33mwarning[39m  'context' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m82:9[22m  [33mwarning[39m  'fullContent' is assigned a value but never used                           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/ai-chat/src/websocket/chatWebSocketHandler.ts[24m[0m
+[0m    [2m3:23[22m  [33mwarning[39m  'StreamResponse' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m415:17[22m  [33mwarning[39m  'clientId' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 8 problems (0 errors, 8 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

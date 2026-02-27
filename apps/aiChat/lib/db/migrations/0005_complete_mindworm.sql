@@ -1,0 +1,1 @@
+ALTER TABLE `Document` MODIFY COLUMN `kind` enum('text','code','image','sheet','quote','project','position','requirement','resume','service','matching','approval','contract','message','report','task','web','agent','admin') DEFAULT 'quote';

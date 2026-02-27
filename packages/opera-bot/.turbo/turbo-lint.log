@@ -1,0 +1,30 @@
+
+> @uxin/opera-bot@1.0.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/opera-bot
+> eslint "src/**/*.{ts,tsx}"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.3.5 <5.4.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/opera-bot/src/DatabaseConnector.ts[24m[0m
+[0m  [2m63:11[22m  [33mwarning[39m  'sql' is defined but never used              [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m64:11[22m  [33mwarning[39m  'params' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/opera-bot/src/OperaBot.ts[24m[0m
+[0m  [2m7:3[22m  [33mwarning[39m  'ConversationContext' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/opera-bot/src/utils.ts[24m[0m
+[0m  [2m1:23[22m  [33mwarning[39m  'IntentRecognitionResult' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 4 problems (0 errors, 4 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

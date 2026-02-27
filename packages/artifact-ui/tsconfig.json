@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@uxin/projects": ["../projects/src/index.ts"],
+      "@uxin/projects/*": ["../projects/src/*"],
+      "@uxin/agent-lib": ["../agent-lib/src/index.ts"],
+      "@uxin/agent-lib/*": ["../agent-lib/src/*"],
+      "@uxin/worker-service": ["../worker-service/src/index.ts"],
+      "@uxin/worker-service/*": ["../worker-service/src/*"],
+      "@uxin/ui": ["../ui/src/index.ts"],
+      "@uxin/requirement-lib": ["../requirement-lib/src/index.ts"],
+      "@uxin/requirement-lib/*": ["../requirement-lib/src/*"],
+      "@uxin/utils": ["../utils/src/index.ts"],
+      "@uxin/utils/*": ["../utils/src/*"]
+    },
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "incremental": false
+  },
+  "include": ["src"]
+}

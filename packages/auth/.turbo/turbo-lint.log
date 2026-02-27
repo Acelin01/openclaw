@@ -1,0 +1,31 @@
+
+> @uxin/auth@0.1.0 lint /Users/acelin/Documents/Next/AIGC/uxin/packages/auth
+> eslint "src/**/*.{ts,tsx}"
+
+=============
+
+WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+You may find that it works just fine, or you may not.
+
+SUPPORTED TYPESCRIPT VERSIONS: >=4.7.4 <5.6.0
+
+YOUR TYPESCRIPT VERSION: 5.9.3
+
+Please only submit bug reports when using the officially supported version.
+
+=============
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/auth/src/hooks/useAuth.ts[24m[0m
+[0m  [2m7:27[22m  [33mwarning[39m  'setIsAuthenticated' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m8:16[22m  [33mwarning[39m  'setUser' is assigned a value but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/auth/src/services/accessControlService.ts[24m[0m
+[0m  [2m7:3[22m  [33mwarning[39m  'AuthError' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m8:3[22m  [33mwarning[39m  'AuthErrorCode' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/acelin/Documents/Next/AIGC/uxin/packages/auth/src/utils/securityUtils.ts[24m[0m
+[0m  [2m107:9[22m  [33mwarning[39m  'iv' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[33m[1m✖ 5 problems (0 errors, 5 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m

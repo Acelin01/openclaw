@@ -1,0 +1,4 @@
+
+> @uxin/ai-chat@1.0.0 type-check /Users/acelin/Documents/Next/AIGC/uxin/packages/ai-chat
+> tsc --noEmit
+
