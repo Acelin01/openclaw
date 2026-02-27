@@ -53,7 +53,8 @@
           "operator.approvals",
           "operator.pairing"
         ],
-        "createdAtMs": 1772153195925
+        "createdAtMs": 1772153195925,
+        "lastUsedAtMs": 1772191301788
       }
     },
     "createdAtMs": 1772153195925,
