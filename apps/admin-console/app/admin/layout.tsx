@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <a href="/admin/permissions">权限</a>
           <a href="/admin/gateway">网关调用</a>
           <a href="/admin/alerts">告警</a>
+          <a href="/admin/external">对外MCP</a>
         </nav>
       </aside>
       <main style={{ flex: 1, padding: 24 }}>{children}</main>
