@@ -98,7 +98,7 @@ export class SkillMatcher {
 
     const params: Record<string, unknown> = {};
 
-    // 解析 key=value 格式的参数
+    // 1. 解析 key=value 格式的参数 (支持中文键)
     for (const param of paramStrings) {
       const [key, ...valueParts] = param.split("=");
       if (key && valueParts.length > 0) {
@@ -106,7 +106,18 @@ export class SkillMatcher {
       }
     }
 
-    // 如果没有明确的 key=value，将整个 rest 作为 content/description
+    // 2. 解析中文格式：标题：xxx 描述：xxx (支持中英文冒号，优先级更高)
+    const titleMatch = rawInput.match(/标题\s*[:：]\s*([^\s,，.。.]+)/);
+    if (titleMatch) {
+      params.title = titleMatch[1].trim();
+    }
+
+    const descMatch = rawInput.match(/描述\s*[:：]\s*(.+?)(?:[.。]|$)/);
+    if (descMatch) {
+      params.description = descMatch[1].trim();
+    }
+
+    // 3. 如果没有明确的 key=value 或中文参数，将整个 rest 作为 content/description
     if (Object.keys(params).length === 0 && rest.trim()) {
       // 尝试从上下文推断参数名
       const skill = this.skills.find((s) => s.name === skillName);
@@ -176,6 +187,23 @@ export class SkillMatcher {
     if (projectMatch) {
       extractedParams.projectName = projectMatch[1].trim();
       confidence += 0.1;
+    }
+
+    // 自然语言模式检测：创建/生成 + 需求/项目/功能
+    const naturalPatterns = [
+      /创建 (.+?) 需求/i,
+      /生成 (.+?) 文档/i,
+      /帮我 (.+?)(?:的 | 需求 | 项目)/i,
+      /需要 (.+?) 功能/i,
+    ];
+    for (const pattern of naturalPatterns) {
+      const match = userInput.match(pattern);
+      if (match) {
+        extractedParams.title = match[1]?.trim() || "新需求";
+        extractedParams.description = userInput;
+        confidence += 0.15;
+        break;
+      }
     }
 
     return {

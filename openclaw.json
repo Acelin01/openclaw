@@ -29,14 +29,19 @@
       }
     },
     "feishu": {
-      "appId": "cli_a91e3fad7d789cd3",
-      "appSecret": "nRcFy0MlKEoFBoC2qaeoIbKIbDDU3D5U",
       "enabled": true,
-      "dmPolicy": "open",
+      "dmPolicy": "pairing",
       "groupPolicy": "open",
       "groups": {
         "*": {
           "requireMention": false
+        }
+      },
+      "accounts": {
+        "main": {
+          "appId": "cli_a928659889f8dcb1",
+          "appSecret": "EMD3fiRiIxx5Q4KK6CztrcTygmxAOgtd",
+          "botName": "OpenClaw Assistant"
         }
       }
     }
