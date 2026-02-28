@@ -30,7 +30,7 @@
     },
     "feishu": {
       "enabled": true,
-      "dmPolicy": "pairing",
+      "dmPolicy": "open",
       "groupPolicy": "open",
       "groups": {
         "*": {
@@ -62,15 +62,19 @@
   },
   "mcpServers": {
     "uxin-mcp": {
-      "command": "npx",
+      "command": "/opt/homebrew/Cellar/node@22/22.20.0_1/bin/node",
       "args": [
+        "--loader",
         "tsx",
-        "/Users/acelin/Documents/Next/AIGC/openclaw/apps/api/src/mcp-server/index.ts"
+        "--no-warnings",
+        "/Users/acelin/Documents/Next/AIGC/uxin/apps/api/scripts/mcp-server.ts"
       ],
       "env": {
-        "UXIN_API_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZG1pbi11c2VyLWlkIiwiZW1haWwiOiJhZG1pbkB1eGluLmFpIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzcwNTYzOTU5LCJleHAiOjE4MDIxMjE1NTl9.BZx4l7SkrZMr7X0oqLkWZMwG9X1nmav3EG6uI9dNXfo",
-        "API_BASE_URL": "http://localhost:8000"
-      }
+        "UXIN_API_TOKEN": "uxin-service-secret-123",
+        "UXIN_USER_ID": "admin-user-id",
+        "API_BASE_URL": "http://101.201.105.24:8000"
+      },
+      "enabled": true
     }
   },
   "agents": {
