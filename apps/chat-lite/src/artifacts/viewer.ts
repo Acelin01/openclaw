@@ -1,0 +1,88 @@
+import { LitElement, html, css } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import "./project-requirement/element";
+import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
+
+export type ArtifactKind = "project-requirement" | string;
+
+export interface ArtifactContent {
+  kind: ArtifactKind;
+  data: unknown;
+}
+
+@customElement("chatlite-artifact-viewer")
+export class ArtifactViewer extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      padding: 16px;
+      background: #f3f4f6;
+    }
+
+    .empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+  `;
+
+  @property({ type: Object })
+  content: ArtifactContent | null = null;
+
+  @property({ type: Boolean })
+  editable = false;
+
+  @state()
+  private error: string | null = null;
+
+  render() {
+    if (!this.content) {
+      return html`<div class="empty">选择一个 artifact 查看</div>`;
+    }
+
+    if (this.error) {
+      return html`<div class="empty" style="color: #ef4444;">${this.error}</div>`;
+    }
+
+    switch (this.content.kind) {
+      case "project-requirement":
+        return this._renderProjectRequirement();
+      default:
+        return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
+    }
+  }
+
+  private _renderProjectRequirement() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<ProjectRequirementArtifactContent>;
+
+    return html`
+      <chatlite-project-requirement
+        .content=${{
+          kind: "project-requirement",
+          requirement: data.requirement || {
+            id: "",
+            title: "未命名需求",
+            description: "",
+            status: "draft",
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          },
+          editable: this.editable,
+        }}
+      ></chatlite-project-requirement>
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "chatlite-artifact-viewer": ArtifactViewer;
+  }
+}
