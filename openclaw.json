@@ -62,13 +62,14 @@
   },
   "mcpServers": {
     "uxin-mcp": {
-      "command": "npx",
-      "args": ["tsx", "${UXIN_MCP_SERVER_PATH}"],
+      "command": "/opt/homebrew/Cellar/node@22/22.20.0_1/bin/node",
+      "args": ["/Users/acelin/Documents/Next/AIGC/uxin/packages/mcp/dist/index.js"],
       "env": {
-        "UXIN_API_TOKEN": "${UXIN_API_TOKEN}",
+        "UXIN_API_TOKEN": "uxin-service-secret-123",
         "UXIN_USER_ID": "admin-user-id",
-        "API_BASE_URL": "http://localhost:8000"
-      }
+        "API_BASE_URL": "http://101.201.105.24:8000"
+      },
+      "enabled": true
     }
   },
   "agents": {

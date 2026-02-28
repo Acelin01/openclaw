@@ -37,7 +37,7 @@ metadata:
   "mcpServers": {
     "uxin-mcp": {
       "command": "npx",
-      "args": ["tsx", "/Users/acelin/Documents/Next/AIGC/uxin/apps/api/src/mcp-server/index.ts"],
+      "args": ["tsx", "src/mcp-server/index.ts"],
       "env": {
         "UXIN_API_TOKEN": "your-api-token",
         "UXIN_USER_ID": "admin-user-id",

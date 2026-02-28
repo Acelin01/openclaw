@@ -24,14 +24,12 @@ export class MCPClientManager {
    */
   public static getMCPServerPath(): string {
     const srcCandidates = [
-      path.resolve(process.cwd(), "apps/api/src/mcp-server/index.ts"),
       path.resolve(process.cwd(), "src/mcp-server/index.ts"),
-      path.resolve(process.cwd(), "../api/src/mcp-server/index.ts"),
+      path.resolve(process.cwd(), "../api/src/mcp-server/index.ts")
     ];
     const distCandidates = [
-      path.resolve(process.cwd(), "apps/api/dist/mcp-server/index.js"),
-      path.resolve(process.cwd(), "dist/mcp-server/index.js"),
-      path.resolve(process.cwd(), "../api/dist/mcp-server/index.js"),
+      path.resolve(process.cwd(), "dist/src/mcp-server/index.js"),
+      path.resolve(process.cwd(), "../api/dist/src/mcp-server/index.js")
     ];
 
     const srcPath = srcCandidates.find((candidate) => fs.existsSync(candidate));
