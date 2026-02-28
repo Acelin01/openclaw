@@ -30,7 +30,20 @@ export const getProjectCollaborationTools = (
         },
         required: ["name"],
       },
-      handler: async (args: any) => projectApp.projectManagement.createProject(args, context),
+      handler: async (args: any) => projectApp.createProject(
+        {
+          name: args.name,
+          description: args.description,
+          start_date: args.start_date,
+          end_date: args.end_date,
+          budget: args.budget,
+          priority: args.priority,
+          category: args.category,
+          tags: args.tags,
+          owner_id: context.userId
+        },
+        context
+      ),
     },
     {
       name: "project_query",
@@ -42,7 +55,7 @@ export const getProjectCollaborationTools = (
           filter: { type: "object" },
         },
       },
-      handler: async (args: any) => projectApp.projectManagement.getProject(args, context),
+      handler: async (args: any) => projectApp.getProject(args.project_id, context),
     },
     {
       name: "task_create",
@@ -62,7 +75,20 @@ export const getProjectCollaborationTools = (
         },
         required: ["project_id", "title"],
       },
-      handler: async (args: any) => projectApp.taskManagement.createTask(args, context),
+      handler: async (args: any) => projectApp.createTask(
+        {
+          project_id: args.project_id,
+          title: args.title,
+          description: args.description,
+          assignee_id: args.assignee_id,
+          due_date: args.due_date,
+          priority: args.priority,
+          labels: args.labels,
+          estimate_hours: args.estimate_hours,
+          requirement_id: args.requirement_id
+        },
+        context
+      ),
     },
     {
       name: "task_update_status",
@@ -78,7 +104,7 @@ export const getProjectCollaborationTools = (
         },
         required: ["task_id", "status"],
       },
-      handler: async (args: any) => projectApp.taskManagement.updateTaskStatus(args, context),
+      handler: async (args: any) => projectApp.updateTaskStatus(args.task_id, args.status, context),
     },
     {
       name: "task_list",
@@ -93,7 +119,16 @@ export const getProjectCollaborationTools = (
           offset: { type: "number" },
         },
       },
-      handler: async (args: any) => projectApp.taskManagement.listTasks(args, context),
+      handler: async (args: any) => projectApp.listTasks(
+        {
+          project_id: args.project_id,
+          status: args.status,
+          assignee_id: args.assignee_id,
+          limit: args.limit,
+          offset: args.offset
+        },
+        context
+      ),
     },
     {
       name: "requirement_create",
@@ -110,7 +145,17 @@ export const getProjectCollaborationTools = (
         },
         required: ["project_id", "title"],
       },
-      handler: async (args: any) => projectApp.requirementManagement.createRequirement(args, context),
+      handler: async (args: any) => projectApp.createRequirement(
+        {
+          project_id: args.project_id,
+          title: args.title,
+          description: args.description,
+          priority: args.priority,
+          category: args.category,
+          acceptance_criteria: args.acceptance_criteria
+        },
+        context
+      ),
     },
     {
       name: "milestone_create",
@@ -125,7 +170,15 @@ export const getProjectCollaborationTools = (
         },
         required: ["project_id", "title"],
       },
-      handler: async (args: any) => projectApp.milestoneManagement.createMilestone(args, context),
+      handler: async (args: any) => projectApp.createMilestone(
+        {
+          project_id: args.project_id,
+          title: args.title,
+          due_date: args.due_date,
+          description: args.description
+        },
+        context
+      ),
     },
     {
       name: "milestone_monitor",
@@ -137,7 +190,7 @@ export const getProjectCollaborationTools = (
         },
         required: ["project_id"],
       },
-      handler: async (args: any) => projectApp.milestoneManagement.monitorMilestones(args, context),
+      handler: async (args: any) => projectApp.monitorMilestones(args.project_id, context),
     },
     {
       name: "defect_create",
@@ -154,7 +207,17 @@ export const getProjectCollaborationTools = (
         },
         required: ["project_id", "title"],
       },
-      handler: async (args: any) => projectApp.defectManagement.createDefect(args, context),
+      handler: async (args: any) => projectApp.createDefect(
+        {
+          project_id: args.project_id,
+          title: args.title,
+          description: args.description,
+          severity: args.severity,
+          priority: args.priority,
+          steps_to_reproduce: args.steps_to_reproduce
+        },
+        context
+      ),
     },
     {
       name: "risk_create",
@@ -171,7 +234,37 @@ export const getProjectCollaborationTools = (
         },
         required: ["project_id", "title"],
       },
-      handler: async (args: any) => projectApp.riskManagement.createRisk(args, context),
+      handler: async (args: any) => projectApp.createRisk(
+        {
+          project_id: args.project_id,
+          title: args.title,
+          description: args.description,
+          probability: args.probability,
+          impact: args.impact,
+          mitigation_plan: args.mitigation_plan
+        },
+        context
+      ),
+    },
+    {
+      name: "document_query",
+      description: "查询文档。参数可选：project_id(项目 ID), kind(文档类型), chat_id(聊天 ID)",
+      inputSchema: {
+        type: "object",
+        properties: {
+          project_id: { type: "string" },
+          kind: { type: "string" },
+          chat_id: { type: "string" },
+        },
+      },
+      handler: async (args: any) => projectApp.getDocuments(
+        {
+          project_id: args.project_id,
+          kind: args.kind,
+          chat_id: args.chat_id
+        },
+        context
+      ),
     },
   ];
 };
