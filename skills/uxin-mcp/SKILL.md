@@ -30,16 +30,41 @@ metadata:
 
 ## 配置
 
-在 Claude Desktop 配置文件中添加（`UXIN_API_TOKEN` 为必填）：
+### 方式一：使用 API Token（推荐）
+
+在 MCP 配置文件中添加：
 
 ```json
 {
   "mcpServers": {
     "uxin-mcp": {
       "command": "npx",
-      "args": ["tsx", "src/mcp-server/index.ts"],
+      "args": [
+        "tsx",
+        "/Users/acelin/Documents/Next/AIGC/openclaw/apps/api/src/mcp-server/index.ts"
+      ],
       "env": {
-        "UXIN_API_TOKEN": "your-api-token",
+        "UXIN_API_TOKEN": "<your-jwt-token>",
+        "API_BASE_URL": "http://localhost:8000"
+      }
+    }
+  }
+}
+```
+
+### 方式二：使用用户 ID 和服务密钥
+
+```json
+{
+  "mcpServers": {
+    "uxin-mcp": {
+      "command": "npx",
+      "args": [
+        "tsx",
+        "/Users/acelin/Documents/Next/AIGC/openclaw/apps/api/src/mcp-server/index.ts"
+      ],
+      "env": {
+        "UXIN_API_TOKEN": "uxin-service-secret-123",
         "UXIN_USER_ID": "admin-user-id",
         "API_BASE_URL": "http://localhost:8000"
       }
@@ -47,6 +72,20 @@ metadata:
   }
 }
 ```
+
+### 配置说明
+
+| 环境变量         | 必填 | 说明                                           |
+| ---------------- | ---- | ---------------------------------------------- |
+| `UXIN_API_TOKEN` | 是   | JWT Token 或服务密钥                           |
+| `UXIN_USER_ID`   | 否   | 用户 ID（如不提供，将从 JWT Token 中自动提取） |
+| `API_BASE_URL`   | 否   | API 服务器地址，默认 `http://127.0.0.1:8000`   |
+
+### 获取 API Token
+
+1. 登录系统后，从用户会话中获取 JWT Token
+2. Token 格式：`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxx`
+3. Token 包含用户 ID、角色和过期时间信息
 
 ## 项目管理
 

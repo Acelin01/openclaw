@@ -52,9 +52,18 @@ export class MCPClientManager {
     }
 
     const isTs = serverPath.endsWith('.ts');
+
+    // 构建环境变量配置
+    const env: Record<string, string> = {};
+    const apiBaseUrl = process.env.API_BASE_URL || process.env.SERVER_API_URL || 'http://127.0.0.1:8000';
+    if (process.env.UXIN_API_TOKEN) env.UXIN_API_TOKEN = process.env.UXIN_API_TOKEN;
+    if (process.env.UXIN_USER_ID) env.UXIN_USER_ID = process.env.UXIN_USER_ID;
+    if (process.env.API_BASE_URL) env.API_BASE_URL = apiBaseUrl;
+
     const transport = new StdioClientTransport({
       command: isTs ? "npx" : "node",
       args: isTs ? ["tsx", serverPath] : [serverPath],
+      env,
     });
 
     const client = new Client(
@@ -69,8 +78,8 @@ export class MCPClientManager {
 
     await client.connect(transport);
     this.clients.set(serverName, client);
-    
-    console.log(`Connected to MCP server: ${serverName} via ${isTs ? 'tsx' : 'node'}`);
+
+    console.log(`Connected to MCP server: ${serverName} via ${isTs ? 'tsx' : 'node'} (API: ${apiBaseUrl})`);
     return client;
   }
 }

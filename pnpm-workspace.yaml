@@ -3,6 +3,7 @@ packages:
   - ui
   - apps/admin-console
   - apps/chat-lite
+  - apps/api
   - packages/*
   - extensions/*
 

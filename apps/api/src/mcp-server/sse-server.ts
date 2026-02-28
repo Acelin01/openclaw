@@ -18,49 +18,77 @@ type Tool = {
   handler: (args: unknown) => Promise<unknown>;
 };
 
+/**
+ * 从 JWT Token 中提取用户 ID
+ */
+function extractUserIdFromToken(token: string): string | null {
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    return payload.userId || payload.id || payload.sub || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 解析基础上下文配置
+ */
+function parseBaseContext() {
+  const apiToken = process.env.UXIN_API_TOKEN || "uxin-service-secret-123";
+  const apiBaseUrl = process.env.API_BASE_URL || process.env.SERVER_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
+  let userId = process.env.UXIN_USER_ID;
+
+  // 尝试从 JWT Token 中提取 userId
+  if (!userId && apiToken && apiToken.includes('.')) {
+    const extractedId = extractUserIdFromToken(apiToken);
+    if (extractedId) {
+      console.log(`[MCP SSE] Extracted userId from JWT: ${extractedId}`);
+      userId = extractedId;
+    }
+  }
+
+  // 默认 userId
+  if (!userId) {
+    userId = "seed-user-linyi";
+  }
+
+  // 确保 API URL 可用
+  process.env.SERVER_API_URL = apiBaseUrl;
+
+  return {
+    userId,
+    token: apiToken,
+    apiUrl: apiBaseUrl,
+    isService: true,
+  };
+}
+
 class UxinMultiMCPSSEServer {
   private app: express.Application;
   private projectApp: ProjectApp;
   private freelancerSkills: FreelancerSkills;
   private servers: Map<string, Server> = new Map();
   private transportManagers: Map<string, Map<string, SSEServerTransport>> = new Map();
+  private context: { userId: string; token: string; apiUrl: string; isService: boolean };
 
   constructor() {
     this.app = express();
     this.projectApp = new ProjectApp();
     this.freelancerSkills = new FreelancerSkills();
+    this.context = parseBaseContext();
+
+    console.log(`[MCP SSE] Starting server with userId: ${this.context.userId}, apiUrl: ${this.context.apiUrl}`);
+
     this.setupServer("project", "uxin-mcp", [
-      ...getProjectCollaborationTools(this.projectApp, this.getBaseContext()),
+      ...getProjectCollaborationTools(this.projectApp, this.context),
     ]);
     this.setupServer("freelancer", "uxin-mcp-freelancer", [
-      ...getFreelancerServiceTools(this.freelancerSkills, this.getBaseContext()),
+      ...getFreelancerServiceTools(this.freelancerSkills, this.context),
     ]);
     this.setupServer("agent", "uxin-mcp-agent", [
-      ...getAgentCollaborationTools(this.projectApp, this.getBaseContext()),
+      ...getAgentCollaborationTools(this.projectApp, this.context),
     ]);
-  }
-
-  private getBaseContext() {
-    const apiToken = process.env.UXIN_API_TOKEN || "uxin-service-secret-123";
-    let userId = process.env.UXIN_USER_ID;
-
-    if (!userId && apiToken && apiToken.includes('.')) {
-      try {
-        const payload = JSON.parse(Buffer.from(apiToken.split('.')[1], 'base64').toString());
-        userId = payload.userId || payload.id || payload.sub;
-        if (userId) {
-          console.log(`[MCP SSE Debug] Extracted userId from JWT: ${userId}`);
-        }
-      } catch (error) {
-        console.log(`[MCP SSE Debug] Failed to parse JWT for userId: ${String(error)}`);
-      }
-    }
-
-    return {
-      userId: userId || "seed-user-linyi",
-      token: apiToken,
-      isService: true,
-    };
   }
 
   private setupServer(id: string, name: string, tools: Tool[]) {

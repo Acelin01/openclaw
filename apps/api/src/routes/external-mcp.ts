@@ -5,6 +5,7 @@ import { DatabaseService } from '../lib/db/service.js';
 import { toolRegistry } from '../lib/ai/tools/mcp/registry.js';
 import { ApiTokenRequest, apiRateLimit, authenticateApiToken, recordApiUsage } from '../middleware/api-token.js';
 import { resolveDefaultAllowlist, resolveMcpPermission } from '../lib/mcp/permissions.js';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth.js';
 
 const router: Router = express.Router();
 const mcpServer = new UnifiedMCPServer();
@@ -77,30 +78,49 @@ router.post(
   },
 );
 
+/**
+ * GET /api/v1/external/mcp/config
+ * Returns the MCP configuration for external clients
+ */
 router.get(
   '/config',
-  authenticateApiToken,
-  apiRateLimit(),
-  async (req: ApiTokenRequest, res: Response): Promise<void> => {
-    const host = req.headers.host || 'localhost:3000';
-    const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
-    const endpoint = `${protocol}://${host}/api/v1/external/mcp/route`;
-    res.json({
-      success: true,
-      data: {
-        mcpServers: {
-          'uxin-mcp': {
-            command: 'npx',
-            args: ['mcporter', 'call', endpoint],
-            env: {
-              UXIN_API_TOKEN: '<YOUR_API_TOKEN>',
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      const host = req.headers.host || 'localhost:8000';
+      const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
+      const apiBaseUrl = `${protocol}://${host}`;
+      const endpoint = `${apiBaseUrl}/api/v1/external/mcp/route`;
+
+      res.json({
+        success: true,
+        data: {
+          mcpServers: {
+            'uxin-mcp': {
+              command: 'npx',
+              args: ['mcporter', 'call', endpoint],
+              env: {
+                UXIN_API_TOKEN: '<YOUR_API_TOKEN>',
+                API_BASE_URL: apiBaseUrl,
+              },
             },
           },
+          endpoint,
+          apiBaseUrl,
+          user: {
+            id: req.user?.id,
+            email: req.user?.email,
+            role: req.user?.role,
+          },
         },
-        endpoint,
-        client: req.apiClient,
-      },
-    });
+      });
+    } catch (error: any) {
+      console.error('MCP Config Error:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Internal Server Error',
+      });
+    }
   },
 );
 
