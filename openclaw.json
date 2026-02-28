@@ -180,8 +180,8 @@
         ]
       },
       "bailian": {
-        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        "apiKey": "${BAILIAN_API_KEY}",
+        "baseUrl": "https://coding.dashscope.aliyuncs.com/v1",
+        "apiKey": "sk-sp-f0ca3214e82b43eeb4f5079015f26a4d",
         "api": "openai-completions",
         "models": [
           {
