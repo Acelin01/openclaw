@@ -686,83 +686,22 @@ export class ChatLiteApp extends LitElement {
             : ""}
         </div>
 
-        ${this.showArtifactPanel ? html`
-          <div 
-            class="resize-handle ${this.isResizing ? 'resizing' : ''}"
-            @mousedown=${this._handleResizeStart}
-          ></div>
-
-          <div 
-            class="artifact-panel"
-            style="width: ${this.artifactPanelWidth}px"
-          >
-            <div class="artifact-header">
-              <h2>📎 ${this.currentArtifact?.kind || 'Artifact'}</h2>
-              <button 
-                class="artifact-close"
-                @click=${this._closeArtifactPanel}
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div class="artifact-content">
-              ${this.currentArtifact ? html`
-                <chatlite-artifact-viewer
-                  .content=${this.currentArtifact}
-                  .editable=${true}
-                ></chatlite-artifact-viewer>
-              ` : html`
+        <div class="artifact-panel">
+          <div class="artifact-header">Artifact 查看器</div>
+          ${this.currentArtifact
+            ? html`<chatlite-artifact-viewer
+                .content=${this.currentArtifact}
+                .editable=${true}
+              ></chatlite-artifact-viewer>`
+            : html`
                 <div class="empty-artifact">
                   选择一个 artifact 查看<br/>
                   技能调用后会自动显示相关文档
                 </div>
               `}
-            </div>
-          </div>
-        ` : ''}
+        </div>
       </div>
     `;
-  }
-
-  private _handleResizeStart(e: MouseEvent) {
-    this.isResizing = true;
-    document.addEventListener('mousemove', this._handleResizeMove);
-    document.addEventListener('mouseup', this._handleResizeEnd);
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  }
-
-  private _handleResizeMove = (e: MouseEvent) => {
-    if (!this.isResizing) return;
-    
-    const container = this.shadowRoot?.querySelector('.main') as HTMLElement;
-    if (!container) return;
-    
-    const containerRect = container.getBoundingClientRect();
-    const newWidth = containerRect.right - e.clientX;
-    
-    const minWidth = 300;
-    const maxWidth = 800;
-    this.artifactPanelWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
-  }
-
-  private _handleResizeEnd() {
-    this.isResizing = false;
-    document.removeEventListener('mousemove', this._handleResizeMove);
-    document.removeEventListener('mouseup', this._handleResizeEnd);
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-  }
-
-  private _closeArtifactPanel() {
-    this.showArtifactPanel = false;
-    this.currentArtifact = null;
-  }
-
-  private _handleArtifactClick(artifact: any) {
-    this.currentArtifact = artifact;
-    this.showArtifactPanel = true;
   }
 }
 
