@@ -2,6 +2,7 @@ import "./components/app";
 
 // 注册所有 Web Components
 import "./artifacts/project-requirement/element";
+import "./artifacts/testcase/element";
 import "./artifacts/viewer";
 
 // 应用样式
