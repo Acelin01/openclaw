@@ -3,9 +3,11 @@ import { customElement, state } from "lit/decorators.js";
 import { chatClient, type ChatMessage } from "../client/chat-client";
 import { skillMatcher, type MatchedSkill } from "../services/skill-matcher";
 import { requirementManager, type RequirementDraft } from "../services/requirement-manager";
+import { testcaseManager } from "../services/testcase-manager";
 import { generateUUID, formatTime } from "../lib/utils";
 import "../artifacts/viewer";
 import type { ArtifactContent } from "../artifacts/viewer";
+import type { TestCaseContent } from "../artifacts/testcase/element";
 
 @customElement("chatlite-app")
 export class ChatLiteApp extends LitElement {
@@ -458,6 +460,11 @@ export class ChatLiteApp extends LitElement {
   }
 
   private _handleLocalResponse(input: string) {
+    // 检查是否是测试用例创建请求
+    if (this._handleTestCaseCreation(input)) {
+      return;
+    }
+
     // 本地模式：解析输入并创建模拟响应
     const parsedCall = skillMatcher.parseSkillCall(input);
 
@@ -478,14 +485,52 @@ export class ChatLiteApp extends LitElement {
     }
   }
 
-  private _addAssistantMessage(content: string) {
+  private _addAssistantMessage(content: string, artifact?: { kind: string; content: string }) {
     const msg: ChatMessage = {
       id: generateUUID(),
       role: "assistant",
       content,
       timestamp: Date.now(),
+      artifact,
     };
     this.messages = [...this.messages, msg];
+  }
+
+  private _handleTestCaseCreation(input: string) {
+    // 检测是否包含测试用例创建关键词
+    const testCaseKeywords = [
+      "测试用例", "创建测试", "test case", "test",
+      "功能测试", "性能测试", "安全测试", "集成测试"
+    ];
+
+    const hasTestCaseKeyword = testCaseKeywords.some(keyword => 
+      input.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    if (hasTestCaseKeyword) {
+      // 创建测试用例
+      const draft = testcaseManager.createFromKeywords(input);
+      const artifactContent = testcaseManager.toArtifactContent(draft);
+
+      // 显示测试用例 artifact
+      this.currentArtifact = {
+        kind: "testcase",
+        data: artifactContent as unknown as Record<string, unknown>,
+      };
+
+      // 添加助手消息，包含 artifact 引用
+      this._addAssistantMessage(
+        `已创建测试用例：**${draft.title}**\n\n类型：${draft.type}\n优先级：${draft.priority}\n\n共 ${draft.steps?.length || 0} 个测试步骤。`,
+        {
+          kind: "testcase",
+          content: JSON.stringify(artifactContent),
+        }
+      );
+
+      return true;
+    }
+
+    return false;
   }
 
   private _handleInputKeydown(e: KeyboardEvent) {

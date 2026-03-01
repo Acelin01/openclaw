@@ -1,9 +1,11 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import "./project-requirement/element";
+import "./testcase/element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
+import type { TestCaseContent } from "./testcase/element";
 
-export type ArtifactKind = "project-requirement" | string;
+export type ArtifactKind = "project-requirement" | "testcase" | string;
 
 export interface ArtifactContent {
   kind: ArtifactKind;
@@ -53,6 +55,8 @@ export class ArtifactViewer extends LitElement {
     switch (this.content.kind) {
       case "project-requirement":
         return this._renderProjectRequirement();
+      case "testcase":
+        return this._renderTestCase();
       default:
         return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
     }
@@ -77,6 +81,31 @@ export class ArtifactViewer extends LitElement {
           editable: this.editable,
         }}
       ></chatlite-project-requirement>
+    `;
+  }
+
+  private _renderTestCase() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<TestCaseContent>;
+
+    return html`
+      <chatlite-testcase
+        .content=${{
+          id: data.id,
+          title: data.title || "未命名测试用例",
+          description: data.description,
+          type: data.type || "FUNCTIONAL",
+          priority: data.priority || "MEDIUM",
+          projectId: data.projectId,
+          precondition: data.precondition,
+          steps: data.steps,
+          expectedResult: data.expectedResult,
+          tags: data.tags,
+          status: data.status || "DRAFT",
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+        }}
+      ></chatlite-testcase>
     `;
   }
 }

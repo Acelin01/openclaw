@@ -36,7 +36,6 @@ model User {
   agents                  Agent[]
   aiConversations         AIConversation[]
   providerKeys            AIProviderKey[]
-  apiClients              ApiClient[]
   interactionMetrics      ChatInteractionMetrics[]
   inquiries               Inquiry[]
   interviewsAsCandidate   Interview[]              @relation("Candidate")
@@ -81,6 +80,7 @@ model User {
   userTasks               UserTask[]
   wallet                  Wallet?
   workerProfile           WorkerProfile?
+  apiClients              ApiClient[]
 
   @@index([departmentId], map: "users_departmentId_fkey")
   @@index([teamId], map: "users_teamId_fkey")
@@ -741,6 +741,7 @@ model Chat {
   @@index([userId])
   @@index([projectId], map: "Chat_projectId_fkey")
   @@index([userId, createdAt], map: "idx_userId_createdAt")
+  @@index([userId], map: "userId_idx")
   @@index([userId, createdAt], map: "user_createdAt_idx")
   @@index([agentId], map: "Chat_agentId_fkey")
   @@map("Chat")
@@ -753,11 +754,11 @@ model ChatMessage {
   parts        Json
   attachments  Json
   createdAt    DateTime
-  agentId      String?
   authorAvatar String?    @db.Text
   authorName   String?    @db.VarChar(255)
   content      String?    @db.Text
   userId       String?    @db.VarChar(36)
+  agentId      String?
   documents    Document[]
   agent        Agent?     @relation(fields: [agentId], references: [id])
   chat         Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
@@ -766,6 +767,7 @@ model ChatMessage {
   @@index([chatId])
   @@index([agentId])
   @@index([chatId, createdAt], map: "idx_chatId_createdAt")
+  @@index([chatId], map: "chatId_idx")
   @@index([chatId, createdAt], map: "chat_createdAt_idx")
   @@map("Message_v2")
 }
@@ -780,10 +782,10 @@ model Document {
   chatId         String?
   projectId      String?
   serviceId      String?
+  visibility     ChatVisibility  @default(private)
+  status         DocumentStatus  @default(PENDING)
   agentId        String?
   messageId      String?
-  status         DocumentStatus  @default(PENDING)
-  visibility     ChatVisibility  @default(private)
   agent          Agent?          @relation(fields: [agentId], references: [id])
   chat           Chat?           @relation(fields: [chatId], references: [id])
   message        ChatMessage?    @relation(fields: [messageId], references: [id])
@@ -800,6 +802,7 @@ model Document {
   @@index([projectId], map: "Document_projectId_fkey")
   @@index([serviceId], map: "Document_serviceId_fkey")
   @@index([userId, kind, createdAt], map: "idx_userId_kind_createdAt")
+  @@index([userId], map: "userId_idx")
   @@index([userId, kind, createdAt], map: "user_kind_createdAt_idx")
   @@index([agentId], map: "Document_agentId_fkey")
   @@map("Document")
@@ -890,7 +893,6 @@ model Project {
   team             Team?                 @relation(fields: [teamId], references: [id])
   user             User                  @relation(fields: [userId], references: [id])
   schedules        Schedule[]
-  testCases        TestCase[]
   transactions     Transaction[]
   userTasks        UserTask[]
   agents           Agent[]               @relation("AgentToProject")
@@ -921,7 +923,6 @@ model ProjectCollaboration {
   requirements     ProjectRequirement[]
   risks            ProjectRisk[]
   tasks            ProjectTask[]
-  testCases        TestCase[]
 
   @@index([aiAppId])
   @@map("project_collaborations")
@@ -1192,17 +1193,17 @@ model Schedule {
 model ProjectRequirement {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   title           String
   description     String?               @db.Text
+  type            String?               @default("FUNCTIONAL")
   priority        String?               @default("MEDIUM")
   status          String?               @default("PENDING")
+  assigneeId      String?
+  reporterId      String?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  assigneeId      String?
-  collaborationId String?
   iterationId     String?
-  reporterId      String?
-  type            String?               @default("FUNCTIONAL")
   assignee        User?                 @relation("RequirementAssignee", fields: [assigneeId], references: [id])
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id])
   iteration       Iteration?            @relation(fields: [iterationId], references: [id])
@@ -1222,9 +1223,11 @@ model ProjectRequirement {
 model ProjectTask {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   requirementId   String?
   assigneeId      String?
   title           String
+  type            String?               @default("TASK")
   description     String?               @db.Text
   priority        String?               @default("MEDIUM")
   status          String?               @default("PENDING")
@@ -1236,9 +1239,7 @@ model ProjectTask {
   subtasks        Json?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  collaborationId String?
   iterationId     String?
-  type            String?               @default("TASK")
   assignee        User?                 @relation("TaskAssignee", fields: [assigneeId], references: [id])
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id])
   iteration       Iteration?            @relation(fields: [iterationId], references: [id])
@@ -1255,27 +1256,27 @@ model ProjectTask {
 }
 
 model ProjectDefect {
-  id               String                @id @default(uuid())
-  projectId        String?
-  collaborationId  String?
-  iterationId      String?
-  title            String
-  description      String?               @db.Text
-  status           String                @default("OPEN")
-  severity         String                @default("MEDIUM")
-  priority         String                @default("MEDIUM")
-  reporterId       String?
-  assigneeId       String?
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  actualResult     String?               @db.Text
-  expectedResult   String?               @db.Text
+  id              String                @id @default(uuid())
+  projectId       String?
+  collaborationId String?
+  iterationId     String?
+  title           String
+  description     String?               @db.Text
+  status          String                @default("OPEN")
+  severity        String                @default("MEDIUM")
+  priority        String                @default("MEDIUM")
   stepsToReproduce Json?
-  assignee         User?                 @relation("DefectAssignee", fields: [assigneeId], references: [id])
-  collaboration    ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
-  iteration        Iteration?            @relation(fields: [iterationId], references: [id])
-  project          Project?              @relation(fields: [projectId], references: [id])
-  reporter         User?                 @relation("DefectReporter", fields: [reporterId], references: [id])
+  expectedResult  String?               @db.Text
+  actualResult    String?               @db.Text
+  reporterId      String?
+  assigneeId      String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  assignee        User?                 @relation("DefectAssignee", fields: [assigneeId], references: [id])
+  collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
+  iteration       Iteration?            @relation(fields: [iterationId], references: [id])
+  project         Project?              @relation(fields: [projectId], references: [id])
+  reporter        User?                 @relation("DefectReporter", fields: [reporterId], references: [id])
 
   @@index([projectId])
   @@index([collaborationId])
@@ -1306,14 +1307,14 @@ model ProjectTeamMember {
 model ProjectMilestone {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   title           String
   description     String?               @db.Text
   dueDate         DateTime?
   status          String                @default("PENDING")
+  dependencies    Json?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  collaborationId String?
-  dependencies    Json?
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
 
@@ -1325,11 +1326,11 @@ model ProjectMilestone {
 model ProjectActivity {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   userId          String
   action          String
   details         Json?
   createdAt       DateTime              @default(now())
-  collaborationId String?
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
   user            User                  @relation(fields: [userId], references: [id])
@@ -1343,6 +1344,7 @@ model ProjectActivity {
 model ProjectApproval {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   requesterId     String
   title           String
   description     String?               @db.Text
@@ -1351,7 +1353,6 @@ model ProjectApproval {
   approvedAt      DateTime?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  collaborationId String?
   approver        User?                 @relation("ApprovalApprover", fields: [approvedBy], references: [id])
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
@@ -1367,6 +1368,7 @@ model ProjectApproval {
 model ProjectFinancial {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   type            String
   amount          Float
   category        String?
@@ -1374,7 +1376,6 @@ model ProjectFinancial {
   date            DateTime
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  collaborationId String?
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
 
@@ -1395,9 +1396,9 @@ model ProjectRisk {
   probability     String?               @default("MEDIUM")
   impact          String?               @default("MEDIUM")
   mitigationPlan  String?               @db.Text
+  dueDate         DateTime?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  dueDate         DateTime?
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   owner           User?                 @relation("RiskOwner", fields: [ownerId], references: [id])
   project         Project?              @relation(fields: [projectId], references: [id])
@@ -1411,13 +1412,13 @@ model ProjectRisk {
 model ProjectQnA {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   question        String                @db.Text
   answer          String?               @db.Text
   askedById       String
   answeredById    String?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
-  collaborationId String?
   answeredBy      User?                 @relation("QnAAnswerer", fields: [answeredById], references: [id])
   askedBy         User                  @relation("QnAAsker", fields: [askedById], references: [id])
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
@@ -1430,72 +1431,14 @@ model ProjectQnA {
   @@map("project_qna")
 }
 
-model TestCase {
-  id              String                @id @default(uuid())
-  projectId       String?
-  collaborationId String?
-  testSuiteId     String?
-  title           String
-  description     String?               @db.Text
-  type            TestCaseType          @default(FUNCTIONAL)
-  priority        TestCasePriority      @default(MEDIUM)
-  status          TestCaseStatus        @default(DRAFT)
-  precondition    String?               @db.Text
-  steps           Json?
-  expectedResult  String?               @db.Text
-  actualResult    String?               @db.Text
-  tags            Json?
-  assigneeId      String?
-  reviewerId      String?
-  reviewedAt      DateTime?
-  reviewComment   String?               @db.Text
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
-  collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
-  project         Project?              @relation(fields: [projectId], references: [id])
-  testSuite       TestSuite?            @relation(fields: [testSuiteId], references: [id])
-
-  @@index([collaborationId], map: "test_cases_collaborationId_fkey")
-  @@index([projectId], map: "test_cases_projectId_fkey")
-  @@index([testSuiteId], map: "test_cases_testSuiteId_fkey")
-  @@map("test_cases")
-}
-
-model TestCaseExecution {
-  id           String          @id @default(uuid())
-  testCaseId   String
-  executedById String?
-  executedAt   DateTime        @default(now())
-  status       ExecutionStatus @default(PENDING)
-  duration     Int             @default(0)
-  result       String?         @db.Text
-  notes        String?         @db.Text
-
-  @@map("test_case_executions")
-}
-
-model TestSuite {
-  id              String     @id @default(uuid())
-  projectId       String?
-  collaborationId String?
-  name            String
-  description     String?    @db.Text
-  status          String     @default("ACTIVE")
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  testCases       TestCase[]
-
-  @@map("test_suites")
-}
-
 model FinancialReport {
   id              String                @id @default(uuid())
   projectId       String?
+  collaborationId String?
   title           String
   content         Json
   period          String
   generatedAt     DateTime              @default(now())
-  collaborationId String?
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
 
@@ -1608,8 +1551,6 @@ model MCPTool {
   name         String    @db.VarChar(50)
   description  String?   @db.Text
   avatar       String?   @db.Text
-  publisher    String?   @db.VarChar(100)
-  skills       Json?
   rating       Float     @default(0)
   isBuiltIn    Boolean   @default(true)
   isAppOutput  Boolean   @default(false)
@@ -1620,8 +1561,10 @@ model MCPTool {
   endpoint     String?   @db.Text
   type         String    @default("REST")
   capabilities Json?
-  creator      User?     @relation(fields: [creatorId], references: [id])
+  publisher    String?   @db.VarChar(100)
+  skills       Json?
   skillList    Skill[]
+  creator      User?     @relation(fields: [creatorId], references: [id])
   aiApps       AIApp[]   @relation("AIAppTools")
   agents       Agent[]   @relation("AgentTools")
   mcp_tools_A  MCPTool[] @relation("ToolRelations")
@@ -1632,21 +1575,21 @@ model MCPTool {
 }
 
 model ApiClient {
-  id                  String        @id @default(uuid())
-  ownerUserId         String?
-  name                String
-  description         String?
-  status              String        @default("ACTIVE")
-  rateLimitPerMin     Int           @default(60)
-  defaultProjectId    String?
-  defaultTeamId       String?
-  toolAllowlist       Json?
+  id              String           @id @default(uuid())
+  ownerUserId     String?
+  name            String
+  description     String?
+  status          String           @default("ACTIVE")
+  rateLimitPerMin Int              @default(60)
+  defaultProjectId String?
+  defaultTeamId   String?
+  toolAllowlist   Json?
   permissionAllowlist Json?
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  owner               User?         @relation(fields: [ownerUserId], references: [id])
-  tokens              ApiToken[]
-  usageLogs           ApiUsageLog[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  owner           User?            @relation(fields: [ownerUserId], references: [id])
+  tokens          ApiToken[]
+  usageLogs       ApiUsageLog[]
 
   @@index([ownerUserId])
   @@index([status])
@@ -1654,15 +1597,15 @@ model ApiClient {
 }
 
 model ApiToken {
-  id         String        @id @default(uuid())
+  id         String     @id @default(uuid())
   clientId   String
   name       String
-  tokenHash  String        @db.VarChar(128)
+  tokenHash  String     @db.VarChar(128)
   lastUsedAt DateTime?
   expiresAt  DateTime?
   revokedAt  DateTime?
-  createdAt  DateTime      @default(now())
-  client     ApiClient     @relation(fields: [clientId], references: [id])
+  createdAt  DateTime   @default(now())
+  client     ApiClient  @relation(fields: [clientId], references: [id])
   usageLogs  ApiUsageLog[]
 
   @@index([clientId])
@@ -1688,14 +1631,14 @@ model ApiUsageLog {
 }
 
 model Skill {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   mcpToolId   String
   name        String
-  description String?  @db.Text
+  description String?   @db.Text
   parameters  Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  mcpTool     MCPTool  @relation(fields: [mcpToolId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  mcpTool     MCPTool   @relation(fields: [mcpToolId], references: [id], onDelete: Cascade)
 
   @@index([mcpToolId])
   @@map("skills")
@@ -1851,38 +1794,6 @@ model UserAssociatedAgents {
   @@unique([A, B], map: "_UserAssociatedAgents_AB_unique")
   @@index([B], map: "_UserAssociatedAgents_B_index")
   @@map("_UserAssociatedAgents")
-}
-
-enum TestCaseType {
-  FUNCTIONAL
-  INTEGRATION
-  PERFORMANCE
-  SECURITY
-  REGRESSION
-  ACCEPTANCE
-}
-
-enum TestCasePriority {
-  LOW
-  MEDIUM
-  HIGH
-  CRITICAL
-}
-
-enum TestCaseStatus {
-  DRAFT
-  PENDING_REVIEW
-  APPROVED
-  REJECTED
-  ARCHIVED
-}
-
-enum ExecutionStatus {
-  PENDING
-  PASSED
-  FAILED
-  BLOCKED
-  SKIPPED
 }
 
 enum WalletTransactionType {
@@ -2130,7 +2041,6 @@ enum Document_kind {
   requirement
   resume
   service
-  testcase
   matching
   approval
   contract

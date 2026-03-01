@@ -1,6 +1,8 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { executeMCPTool } from "../../../mcp/client";
+import { testCaseManagementTools } from "./test-case-tools.js";
+import { documentManagementTools } from "./document-tools.js";
 
 export const projectCollaborationMCPTools = {
   project_create: {
@@ -136,7 +138,11 @@ export const projectCollaborationMCPTools = {
       chat_id: z.string().optional()
     }),
     execute: async (args: any) => executeMCPTool('uxin-mcp', 'document_query', args)
-  }
+  },
+  // 测试用例管理工具
+  ...testCaseManagementTools,
+  // 文档管理工具
+  ...documentManagementTools,
 };
 
 export const businessSupportMCPTools = {

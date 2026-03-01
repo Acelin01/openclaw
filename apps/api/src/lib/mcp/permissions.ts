@@ -19,6 +19,18 @@ const TOOL_PERMISSION_MAP: Record<string, string> = {
   growth_strategy_analyzer: "analysis.read",
   ux_design_reviewer: "analysis.read",
   devops_pipeline_optimizer: "analysis.read",
+  // Test Case Management
+  test_case_create: "test.write",
+  test_case_query: "test.read",
+  test_case_get: "test.read",
+  test_case_update: "test.write",
+  test_case_delete: "test.write",
+  test_case_submit_review: "test.write",
+  test_case_review: "test.write",
+  test_case_execute: "test.write",
+  test_case_get_executions: "test.read",
+  test_case_stats: "test.read",
+  test_case_batch_create: "test.write",
 };
 
 export const resolveMcpPermission = (tool: string) =>
@@ -51,4 +63,23 @@ export const resolveDefaultAllowlist = () => [
   "agent_collaboration_plan",
   "agent_collaboration_start",
   "document_query",
+  // Test Case Management
+  "test_case_create",
+  "test_case_query",
+  "test_case_get",
+  "test_case_update",
+  "test_case_delete",
+  "test_case_submit_review",
+  "test_case_review",
+  "test_case_execute",
+  "test_case_get_executions",
+  "test_case_stats",
+  "test_case_batch_create",
+  // Document Management
+  "document_create",
+  "document_get",
+  "document_update",
+  "document_delete",
+  "document_review",
+  "document_stats",
 ];

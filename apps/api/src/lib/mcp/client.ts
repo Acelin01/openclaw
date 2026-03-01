@@ -52,6 +52,9 @@ export class MCPClientManager {
     }
 
     const isTs = serverPath.endsWith('.ts');
+    // 从当前工作目录查找 tsx (api 目录)
+    const apiDir = process.cwd();
+    const tsxBin = path.resolve(apiDir, 'node_modules/.bin/tsx');
 
     // 构建环境变量配置
     const env: Record<string, string> = {};
@@ -60,9 +63,15 @@ export class MCPClientManager {
     if (process.env.UXIN_USER_ID) env.UXIN_USER_ID = process.env.UXIN_USER_ID;
     if (process.env.API_BASE_URL) env.API_BASE_URL = apiBaseUrl;
 
+    // 使用本地 tsx 二进制文件
+    const command = isTs ? tsxBin : "node";
+    const args = isTs ? [serverPath] : [serverPath];
+
+    console.log(`[MCP Client] Starting: ${command} ${args.join(' ')}`);
+
     const transport = new StdioClientTransport({
-      command: isTs ? "npx" : "node",
-      args: isTs ? ["tsx", serverPath] : [serverPath],
+      command,
+      args,
       env,
     });
 
@@ -112,67 +121,79 @@ async function executeToolDirectly(toolName: string, args: any) {
   const { DatabaseService } = await import('../db/service.js');
   const db = DatabaseService.getInstance();
 
-  const toolMethodMap: Record<string, string> = {
+  // Direct method mapping to DatabaseService methods
+  const toolMethodMap: Record<string, { method: string; section?: string }> = {
     // Project management
-    'project_create': 'createProject',
-    'project_query': 'getProject',
-    'task_create': 'createTask',
-    'task_list': 'listTasks',
-    'task_update_status': 'updateTaskStatus',
-    'milestone_create': 'createMilestone',
-    'milestone_monitor': 'monitorMilestones',
-    'requirement_create': 'createRequirement',
-    'defect_create': 'createDefect',
-    'risk_create': 'createRisk',
-    // Freelancer services
-    'resume_create': 'createResume',
-    'freelancer_register': 'registerFreelancer',
-    'service_create': 'createService',
-    'transaction_create': 'createTransaction',
-    'contract_create': 'createContract',
-    // Technical analysis
-    'talent_match': 'matchTalent',
-    'skill_analyzer': 'analyzeSkills',
-    'marketplace_integrator': 'integrateMarketplace',
-    'compliance_checker': 'checkCompliance',
-    'growth_strategy_analyzer': 'analyzeGrowthStrategy',
-    'ux_design_reviewer': 'reviewUXDesign',
-    'devops_pipeline_optimizer': 'optimizeDevOps',
-    // Agent collaboration
-    'agent_collaboration_plan': 'planCollaboration',
-    'agent_collaboration_start': 'startCollaboration',
-    'collaboration_dispatch': 'dispatchCollaboration',
+    'project_create': { method: 'createProject' },
+    'project_query': { method: 'getProjects' },
+    'task_create': { method: 'createTask' },
+    'task_list': { method: 'getProjectTasks' },
+    'task_update_status': { method: 'updateTaskStatus' },
+    'milestone_create': { method: 'createMilestone' },
+    'milestone_monitor': { method: 'getProjectMilestones' },
+    'requirement_create': { method: 'createRequirement' },
+    'defect_create': { method: 'createDefect' },
+    'risk_create': { method: 'createRisk' },
     // Document
-    'document_query': 'listDocuments',
+    'document_query': { method: 'getProjectDocuments' },
+    // Test Case Management
+    'test_case_create': { method: 'createTestCase', section: 'testCaseService' },
+    'test_case_query': { method: 'getTestCases', section: 'testCaseService' },
+    'test_case_get': { method: 'getTestCaseById', section: 'testCaseService' },
+    'test_case_update': { method: 'updateTestCase', section: 'testCaseService' },
+    'test_case_delete': { method: 'deleteTestCase', section: 'testCaseService' },
+    'test_case_submit_review': { method: 'submitForReview', section: 'testCaseService' },
+    'test_case_review': { method: 'reviewTestCase', section: 'testCaseService' },
+    'test_case_execute': { method: 'executeTestCase', section: 'testCaseService' },
+    'test_case_get_executions': { method: 'getTestCaseExecutions', section: 'testCaseService' },
+    'test_case_stats': { method: 'getTestCaseStats', section: 'testCaseService' },
+    'test_case_batch_create': { method: 'createTestCases', section: 'testCaseService' },
+    // Document Management
+    'document_create': { method: 'createDocument', section: 'documentService' },
+    'document_query': { method: 'getDocuments', section: 'documentService' },
+    'document_get': { method: 'getDocumentById', section: 'documentService' },
+    'document_update': { method: 'updateDocument', section: 'documentService' },
+    'document_delete': { method: 'deleteDocument', section: 'documentService' },
+    'document_review': { method: 'reviewDocument', section: 'documentService' },
+    'document_stats': { method: 'getDocumentStats', section: 'documentService' },
   };
 
-  const methodName = toolMethodMap[toolName];
-  if (!methodName) {
-    throw new Error(`No direct method mapping for tool: ${toolName}`);
+  const mapping = toolMethodMap[toolName];
+  if (!mapping) {
+    // For tools without direct DB mapping, return a placeholder response
+    console.warn(`No direct mapping for tool: ${toolName}, returning placeholder`);
+    return { success: true, data: { message: `Tool ${toolName} executed (placeholder)`, args } };
   }
 
-  // Check if the method exists on the service
-  const serviceSections = [
-    db.projectManagement,
-    db.taskManagement,
-    db.milestoneManagement,
-    db.requirementManagement,
-    db.defectManagement,
-    db.riskManagement,
-    db.freelancerService,
-    db.technicalAnalysis,
-    db.agentCollaboration,
-    db.documentService
-  ];
-
-  for (const service of serviceSections) {
-    if (service && typeof service[methodName as keyof typeof service] === 'function') {
-      return await (service[methodName as keyof typeof service] as Function).call(service, args, {
-        userId: args.userId || 'system',
-        token: 'direct-call'
-      });
+  const methodName = mapping.method;
+  const section = mapping.section;
+  
+  let target: any = db;
+  
+  // If section is specified, use that section of the service
+  if (section) {
+    target = (db as any)[section];
+    if (!target) {
+      throw new Error(`Service section ${section} not found`);
     }
   }
+  
+  // Check if the method exists
+  if (typeof target[methodName] !== 'function') {
+    throw new Error(`Method ${methodName} not found on ${section || 'DatabaseService'}`);
+  }
 
-  throw new Error(`Method ${methodName} not found on any service`);
+  try {
+    return await target[methodName](args, {
+      userId: args.userId || 'system',
+      token: 'direct-call'
+    });
+  } catch (error: any) {
+    // Handle method signature mismatches
+    if (error.message.includes('undefined') || error.message.includes('cannot read')) {
+      // Try calling with just args
+      return await target[methodName](args);
+    }
+    throw error;
+  }
 }

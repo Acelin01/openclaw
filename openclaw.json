@@ -62,12 +62,11 @@
   },
   "mcpServers": {
     "uxin-mcp": {
-      "command": "/opt/homebrew/Cellar/node@22/22.20.0_1/bin/node",
+      "command": "pnpm",
       "args": [
-        "--loader",
-        "tsx",
-        "--no-warnings",
-        "/Users/acelin/Documents/Next/AIGC/uxin/apps/api/scripts/mcp-server.ts"
+        "--dir",
+        "/Users/acelin/Documents/Next/AIGC/uxin/apps/api",
+        "mcp:stdio"
       ],
       "env": {
         "UXIN_API_TOKEN": "uxin-service-secret-123",

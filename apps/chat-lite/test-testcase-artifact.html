@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试用例 Artifact 测试</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f3f4f6;
+      padding: 24px;
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #111827;
+      margin-bottom: 24px;
+    }
+    .controls {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-right: 12px;
+    }
+    button:hover {
+      background: #059669;
+    }
+    .artifact-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 测试用例 Artifact 测试</h1>
+    
+    <div class="controls">
+      <button onclick="loadTestCase1()">加载测试用例 1</button>
+      <button onclick="loadTestCase2()">加载测试用例 2</button>
+      <button onclick="loadEmpty()">清空</button>
+    </div>
+
+    <div class="artifact-container">
+      <chatlite-artifact-viewer id="viewer"></chatlite-artifact-viewer>
+    </div>
+  </div>
+
+  <script type="module">
+    import "./dist/artifacts/viewer.js";
+
+    const viewer = document.getElementById("viewer");
+
+    window.loadTestCase1 = function() {
+      viewer.content = {
+        kind: "testcase",
+        data: {
+          id: "tc-001",
+          title: "用户登录功能测试",
+          description: "验证用户使用正确的用户名和密码可以成功登录系统",
+          type: "FUNCTIONAL",
+          priority: "HIGH",
+          projectId: "proj-uxin",
+          precondition: "用户已注册且账号处于激活状态",
+          steps: [
+            { step: "1", action: "打开登录页面", expected: "页面正常加载，显示用户名和密码输入框" },
+            { step: "2", action: "输入正确的用户名", expected: "输入框接受输入，无错误提示" },
+            { step: "3", action: "输入正确的密码", expected: "密码以掩码（*）形式显示" },
+            { step: "4", action: "点击登录按钮", expected: "验证通过，跳转到首页" }
+          ],
+          expectedResult: "用户成功登录系统，页面跳转到用户首页，显示欢迎信息",
+          tags: ["登录", "用户认证", "核心功能", "冒烟测试"],
+          status: "APPROVED",
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        }
+      };
+    };
+
+    window.loadTestCase2 = function() {
+      viewer.content = {
+        kind: "testcase",
+        data: {
+          id: "tc-002",
+          title: "API 性能测试",
+          description: "测试 API 在高并发下的响应时间",
+          type: "PERFORMANCE",
+          priority: "CRITICAL",
+          projectId: "proj-uxin",
+          precondition: "测试环境已准备，压测工具已安装",
+          steps: [
+            { step: "1", action: "配置 JMeter 压测工具", expected: "工具配置正确" },
+            { step: "2", action: "设置并发用户数为 1000", expected: "用户数设置成功" },
+            { step: "3", action: "执行压测持续 5 分钟", expected: "压测正常执行" },
+            { step: "4", action: "收集性能指标", expected: "获取响应时间、吞吐量等数据" }
+          ],
+          expectedResult: "API 响应时间 < 200ms，错误率 < 0.1%",
+          tags: ["性能", "API", "压测"],
+          status: "PENDING_REVIEW",
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        }
+      };
+    };
+
+    window.loadEmpty = function() {
+      viewer.content = null;
+    };
+
+    // 自动加载第一个测试用例
+    setTimeout(() => {
+      loadTestCase1();
+    }, 500);
+  </script>
+</body>
+</html>
