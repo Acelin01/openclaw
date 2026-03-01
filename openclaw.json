@@ -63,11 +63,7 @@
   "mcpServers": {
     "uxin-mcp": {
       "command": "pnpm",
-      "args": [
-        "--dir",
-        "/Users/acelin/Documents/Next/AIGC/uxin/apps/api",
-        "mcp:stdio"
-      ],
+      "args": ["--dir", "/Users/acelin/Documents/Next/AIGC/uxin/apps/api", "mcp:stdio"],
       "env": {
         "UXIN_API_TOKEN": "uxin-service-secret-123",
         "UXIN_USER_ID": "admin-user-id",
