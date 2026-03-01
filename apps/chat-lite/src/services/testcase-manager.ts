@@ -84,7 +84,7 @@ class TestCaseManager {
     });
   }
 
-  private _generateTitleFromKeywords(keywords: string, type: string): string {
+  private _generateTitleFromKeywords(_keywords: string, type: string): string {
     const typeNames: Record<string, string> = {
       FUNCTIONAL: "功能测试",
       PERFORMANCE: "性能测试",
@@ -93,10 +93,10 @@ class TestCaseManager {
       REGRESSION: "回归测试",
       ACCEPTANCE: "验收测试",
     };
-    return `${keywords}${typeNames[type] || "测试"}`;
+    return `${_keywords}${typeNames[type] || "测试"}`;
   }
 
-  private _generateStepsFromKeywords(keywords: string, type: string): TestCaseStep[] {
+  private _generateStepsFromKeywords(_keywords: string, type: string): TestCaseStep[] {
     const steps: TestCaseStep[] = [];
 
     if (type === "FUNCTIONAL") {

@@ -1,11 +1,13 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import "./project-requirement/element";
+import "./project-requirement/list-element";
 import "./testcase/element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
 import type { TestCaseContent } from "./testcase/element";
+import type { RequirementListItem } from "./project-requirement/list-element";
 
-export type ArtifactKind = "project-requirement" | "testcase" | string;
+export type ArtifactKind = "project-requirement" | "project-requirement-list" | "testcase" | string;
 
 export interface ArtifactContent {
   kind: ArtifactKind;
@@ -55,6 +57,8 @@ export class ArtifactViewer extends LitElement {
     switch (this.content.kind) {
       case "project-requirement":
         return this._renderProjectRequirement();
+      case "project-requirement-list":
+        return this._renderRequirementList();
       case "testcase":
         return this._renderTestCase();
       default:
@@ -106,6 +110,21 @@ export class ArtifactViewer extends LitElement {
           updatedAt: data.updatedAt,
         }}
       ></chatlite-testcase>
+    `;
+  }
+
+  private _renderRequirementList() {
+    if (!this.content) return html``;
+    const data = this.content.data as { 
+      requirements?: RequirementListItem[];
+      title?: string;
+    };
+
+    return html`
+      <chatlite-requirement-list
+        .requirements=${data.requirements || []}
+        .title=${data.title || "全部需求"}
+      ></chatlite-requirement-list>
     `;
   }
 }

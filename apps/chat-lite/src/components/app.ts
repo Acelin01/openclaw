@@ -7,7 +7,6 @@ import { testcaseManager } from "../services/testcase-manager";
 import { generateUUID, formatTime } from "../lib/utils";
 import "../artifacts/viewer";
 import type { ArtifactContent } from "../artifacts/viewer";
-import type { TestCaseContent } from "../artifacts/testcase/element";
 
 @customElement("chatlite-app")
 export class ChatLiteApp extends LitElement {
