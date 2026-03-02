@@ -103,7 +103,14 @@ echo "1️⃣  检查 OpenClaw 安装"
 echo "============================================================="
 echo ""
 
-if ! command -v openclaw &> /dev/null; then
+# 检查 OpenClaw 是否安装（检查命令或项目目录）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if command -v openclaw &> /dev/null; then
+  echo -e "${GREEN}✅ OpenClaw 已安装 (命令)${NC}"
+elif [ -f "$SCRIPT_DIR/package.json" ]; then
+  echo -e "${GREEN}✅ OpenClaw 项目存在${NC}"
+else
   echo -e "${RED}❌ OpenClaw 未安装${NC}"
   echo ""
   echo "请先安装 OpenClaw："
@@ -112,8 +119,6 @@ if ! command -v openclaw &> /dev/null; then
   echo "  pnpm install"
   echo "  pnpm build"
   exit 1
-else
-  echo -e "${GREEN}✅ OpenClaw 已安装${NC}"
 fi
 echo ""
 
