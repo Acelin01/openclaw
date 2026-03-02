@@ -77,22 +77,41 @@ export const milestoneManagementTools = {
 
       console.log('[milestone_create] Creating milestone document:', JSON.stringify(documentData, null, 2));
       
-      // 创建文档
-      const documentResult = await executeMCPTool('uxin-mcp', 'document_create', documentData);
-      console.log('[milestone_create] Document result:', documentResult);
-      
-      if (!documentResult.success) {
-        throw new Error(`创建里程碑文档失败：${documentResult.error}`);
-      }
-
-      return {
-        success: true,
-        message: '里程碑创建申请已提交，等待审核',
-        data: {
-          documentId: documentResult.data?.id,
-          status: 'PENDING_REVIEW',
-          milestone: documentResult.data
+      try {
+        // 创建文档
+        const documentResult = await executeMCPTool('uxin-mcp', 'document_create', documentData);
+        console.log('[milestone_create] Document result:', JSON.stringify(documentResult, null, 2));
+        
+        // 检查返回结果
+        if (!documentResult) {
+          throw new Error('创建文档返回空结果');
         }
+        
+        // 处理不同的返回格式
+        const docId = documentResult.data?.id || documentResult.id || documentResult.documentId;
+        const isSuccess = documentResult.success !== false && docId;
+        
+        if (!isSuccess) {
+          const errorMsg = documentResult.error || documentResult.message || '未知错误';
+          throw new Error(`创建里程碑文档失败：${errorMsg}`);
+        }
+
+        console.log('[milestone_create] Document created successfully, ID:', docId);
+        
+        return {
+          success: true,
+          message: '里程碑创建申请已提交，等待审核',
+          data: {
+            documentId: docId,
+            status: 'PENDING_REVIEW',
+            milestone: documentResult.data || documentResult
+          }
+        };
+      } catch (error: any) {
+        console.error('[milestone_create] Error:', error.message);
+        console.error('[milestone_create] Stack:', error.stack);
+        throw error;
+      }
       };
     }
   },
