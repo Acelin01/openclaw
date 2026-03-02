@@ -48,6 +48,7 @@ export class DocumentService {
         chatId: data.chatId,
         agentId: data.agentId,
         status: 'PENDING', // 默认为待审核状态
+        createdAt: new Date(),
       },
       include: {
         user: true,
