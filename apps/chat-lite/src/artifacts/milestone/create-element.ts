@@ -7,7 +7,7 @@ export interface MilestoneCreateData {
   description?: string;
   assigneeId: string;
   dueDate: string;
-  priority?: "low" | "medium" | "high";
+  status?: "notstarted" | "progress" | "completed" | "canceled";
 }
 
 @customElement("chatlite-milestone-create")
@@ -197,7 +197,7 @@ export class ChatliteMilestoneCreate extends LitElement {
   private dueDate = '';
 
   @state()
-  private priority: "low" | "medium" | "high" = "medium";
+  private status: "notstarted" | "progress" | "completed" | "canceled" = "notstarted";
 
   @state()
   private errors: Record<string, string> = {};
@@ -253,15 +253,16 @@ export class ChatliteMilestoneCreate extends LitElement {
             </div>
             
             <div class="form-group">
-              <label class="form-label">优先级</label>
+              <label class="form-label">状态</label>
               <select
                 class="form-input"
-                .value=${this.priority}
-                @change=${(e: Event) => this.priority = (e.target as HTMLSelectElement).value as any}
+                .value=${this.status}
+                @change=${(e: Event) => this.status = (e.target as HTMLSelectElement).value as any}
               >
-                <option value="low">低</option>
-                <option value="medium">中</option>
-                <option value="high">高</option>
+                <option value="notstarted">未开始</option>
+                <option value="progress">进行中</option>
+                <option value="completed">已完成</option>
+                <option value="canceled">已取消</option>
               </select>
             </div>
           </div>
@@ -300,7 +301,7 @@ export class ChatliteMilestoneCreate extends LitElement {
       description: this.description,
       assigneeId: this.assigneeId,
       dueDate: this.dueDate,
-      priority: this.priority
+      status: this.status
     };
     
     this.dispatchEvent(new CustomEvent('milestone-create-submit', {

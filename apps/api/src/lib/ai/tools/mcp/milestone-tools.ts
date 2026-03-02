@@ -43,7 +43,6 @@ export const milestoneManagementTools = {
       description: z.string().optional().describe("里程碑描述"),
       assignee_id: z.string().describe("负责人 ID"),
       due_date: z.string().describe("计划完成时间 (YYYY-MM-DD)"),
-      priority: z.enum(["low", "medium", "high"]).optional().describe("优先级"),
       status: z.enum(["notstarted", "progress", "completed", "canceled"]).optional().describe("状态")
     }),
     execute: async (args: any) => executeMCPTool('uxin-mcp', 'milestone_create', args)
@@ -60,8 +59,7 @@ export const milestoneManagementTools = {
       description: z.string().optional().describe("里程碑描述"),
       assignee_id: z.string().optional().describe("负责人 ID"),
       due_date: z.string().optional().describe("计划完成时间 (YYYY-MM-DD)"),
-      status: z.enum(["notstarted", "progress", "completed", "canceled"]).optional().describe("状态"),
-      priority: z.enum(["low", "medium", "high"]).optional().describe("优先级")
+      status: z.enum(["notstarted", "progress", "completed", "canceled"]).optional().describe("状态")
     }),
     execute: async (args: any) => executeMCPTool('uxin-mcp', 'milestone_update', args)
   },

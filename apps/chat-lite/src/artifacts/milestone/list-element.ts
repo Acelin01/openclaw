@@ -6,7 +6,6 @@ export interface Milestone {
   title: string;
   description?: string;
   status: "notstarted" | "progress" | "completed" | "canceled";
-  priority: "low" | "medium" | "high";
   assignee?: {
     id: string;
     name: string;

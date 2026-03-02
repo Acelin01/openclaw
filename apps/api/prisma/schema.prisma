@@ -58,6 +58,7 @@ model User {
   reportedRequirements    ProjectRequirement[]     @relation("RequirementReporter")
   ownedRisks              ProjectRisk[]            @relation("RiskOwner")
   assignedTasks           ProjectTask[]            @relation("TaskAssignee")
+  assignedMilestones      ProjectMilestone[]       @relation("MilestoneAssignee")
   projectMemberships      ProjectTeamMember[]
   projects                Project[]
   quotations              Quotation[]
@@ -1309,16 +1310,20 @@ model ProjectMilestone {
   title           String
   description     String?               @db.Text
   dueDate         DateTime?
-  status          String                @default("PENDING")
+  status          String                @default("notstarted")
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
   collaborationId String?
+  assigneeId      String?
   dependencies    Json?
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
+  assignee        User?                 @relation("MilestoneAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
 
   @@index([projectId])
   @@index([collaborationId])
+  @@index([assigneeId])
+  @@index([status])
   @@map("project_milestones")
 }
 

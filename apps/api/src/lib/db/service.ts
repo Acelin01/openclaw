@@ -406,6 +406,27 @@ export class DatabaseService {
     });
   }
 
+  async getMilestoneById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectMilestone.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        requirements: true,
+        tasks: true
+      }
+    });
+  }
+
   async createMilestone(data: any) {
     if (!prisma) throw new Error('Database not available');
     const p: any = prisma;
@@ -416,8 +437,7 @@ export class DatabaseService {
         description: data.description || '',
         assigneeId: data.assignee_id || data.assigneeId,
         dueDate: data.due_date || data.dueDate ? new Date(data.due_date || data.dueDate) : null,
-        status: data.status || 'notstarted',
-        priority: data.priority || 'medium'
+        status: data.status || 'notstarted'
       }
     });
   }
@@ -432,7 +452,6 @@ export class DatabaseService {
     if (data.assignee_id || data.assigneeId) updateData.assigneeId = data.assignee_id || data.assigneeId;
     if (data.due_date || data.dueDate) updateData.dueDate = new Date(data.due_date || data.dueDate);
     if (data.status) updateData.status = data.status;
-    if (data.priority) updateData.priority = data.priority;
     
     return p.projectMilestone.update({
       where: { id },
