@@ -1,0 +1,100 @@
+/* MessageList.css */
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-messages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  max-width: 80%;
+}
+
+.message.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message.assistant {
+  align-self: flex-start;
+}
+
+.message.system {
+  align-self: center;
+  max-width: 90%;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+  background: #3b82f6;
+  color: white;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.message-bubble {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.message.assistant .message-bubble {
+  background: #f3f4f6;
+  color: #111827;
+  border-bottom-left-radius: 4px;
+}
+
+.message.user .message-bubble {
+  background: #3b82f6;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message.system .message-bubble {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 8px;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  padding: 0 4px;
+}
+
+.message.user .message-time {
+  text-align: right;
+}

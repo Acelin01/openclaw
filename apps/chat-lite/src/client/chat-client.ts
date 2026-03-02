@@ -36,7 +36,7 @@ export class ChatClient {
       this.client = new SimpleGatewayClient({
         url: gatewayUrl,
         clientName: "chat-lite",
-        token: token ?? "test-token",
+        token: token ?? "d269134391ac26b0075ea2966b2b66f20cfa65dea6d70c6a",
         onHello: (_hello: GatewayHelloOk) => {
           this.connected = true;
           console.log("[ChatClient] Connected to gateway");

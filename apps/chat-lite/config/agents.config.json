@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "platform": "ChatLite Multi-Agent",
+  "agents": [
+    {
+      "id": "uxin-public",
+      "name": "Uxin 公网助手",
+      "description": "部署在公网的 Uxin 智能体",
+      "gateway": {
+        "url": "ws://116.237.135.222:18789",
+        "token": "test-token",
+        "type": "public"
+      },
+      "model": "bailian/qwen3.5-plus",
+      "skills": ["customer-service", "project-management", "document-query"],
+      "status": "active",
+      "priority": 1
+    },
+    {
+      "id": "rrvc-local",
+      "name": "RRVC 本地助手",
+      "description": "部署在局域网的 RRVC 智能体",
+      "gateway": {
+        "url": "ws://192.168.31.154:18789",
+        "token": "d269134391ac26b0075ea2966b2b66f20cfa65dea6d70c6a",
+        "type": "local"
+      },
+      "model": "deepseek-chat",
+      "skills": ["coding", "debugging", "code-review"],
+      "status": "active",
+      "priority": 2
+    }
+  ],
+  "platform": {
+    "autoReconnect": true,
+    "healthCheckInterval": 30000,
+    "messageTimeout": 30000,
+    "maxRetries": 3
+  }
+}
