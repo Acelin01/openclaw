@@ -60,7 +60,7 @@ export const milestoneManagementTools = {
     execute: async (args: any) => {
       // 第一步：创建 milestone 类型文档
       const documentData = {
-        title: args.title,
+        title: args.title || '未命名里程碑',
         content: JSON.stringify({
           projectId: args.project_id,
           title: args.title,
@@ -69,15 +69,17 @@ export const milestoneManagementTools = {
           dueDate: args.due_date,
           status: args.status || 'notstarted'
         }),
-        kind: 'milestone' as const,
+        kind: 'milestone',
         projectId: args.project_id,
-        status: 'PENDING' as const
+        userId: args.user_id || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0',
+        status: 'PENDING'
       };
 
-      console.log('[milestone_create] Creating milestone document:', documentData);
+      console.log('[milestone_create] Creating milestone document:', JSON.stringify(documentData, null, 2));
       
       // 创建文档
       const documentResult = await executeMCPTool('uxin-mcp', 'document_create', documentData);
+      console.log('[milestone_create] Document result:', documentResult);
       
       if (!documentResult.success) {
         throw new Error(`创建里程碑文档失败：${documentResult.error}`);
