@@ -150,9 +150,10 @@ export const projectCollaborationMCPTools = {
   ...iterationManagementTools,
   // 里程碑管理工具
   ...milestoneManagementTools,
-  // 项目管理工具
-  ...projectManagementTools,
 };
+
+// 项目管理工具（单独导出，需要在 registry 中注册）
+export { projectManagementTools };
 
 export const businessSupportMCPTools = {
   resume_create: {

@@ -64,6 +64,12 @@ Object.entries(orchestrationMCPTools).forEach(([name, tool]) => {
   registerTool(name, tool, ['orchestration', 'mcp', name]);
 });
 
+// 注册项目管理 MCP 工具
+import { projectManagementTools } from "./mcp-tools.js";
+Object.entries(projectManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['project-management', 'mcp', name]);
+});
+
 /**
  * 获取所有已注册工具的 AI SDK 兼容格式对象
  * 方便在 streamText 的 tools 属性中使用
