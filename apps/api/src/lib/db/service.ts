@@ -1728,7 +1728,9 @@ export class DatabaseService {
     
     const project = await p.project.create({
       data: {
-        userId: userId,
+        user: {
+          connect: { id: userId }
+        },
         name: data.name,
         description: data.description || '',
         status: data.status || 'active',
