@@ -1412,9 +1412,23 @@ export class DatabaseService {
   async getRequirements(where: any = {}, options: any = {}) {
     if (!prisma) return [];
     const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    
+    // 转换字段名：project_id -> projectId
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.limit) {
+      delete cleanWhere.limit;
+    }
+    if (cleanWhere.offset) {
+      delete cleanWhere.offset;
+    }
+    
     const p: any = prisma;
     return p.projectRequirement.findMany({
-      where,
+      where: cleanWhere,
       skip,
       take,
       orderBy,
@@ -1679,9 +1693,23 @@ export class DatabaseService {
   async getDefects(where: any = {}, options: any = {}) {
     if (!prisma) return [];
     const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    
+    // 转换字段名：project_id -> projectId
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.limit) {
+      delete cleanWhere.limit;
+    }
+    if (cleanWhere.offset) {
+      delete cleanWhere.offset;
+    }
+    
     const p: any = prisma;
     return p.projectDefect.findMany({
-      where,
+      where: cleanWhere,
       skip,
       take,
       orderBy,
