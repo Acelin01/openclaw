@@ -1,4 +1,8 @@
 import "./components/app";
+import "./components/agent-manager";
+import "./components/testcase-library";
+import "./components/add-agent-dialog";
+import "./components/edit-agent-dialog";
 
 // 注册所有 Web Components
 import "./artifacts/project-requirement/element";

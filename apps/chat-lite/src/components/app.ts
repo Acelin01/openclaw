@@ -1,12 +1,14 @@
 import { LitElement, html, css } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { chatClient, type ChatMessage } from "../client/chat-client";
+import { MultiAgentClient, type AgentConfig, type AgentStatus } from "../lib/multi-agent-client";
 import { skillMatcher, type MatchedSkill } from "../services/skill-matcher";
 import { requirementManager, type RequirementDraft } from "../services/requirement-manager";
 import { testcaseManager } from "../services/testcase-manager";
 import { generateUUID, formatTime } from "../lib/utils";
 import "../artifacts/viewer";
 import type { ArtifactContent } from "../artifacts/viewer";
+import type { TestCaseContent } from "../artifacts/testcase/element";
 
 @customElement("chatlite-app")
 export class ChatLiteApp extends LitElement {
@@ -338,10 +340,51 @@ export class ChatLiteApp extends LitElement {
       text-align: center;
       padding: 24px;
     }
-  `;
+  
+
+    .agent-selector {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      background: white;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .agent-selector:hover {
+      border-color: #3b82f6;
+    }
+
+    .agent-selector:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .agent-manager-panel {
+      padding: 20px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      max-height: 400px;
+      overflow-y: auto;
+    }`;
 
   @state()
   private messages: ChatMessage[] = [];
+
+  @state()
+  private multiAgentClient: MultiAgentClient | null = null;
+
+  @state()
+  private agentList: AgentConfig[] = [];
+
+  @state()
+  private agentStatusList: AgentStatus[] = [];
+
+  @state()
+  private selectedAgentId: string = '';
 
   @state()
   private inputValue = "";
@@ -580,7 +623,19 @@ export class ChatLiteApp extends LitElement {
   render() {
     return html`
       <div class="header">
-        <h1>ChatLite</h1>
+        <h1>ChatLite 多智能体平台</h1>
+        <select 
+          class="agent-selector"
+          value=${this.selectedAgentId}
+          @change=${(e: any) => this.selectedAgentId = e.target.value}
+        >
+          <option value="">📢 所有智能体（广播）</option>
+          ${this.agentList.map(agent => html`
+            <option value=${agent.id}>
+              ${agent.name} (${this.agentStatusList.find(s => s.id === agent.id)?.connected ? '🟢' : '🔴'})
+            </option>
+          `)}
+        </select>
         <div class="connection-status">
           <span class="status-dot ${this.isGatewayConnected ? "connected" : this.isConnecting ? "connecting" : ""}"></span>
           <span>${this.isGatewayConnected ? "已连接" : this.isConnecting ? "连接中..." : "未连接"}</span>
@@ -685,83 +740,22 @@ export class ChatLiteApp extends LitElement {
             : ""}
         </div>
 
-        ${this.showArtifactPanel ? html`
-          <div 
-            class="resize-handle ${this.isResizing ? 'resizing' : ''}"
-            @mousedown=${this._handleResizeStart}
-          ></div>
-
-          <div 
-            class="artifact-panel"
-            style="width: ${this.artifactPanelWidth}px"
-          >
-            <div class="artifact-header">
-              <h2>📎 ${this.currentArtifact?.kind || 'Artifact'}</h2>
-              <button 
-                class="artifact-close"
-                @click=${this._closeArtifactPanel}
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div class="artifact-content">
-              ${this.currentArtifact ? html`
-                <chatlite-artifact-viewer
-                  .content=${this.currentArtifact}
-                  .editable=${true}
-                ></chatlite-artifact-viewer>
-              ` : html`
+        <div class="artifact-panel">
+          <div class="artifact-header">Artifact 查看器</div>
+          ${this.currentArtifact
+            ? html`<chatlite-artifact-viewer
+                .content=${this.currentArtifact}
+                .editable=${true}
+              ></chatlite-artifact-viewer>`
+            : html`
                 <div class="empty-artifact">
                   选择一个 artifact 查看<br/>
                   技能调用后会自动显示相关文档
                 </div>
               `}
-            </div>
-          </div>
-        ` : ''}
+        </div>
       </div>
     `;
-  }
-
-  private _handleResizeStart(e: MouseEvent) {
-    this.isResizing = true;
-    document.addEventListener('mousemove', this._handleResizeMove);
-    document.addEventListener('mouseup', this._handleResizeEnd);
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  }
-
-  private _handleResizeMove = (e: MouseEvent) => {
-    if (!this.isResizing) return;
-    
-    const container = this.shadowRoot?.querySelector('.main') as HTMLElement;
-    if (!container) return;
-    
-    const containerRect = container.getBoundingClientRect();
-    const newWidth = containerRect.right - e.clientX;
-    
-    const minWidth = 300;
-    const maxWidth = 800;
-    this.artifactPanelWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
-  }
-
-  private _handleResizeEnd() {
-    this.isResizing = false;
-    document.removeEventListener('mousemove', this._handleResizeMove);
-    document.removeEventListener('mouseup', this._handleResizeEnd);
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-  }
-
-  private _closeArtifactPanel() {
-    this.showArtifactPanel = false;
-    this.currentArtifact = null;
-  }
-
-  private _handleArtifactClick(artifact: any) {
-    this.currentArtifact = artifact;
-    this.showArtifactPanel = true;
   }
 }
 

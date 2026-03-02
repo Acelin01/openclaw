@@ -11,21 +11,22 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "lit": "^3.2.0",
+    "@uxin/agent-lib": "workspace:*",
     "@uxin/artifact-ui": "workspace:*",
     "@uxin/projects": "workspace:*",
     "@uxin/requirement-lib": "workspace:*",
     "@uxin/ui": "workspace:*",
     "@uxin/utils": "workspace:*",
-    "@uxin/agent-lib": "workspace:*",
+    "@vitejs/plugin-react": "^5.1.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lit": "^3.2.0",
     "lucide-react": "^0.446.0",
+    "nanoid": "^5.0.8",
     "react": "19.0.0-rc-45804af1-20241021",
     "react-dom": "19.0.0-rc-45804af1-20241021",
     "tailwind-merge": "^2.5.2",
-    "date-fns": "^4.1.0",
-    "nanoid": "^5.0.8",
     "zod": "^3.25.76"
   },
   "devDependencies": {
