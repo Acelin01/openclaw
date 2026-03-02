@@ -4,7 +4,7 @@
  * 流程说明:
  * 1. 创建里程碑时，先创建 milestone 类型的文档，状态为 PENDING
  * 2. 审核人审核文档（APPROVED/REJECTED）
- * 3. 审核通过后，自动在数据库创建里程碑记录
+ * 3. 审核通过后，直接调用 DatabaseService 创建里程碑记录
  */
 
 import { z } from "zod";
@@ -21,14 +21,13 @@ export const milestoneManagementTools = {
    * 4. 审核通过后自动创建数据库记录
    */
   milestone_create: {
-    description: "创建新里程碑（需要审核）。需要参数：project_id(项目 ID), title(标题), description(描述), assignee_id(负责人 ID), due_date(计划完成时间), reviewer_id(审核人 ID)",
+    description: "创建新里程碑（需要审核）。需要参数：project_id(项目 ID), title(标题), description(描述), assignee_id(负责人 ID), due_date(计划完成时间)",
     parameters: z.object({
       project_id: z.string().describe("项目 ID"),
       title: z.string().describe("里程碑标题"),
       description: z.string().optional().describe("里程碑描述"),
       assignee_id: z.string().describe("负责人 ID"),
       due_date: z.string().describe("计划完成时间 (YYYY-MM-DD)"),
-      reviewer_id: z.string().optional().describe("审核人 ID"),
       status: z.enum(["notstarted", "progress", "completed", "canceled"]).optional().describe("状态")
     }),
     execute: async (args: any) => {
@@ -74,7 +73,7 @@ export const milestoneManagementTools = {
    * 
    * 流程:
    * 1. 审核 milestone 类型文档
-   * 2. 如果审核通过 (APPROVED)，自动在数据库创建里程碑记录
+   * 2. 如果审核通过 (APPROVED)，直接调用 DatabaseService 创建里程碑记录
    * 3. 如果审核拒绝 (REJECTED)，文档状态更新为 REJECTED
    */
   milestone_review: {
@@ -100,7 +99,7 @@ export const milestoneManagementTools = {
         throw new Error(`审核失败：${reviewResult.error}`);
       }
 
-      // 第二步：如果审核通过，创建数据库记录
+      // 第二步：如果审核通过，直接调用 DatabaseService 创建数据库记录
       if (args.status === 'APPROVED') {
         // 获取文档详情
         const docDetail = await executeMCPTool('uxin-mcp', 'document_get', {
@@ -114,30 +113,36 @@ export const milestoneManagementTools = {
         // 解析文档内容
         const milestoneData = JSON.parse(docDetail.data.content);
 
-        // 在数据库创建里程碑
-        const createResult = await executeMCPTool('uxin-mcp', 'milestone_create_db', {
-          project_id: milestoneData.projectId,
-          title: milestoneData.title,
-          description: milestoneData.description,
-          assignee_id: milestoneData.assigneeId,
-          due_date: milestoneData.dueDate,
-          status: milestoneData.status,
-          document_id: args.document_id  // 关联文档 ID
-        });
-
-        if (!createResult.success) {
-          throw new Error(`创建数据库记录失败：${createResult.error}`);
+        // 直接调用 DatabaseService 创建里程碑（内部 API 操作）
+        const { DatabaseService } = await import('../../../db/service.js');
+        const db = DatabaseService.getInstance();
+        
+        if (!db.isAvailable()) {
+          throw new Error('数据库连接不可用');
         }
 
-        return {
-          success: true,
-          message: '里程碑审核通过并已创建',
-          data: {
-            documentId: args.document_id,
-            milestoneId: createResult.data?.id,
-            milestone: createResult.data
-          }
-        };
+        try {
+          const milestone = await db.createMilestone({
+            project_id: milestoneData.projectId,
+            title: milestoneData.title,
+            description: milestoneData.description,
+            assignee_id: milestoneData.assigneeId,
+            due_date: milestoneData.dueDate,
+            status: milestoneData.status || 'notstarted'
+          });
+
+          return {
+            success: true,
+            message: '里程碑审核通过并已创建',
+            data: {
+              documentId: args.document_id,
+              milestoneId: milestone.id,
+              milestone: milestone
+            }
+          };
+        } catch (error: any) {
+          throw new Error(`创建数据库记录失败：${error.message}`);
+        }
       }
 
       return {
@@ -149,23 +154,6 @@ export const milestoneManagementTools = {
         }
       };
     }
-  },
-
-  /**
-   * 在数据库创建里程碑（内部使用，审核通过后调用）
-   */
-  milestone_create_db: {
-    description: "在数据库创建里程碑记录（内部使用）",
-    parameters: z.object({
-      project_id: z.string().describe("项目 ID"),
-      title: z.string().describe("里程碑标题"),
-      description: z.string().optional().describe("里程碑描述"),
-      assignee_id: z.string().describe("负责人 ID"),
-      due_date: z.string().describe("计划完成时间 (YYYY-MM-DD)"),
-      status: z.enum(["notstarted", "progress", "completed", "canceled"]).optional().describe("状态"),
-      document_id: z.string().optional().describe("关联文档 ID")
-    }),
-    execute: async (args: any) => executeMCPTool('uxin-mcp', 'milestone_create', args)
   },
 
   /**
