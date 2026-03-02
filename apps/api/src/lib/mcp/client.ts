@@ -96,21 +96,26 @@ export class MCPClientManager {
 /**
  * 封装一个通用的工具执行器，将 MCP 工具转换为 AI SDK 兼容的工具
  */
-export async function executeMCPTool(serverName: string, toolName: string, args: any) {
-  // Try MCP client first
+export async function executeMCPTool(serverName: string, toolName: string, args: any = {}) {
+  // Try direct database service first (more reliable)
   try {
-    const manager = MCPClientManager.getInstance();
-    const serverPath = MCPClientManager.getMCPServerPath();
-    const client = await manager.getClient(serverName, serverPath);
-
-    return await client.callTool({
-      name: toolName,
-      arguments: args,
-    });
+    return await executeToolDirectly(toolName, args || {});
   } catch (error) {
-    // If MCP client fails, try direct database service
-    console.warn(`MCP client failed for ${toolName}, falling back to direct service:`, error?.message);
-    return await executeToolDirectly(toolName, args);
+    // If direct service fails, try MCP client
+    console.warn(`Direct service failed for ${toolName}, falling back to MCP client:`, error?.message);
+    try {
+      const manager = MCPClientManager.getInstance();
+      const serverPath = MCPClientManager.getMCPServerPath();
+      const client = await manager.getClient(serverName, serverPath);
+
+      return await client.callTool({
+        name: toolName,
+        arguments: args || {},
+      });
+    } catch (clientError) {
+      console.error(`MCP client also failed for ${toolName}:`, clientError?.message);
+      throw error; // Throw original error
+    }
   }
 }
 
@@ -156,6 +161,18 @@ async function executeToolDirectly(toolName: string, args: any) {
     'document_delete': { method: 'deleteDocument', section: 'documentService' },
     'document_review': { method: 'reviewDocument', section: 'documentService' },
     'document_stats': { method: 'getDocumentStats', section: 'documentService' },
+    // Iteration Management
+    'iteration_create': { method: 'createIteration', section: 'iterationService' },
+    'iteration_query': { method: 'getIterations', section: 'iterationService' },
+    'iteration_get': { method: 'getIterationById', section: 'iterationService' },
+    'iteration_list': { method: 'getIterationList', section: 'iterationService' },
+    'iteration_overview': { method: 'getIterationOverview', section: 'iterationService' },
+    'iteration_stats': { method: 'getIterationStats', section: 'iterationService' },
+    'iteration_workitems': { method: 'getIterationWorkitems', section: 'iterationService' },
+    'iteration_workitem_stats': { method: 'getIterationWorkitemStats', section: 'iterationService' },
+    'iteration_plan': { method: 'planIteration', section: 'iterationService' },
+    'iteration_update': { method: 'updateIteration', section: 'iterationService' },
+    'iteration_delete': { method: 'deleteIteration', section: 'iterationService' },
   };
 
   const mapping = toolMethodMap[toolName];
@@ -167,6 +184,8 @@ async function executeToolDirectly(toolName: string, args: any) {
 
   const methodName = mapping.method;
   const section = mapping.section;
+  
+  console.log(`[executeToolDirectly] tool=${toolName}, method=${methodName}, section=${section}, args=`, args);
   
   let target: any = db;
   
@@ -184,14 +203,16 @@ async function executeToolDirectly(toolName: string, args: any) {
   }
 
   try {
-    return await target[methodName](args, {
-      userId: args.userId || 'system',
-      token: 'direct-call'
-    });
+    console.log(`[executeToolDirectly] Calling ${section}.${methodName} with args:`, JSON.stringify(args, null, 2));
+    const result = await target[methodName](args);
+    console.log(`[executeToolDirectly] Result:`, result ? 'success' : 'null');
+    return result;
   } catch (error: any) {
+    console.error(`[executeToolDirectly] Error:`, error.message);
     // Handle method signature mismatches
     if (error.message.includes('undefined') || error.message.includes('cannot read')) {
       // Try calling with just args
+      console.log(`[executeToolDirectly] Retrying without context...`);
       return await target[methodName](args);
     }
     throw error;

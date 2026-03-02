@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迭代功能完整测试流程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #1f1f1f; margin-bottom: 24px; }
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            font-size: 18px;
+            color: #1f1f1f;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .test-step {
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid #52c41a;
+        }
+        .test-step h3 {
+            font-size: 14px;
+            color: #262626;
+            margin-bottom: 8px;
+        }
+        .test-step p {
+            font-size: 13px;
+            color: #595959;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: #1f1f1f;
+            color: #52c41a;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 8px;
+            overflow-x: auto;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #52c41a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 12px;
+            margin-bottom: 12px;
+        }
+        .btn:hover { background: #73d13d; }
+        .btn-secondary {
+            background: white;
+            color: #595959;
+            border: 1px solid #d9d9d9;
+        }
+        .btn-secondary:hover {
+            color: #52c41a;
+            border-color: #52c41a;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+        .status.success { background: #f6ffed; color: #52c41a; }
+        .status.error { background: #fff1f0; color: #ff4d4f; }
+        .status.pending { background: #fff7e6; color: #faad14; }
+        .result-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .artifact-preview {
+            margin-top: 16px;
+            border: 2px solid #52c41a;
+            border-radius: 8px;
+            padding: 16px;
+            background: #fafafa;
+        }
+        .artifact-preview h4 {
+            font-size: 14px;
+            color: #52c41a;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 迭代功能完整测试流程</h1>
+
+        <!-- 测试步骤 1: 发送消息创建迭代 -->
+        <div class="test-section">
+            <h2>
+                <span>1️⃣</span>
+                发送消息创建迭代
+            </h2>
+            <div class="test-step">
+                <h3>用户输入消息</h3>
+                <p>用户在 chat-lite 聊天框中输入创建迭代的指令</p>
+                <div class="code-block">"创建一个新迭代：Sprint 1，时间从 2026-03-01 到 2026-03-15"</div>
+            </div>
+            <button class="btn" onclick="testCreateIteration()">测试创建迭代</button>
+            <div id="create-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 测试步骤 2: 调用 iteration_create 技能 -->
+        <div class="test-section">
+            <h2>
+                <span>2️⃣</span>
+                调用 iteration_create 技能服务
+            </h2>
+            <div class="test-step">
+                <h3>MCP 工具调用</h3>
+                <p>chat-lite 调用 uxin-mcp 的 iteration_create 工具</p>
+                <div class="code-block">{
+  "action": "iteration_create",
+  "params": {
+    "title": "Sprint 1",
+    "project_id": "proj-uxin",
+    "start_date": "2026-03-01",
+    "end_date": "2026-03-15",
+    "description": "第一个迭代",
+    "goal": ["完成用户登录功能", "完成需求管理模块"]
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="testIterationCreate()">测试技能调用</button>
+            <span id="create-status" class="status pending">待测试</span>
+            <div id="create-response" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 测试步骤 3: 显示新建迭代 artifact -->
+        <div class="test-section">
+            <h2>
+                <span>3️⃣</span>
+                显示新建迭代 Artifact 组件
+            </h2>
+            <div class="test-step">
+                <h3>Artifact 组件展示</h3>
+                <p>在聊天框右侧显示新建迭代表单组件</p>
+                <div class="code-block">viewer.content = {
+  kind: "iteration-create",
+  data: { projectId: "proj-uxin" }
+}</div>
+            </div>
+            <button class="btn" onclick="showCreateArtifact()">显示组件</button>
+            <div id="create-artifact" class="artifact-preview" style="display:none;">
+                <h4>📦 新建迭代组件预览</h4>
+                <iframe src="iteration-create-preview.html" style="width:100%; height:500px; border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- 测试步骤 4: 查询迭代列表 -->
+        <div class="test-section">
+            <h2>
+                <span>4️⃣</span>
+                查询迭代列表
+            </h2>
+            <div class="test-step">
+                <h3>调用 iteration_list 技能</h3>
+                <p>查询项目下的所有迭代列表</p>
+                <div class="code-block">{
+  "action": "iteration_list",
+  "params": {
+    "project_id": "proj-uxin",
+    "include_stats": true
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="testIterationList()">测试查询列表</button>
+            <span id="list-status" class="status pending">待测试</span>
+            <div id="list-response" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 测试步骤 5: 显示迭代概览 artifact -->
+        <div class="test-section">
+            <h2>
+                <span>5️⃣</span>
+                显示迭代概览 Artifact 组件
+            </h2>
+            <div class="test-step">
+                <h3>Artifact 组件展示</h3>
+                <p>显示带左侧迭代列表的概览组件</p>
+                <div class="code-block">viewer.content = {
+  kind: "iteration-overview",
+  data: {
+    iterationId: "iter-xxx",
+    overview: {...}
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="showOverviewArtifact()">显示组件</button>
+            <div id="overview-artifact" class="artifact-preview" style="display:none;">
+                <h4>📊 迭代概览组件预览</h4>
+                <iframe src="iteration-overview-preview.html" style="width:100%; height:600px; border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- 测试步骤 6: 查询迭代工作项 -->
+        <div class="test-section">
+            <h2>
+                <span>6️⃣</span>
+                查询迭代工作项
+            </h2>
+            <div class="test-step">
+                <h3>调用 iteration_workitems 技能</h3>
+                <p>查询迭代中的所有工作项（需求/任务/缺陷）</p>
+                <div class="code-block">{
+  "action": "iteration_workitems",
+  "params": {
+    "iteration_id": "iter-xxx",
+    "type": "all"
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="testWorkitems()">测试查询工作项</button>
+            <span id="workitems-status" class="status pending">待测试</span>
+            <div id="workitems-response" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 测试步骤 7: 显示迭代工作项 artifact -->
+        <div class="test-section">
+            <h2>
+                <span>7️⃣</span>
+                显示迭代工作项 Artifact 组件
+            </h2>
+            <div class="test-step">
+                <h3>Artifact 组件展示</h3>
+                <p>显示工作项列表组件</p>
+                <div class="code-block">viewer.content = {
+  kind: "iteration-workitems",
+  data: {
+    iterationId: "iter-xxx",
+    workitems: [...]
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="showWorkitemsArtifact()">显示组件</button>
+            <div id="workitems-artifact" class="artifact-preview" style="display:none;">
+                <h4>📝 迭代工作项组件预览</h4>
+                <iframe src="iteration-workitems-preview.html" style="width:100%; height:500px; border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- 测试步骤 8: 规划迭代 -->
+        <div class="test-section">
+            <h2>
+                <span>8️⃣</span>
+                规划迭代
+            </h2>
+            <div class="test-step">
+                <h3>调用 iteration_plan 技能</h3>
+                <p>将工作项规划到迭代中</p>
+                <div class="code-block">{
+  "action": "iteration_plan",
+  "params": {
+    "iteration_id": "iter-xxx",
+    "requirement_ids": ["req-1", "req-2"],
+    "task_ids": ["task-1"]
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="testIterationPlan()">测试规划迭代</button>
+            <span id="plan-status" class="status pending">待测试</span>
+            <div id="plan-response" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- 测试步骤 9: 显示规划迭代 artifact -->
+        <div class="test-section">
+            <h2>
+                <span>9️⃣</span>
+                显示规划迭代 Artifact 组件
+            </h2>
+            <div class="test-step">
+                <h3>Artifact 组件展示</h3>
+                <p>显示左右两栏规划界面</p>
+                <div class="code-block">viewer.content = {
+  kind: "iteration-plan",
+  data: {
+    iterationId: "iter-xxx",
+    availableWorkitems: [...],
+    assignedWorkitems: [...]
+  }
+}</div>
+            </div>
+            <button class="btn" onclick="showPlanArtifact()">显示组件</button>
+            <div id="plan-artifact" class="artifact-preview" style="display:none;">
+                <h4>📋 规划迭代组件预览</h4>
+                <iframe src="iteration-plan-preview.html" style="width:100%; height:500px; border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- 测试总结 -->
+        <div class="test-section">
+            <h2>
+                <span>📊</span>
+                测试总结
+            </h2>
+            <div id="test-summary">
+                <p style="color: #8c8c8c; text-align: center; padding: 40px;">
+                    点击上方按钮逐步测试各个功能
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        const API_TOKEN = 'test-api-token-12345';
+
+        function showResult(elementId, data, success) {
+            const el = document.getElementById(elementId);
+            el.style.display = 'block';
+            el.innerHTML = '<pre style="margin:0; white-space: pre-wrap;">' + 
+                JSON.stringify(data, null, 2) + '</pre>';
+        }
+
+        function updateStatus(elementId, status, text) {
+            const el = document.getElementById(elementId);
+            el.className = 'status ' + status;
+            el.textContent = text;
+        }
+
+        // 测试 1: 创建迭代
+        async function testCreateIteration() {
+            const userInput = "创建一个新迭代：Sprint 1，时间从 2026-03-01 到 2026-03-15";
+            showResult('create-result', {
+                type: 'user_message',
+                content: userInput,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // 测试 2: iteration_create
+        async function testIterationCreate() {
+            updateStatus('create-status', 'pending', '测试中...');
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/external/mcp/route`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: {
+                            version: '1.0',
+                            body: {
+                                action: 'iteration_create',
+                                params: {
+                                    title: 'Sprint 1',
+                                    project_id: 'proj-uxin',
+                                    start_date: '2026-03-01',
+                                    end_date: '2026-03-15',
+                                    description: '第一个迭代',
+                                    goal: ['完成用户登录功能', '完成需求管理模块']
+                                },
+                                context: {}
+                            }
+                        }
+                    })
+                });
+                const result = await response.json();
+                showResult('create-response', result);
+                if (result.success) {
+                    updateStatus('create-status', 'success', '✅ 成功');
+                } else {
+                    updateStatus('create-status', 'error', '❌ 失败：' + (result.error || result.message));
+                }
+            } catch (error) {
+                updateStatus('create-status', 'error', '❌ 错误：' + error.message);
+                showResult('create-response', { error: error.message });
+            }
+        }
+
+        // 测试 3: 显示新建迭代 artifact
+        function showCreateArtifact() {
+            const el = document.getElementById('create-artifact');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // 测试 4: iteration_list
+        async function testIterationList() {
+            updateStatus('list-status', 'pending', '测试中...');
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/external/mcp/route`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: {
+                            version: '1.0',
+                            body: {
+                                action: 'iteration_list',
+                                params: {
+                                    project_id: 'proj-uxin',
+                                    include_stats: true
+                                },
+                                context: {}
+                            }
+                        }
+                    })
+                });
+                const result = await response.json();
+                showResult('list-response', result);
+                if (result.success) {
+                    updateStatus('list-status', 'success', '✅ 成功');
+                } else {
+                    updateStatus('list-status', 'error', '❌ 失败：' + (result.error || result.message));
+                }
+            } catch (error) {
+                updateStatus('list-status', 'error', '❌ 错误：' + error.message);
+            }
+        }
+
+        // 测试 5: 显示迭代概览 artifact
+        function showOverviewArtifact() {
+            const el = document.getElementById('overview-artifact');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // 测试 6: iteration_workitems
+        async function testWorkitems() {
+            updateStatus('workitems-status', 'pending', '测试中...');
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/external/mcp/route`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: {
+                            version: '1.0',
+                            body: {
+                                action: 'iteration_workitems',
+                                params: {
+                                    iteration_id: 'iter-xxx',
+                                    type: 'all'
+                                },
+                                context: {}
+                            }
+                        }
+                    })
+                });
+                const result = await response.json();
+                showResult('workitems-response', result);
+                if (result.success) {
+                    updateStatus('workitems-status', 'success', '✅ 成功');
+                } else {
+                    updateStatus('workitems-status', 'error', '❌ 失败：' + (result.error || result.message));
+                }
+            } catch (error) {
+                updateStatus('workitems-status', 'error', '❌ 错误：' + error.message);
+            }
+        }
+
+        // 测试 7: 显示工作项 artifact
+        function showWorkitemsArtifact() {
+            const el = document.getElementById('workitems-artifact');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // 测试 8: iteration_plan
+        async function testIterationPlan() {
+            updateStatus('plan-status', 'pending', '测试中...');
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/external/mcp/route`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: {
+                            version: '1.0',
+                            body: {
+                                action: 'iteration_plan',
+                                params: {
+                                    iteration_id: 'iter-xxx',
+                                    requirement_ids: ['req-1', 'req-2'],
+                                    task_ids: ['task-1']
+                                },
+                                context: {}
+                            }
+                        }
+                    })
+                });
+                const result = await response.json();
+                showResult('plan-response', result);
+                if (result.success) {
+                    updateStatus('plan-status', 'success', '✅ 成功');
+                } else {
+                    updateStatus('plan-status', 'error', '❌ 失败：' + (result.error || result.message));
+                }
+            } catch (error) {
+                updateStatus('plan-status', 'error', '❌ 错误：' + error.message);
+            }
+        }
+
+        // 测试 9: 显示规划 artifact
+        function showPlanArtifact() {
+            const el = document.getElementById('plan-artifact');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // 更新测试总结
+        function updateSummary() {
+            const statuses = [
+                { id: 'create-status', name: '创建迭代' },
+                { id: 'list-status', name: '查询列表' },
+                { id: 'workitems-status', name: '查询工作项' },
+                { id: 'plan-status', name: '规划迭代' }
+            ];
+
+            let html = '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">';
+            statuses.forEach(item => {
+                const el = document.getElementById(item.id);
+                const status = el.className.replace('status ', '');
+                const icon = status === 'success' ? '✅' : status === 'error' ? '❌' : '⏳';
+                html += `
+                    <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+                        <div style="font-size: 14px; font-weight: 500; color: #262626;">
+                            ${icon} ${item.name}
+                        </div>
+                        <div style="font-size: 12px; color: #8c8c8c; margin-top: 4px;">
+                            状态：${el.textContent}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('test-summary').innerHTML = html;
+        }
+
+        // 定期检查更新总结
+        setInterval(updateSummary, 2000);
+    </script>
+</body>
+</html>

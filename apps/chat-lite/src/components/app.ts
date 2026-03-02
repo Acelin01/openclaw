@@ -364,6 +364,15 @@ export class ChatLiteApp extends LitElement {
   @state()
   private pendingDrafts: RequirementDraft[] = [];
 
+  @state()
+  private showArtifactPanel = false;
+
+  @state()
+  private isResizing = false;
+
+  @state()
+  private artifactPanelWidth = 500;
+
   private gatewayUrl = "ws://localhost:18789";
 
   connectedCallback() {
@@ -724,7 +733,7 @@ export class ChatLiteApp extends LitElement {
     `;
   }
 
-  private _handleResizeStart(e: MouseEvent) {
+  private _handleResizeStart(_e: MouseEvent) {
     this.isResizing = true;
     document.addEventListener('mousemove', this._handleResizeMove);
     document.addEventListener('mouseup', this._handleResizeEnd);
@@ -759,10 +768,6 @@ export class ChatLiteApp extends LitElement {
     this.currentArtifact = null;
   }
 
-  private _handleArtifactClick(artifact: any) {
-    this.currentArtifact = artifact;
-    this.showArtifactPanel = true;
-  }
 }
 
 declare global {

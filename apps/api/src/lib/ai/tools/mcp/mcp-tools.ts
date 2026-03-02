@@ -3,6 +3,7 @@ import { z } from "zod";
 import { executeMCPTool } from "../../../mcp/client";
 import { testCaseManagementTools } from "./test-case-tools.js";
 import { documentManagementTools } from "./document-tools.js";
+import { iterationManagementTools } from "./iteration-tools.js";
 
 export const projectCollaborationMCPTools = {
   project_create: {
@@ -143,6 +144,8 @@ export const projectCollaborationMCPTools = {
   ...testCaseManagementTools,
   // 文档管理工具
   ...documentManagementTools,
+  // 迭代管理工具
+  ...iterationManagementTools,
 };
 
 export const businessSupportMCPTools = {

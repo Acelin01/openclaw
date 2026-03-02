@@ -82,4 +82,16 @@ export const resolveDefaultAllowlist = () => [
   "document_delete",
   "document_review",
   "document_stats",
+  // Iteration Management
+  "iteration_create",
+  "iteration_query",
+  "iteration_get",
+  "iteration_list",
+  "iteration_overview",
+  "iteration_stats",
+  "iteration_workitems",
+  "iteration_workitem_stats",
+  "iteration_plan",
+  "iteration_update",
+  "iteration_delete",
 ];

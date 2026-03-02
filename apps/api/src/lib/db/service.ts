@@ -2,16 +2,19 @@ import { prisma } from './index.js';
 import type { Transaction } from '@uxin/types';
 import { TestCaseService } from './test-case-service.js';
 import { DocumentService } from './document-service.js';
+import { IterationService } from './iteration-service.js';
 
 // 数据库服务包装器
 export class DatabaseService {
   private static instance: DatabaseService;
   public testCaseService: TestCaseService;
   public documentService: DocumentService;
+  public iterationService: IterationService;
   
   private constructor() {
     this.testCaseService = new TestCaseService();
     this.documentService = new DocumentService();
+    this.iterationService = new IterationService();
   }
   
   static getInstance(): DatabaseService {
