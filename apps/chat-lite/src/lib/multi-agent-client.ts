@@ -28,27 +28,44 @@ export interface AgentStatus {
 }
 
 export class MultiAgentClient {
+  // configPath 保留用于未来扩展
   private agents: Map<string, any> = new Map();
   private configs: AgentConfig[] = [];
   private statusMap: Map<string, AgentStatus> = new Map();
-  private healthCheckTimer?: number;
+  private healthCheckTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private configPath?: string) {}
+  constructor() {}
 
   /**
-   * 加载智能体配置
+   * 加载智能体配置（单个失败不影响其他）
    */
   async loadAgents(configs: AgentConfig[]) {
     this.configs = configs;
     
     console.log(`🤖 加载 ${configs.length} 个智能体...`);
     
+    let successCount = 0;
+    let failCount = 0;
+    
     for (const config of configs) {
       if (config.status === 'active') {
-        await this.connectAgent(config);
+        try {
+          await this.connectAgent(config);
+          successCount++;
+        } catch (error) {
+          failCount++;
+          console.warn(`⚠️ 智能体 ${config.name} 连接失败，继续加载其他智能体`);
+          // 更新状态为离线
+          this.updateStatus(config.id, {
+            connected: false,
+            error: (error as Error).message
+          });
+        }
       }
     }
 
+    console.log(`✅ 加载完成：成功 ${successCount}, 失败 ${failCount}`);
+    
     // 启动健康检查
     this.startHealthCheck();
   }
@@ -65,33 +82,40 @@ export class MultiAgentClient {
       wsUrl.searchParams.set('token', config.gateway.token);
       const ws = new WebSocket(wsUrl.toString());
 
-      // 等待连接
+      // 等待连接（带超时）
       await new Promise((resolve, reject) => {
-        ws.on('open', () => {
+        const timeoutId: any = setTimeout(() => {
+          ws.close();
+          reject(new Error('连接超时（5 秒）'));
+        }, 5000);
+
+        // 浏览器 WebSocket API 使用属性而非 on() 方法
+        ws.onopen = () => {
+          clearTimeout(timeoutId);
           console.log(`✅ ${config.name} 连接成功`);
           this.agents.set(config.id, { config, ws });
           this.updateStatus(config.id, { connected: true });
           resolve(true);
-        });
+        };
 
-        ws.on('error', (err) => {
-          console.error(`❌ ${config.name} 连接失败:`, err.message);
+        ws.onerror = (_err: Event) => {
+          clearTimeout(timeoutId);
+          console.error(`❌ ${config.name} 连接错误`);
           this.updateStatus(config.id, { 
             connected: false, 
-            error: err.message 
+            error: '连接失败' 
           });
-          reject(err);
-        });
+          reject(new Error('WebSocket 连接失败'));
+        };
 
-        ws.on('close', () => {
+        ws.onclose = () => {
+          clearTimeout(timeoutId);
           console.log(`🔌 ${config.name} 连接关闭`);
           this.updateStatus(config.id, { connected: false });
           
-          // 自动重连
-          if (config.status === 'active') {
-            setTimeout(() => this.connectAgent(config), 5000);
-          }
-        });
+          // 注意：addAgent 时的连接失败不自动重连，由用户手动重试
+          // 只有初始化加载时的智能体才会自动重连
+        };
       });
 
     } catch (error) {
@@ -195,11 +219,20 @@ export class MultiAgentClient {
   }
 
   /**
-   * 添加智能体
+   * 添加智能体（连接失败时自动回滚）
    */
-  async addAgent(config: AgentConfig) {
-    this.configs.push(config);
-    await this.connectAgent(config);
+  async addAgent(config: AgentConfig): Promise<boolean> {
+    try {
+      // 先尝试连接
+      await this.connectAgent(config);
+      // 连接成功后再添加到列表
+      this.configs.push(config);
+      console.log(`✅ 智能体 ${config.name} 已添加并连接`);
+      return true;
+    } catch (error) {
+      console.error(`❌ 智能体 ${config.name} 添加失败:`, error);
+      throw error;
+    }
   }
 
   /**
@@ -252,7 +285,7 @@ export class MultiAgentClient {
     const interval = 30000; // 30 秒
     
     this.healthCheckTimer = setInterval(() => {
-      this.statusMap.forEach((status, agentId) => {
+      this.statusMap.forEach((_status, agentId) => {
         const agent = this.agents.get(agentId);
         
         if (agent && agent.ws) {

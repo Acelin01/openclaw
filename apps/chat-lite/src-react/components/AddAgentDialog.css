@@ -190,3 +190,34 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Submit Result Messages */
+.submit-result {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.submit-result.success {
+  background: #d1fae5;
+  color: #065f46;
+  border-bottom: 1px solid #a7f3d0;
+}
+
+.submit-result.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-bottom: 1px solid #fecaca;
+}
