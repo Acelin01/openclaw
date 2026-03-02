@@ -9,6 +9,8 @@ import { projectManagementTools } from "./project-tools.js";
 import { requirementManagementTools } from "./requirement-tools.js";
 import { taskManagementTools } from "./task-tools.js";
 import { defectManagementTools } from "./defect-tools.js";
+import { metricManagementTools } from "./metric-tools.js";
+import { testPlanManagementTools } from "./testplan-tools.js";
 
 export const projectCollaborationMCPTools = {
   project_create: {
