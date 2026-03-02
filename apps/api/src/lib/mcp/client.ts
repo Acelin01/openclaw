@@ -179,6 +179,13 @@ async function executeToolDirectly(toolName: string, args: any) {
     'freelancer_register': { method: 'createResume' },
     'resume_create': { method: 'createResume' },
     'service_create': { method: 'createWorkerService' },
+    // Project management
+    'project_list': { method: 'getProjects' },
+    'project_get': { method: 'getProjectById' },
+    'project_create': { method: 'createProject' },
+    'project_update': { method: 'updateProject' },
+    'project_delete': { method: 'deleteProject' },
+    'project_overview': { method: 'getProjectOverview' },
   };
 
   const mapping = toolMethodMap[toolName];

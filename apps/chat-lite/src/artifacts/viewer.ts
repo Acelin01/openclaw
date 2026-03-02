@@ -11,6 +11,9 @@ import "./iteration/plan-element";
 import "./milestone/list-element";
 import "./milestone/detail-element";
 import "./milestone/create-element";
+import "./project/list-element";
+import "./project/detail-element";
+import "./project/create-element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
 import type { TestCaseContent } from "./testcase/element";
 import type { RequirementListItem } from "./project-requirement/list-element";
@@ -22,6 +25,9 @@ import type { IterationPlanData } from "./iteration/plan-element";
 import type { Milestone, MilestoneListContent } from "./milestone/list-element";
 import type { MilestoneDetailContent } from "./milestone/detail-element";
 import type { MilestoneCreateData } from "./milestone/create-element";
+import type { Project, ProjectListContent } from "./project/list-element";
+import type { ProjectDetailContent } from "./project/detail-element";
+import type { ProjectCreateData } from "./project/create-element";
 
 export type ArtifactKind = 
   | "project-requirement" 
@@ -35,6 +41,9 @@ export type ArtifactKind =
   | "milestone-list"
   | "milestone-detail"
   | "milestone-create"
+  | "project-list"
+  | "project-detail"
+  | "project-create"
   | string;
 
 export interface ArtifactContent {
@@ -105,6 +114,12 @@ export class ArtifactViewer extends LitElement {
         return this._renderMilestoneDetail();
       case "milestone-create":
         return this._renderMilestoneCreate();
+      case "project-list":
+        return this._renderProjectList();
+      case "project-detail":
+        return this._renderProjectDetail();
+      case "project-create":
+        return this._renderProjectCreate();
       default:
         return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
     }
@@ -289,6 +304,49 @@ export class ArtifactViewer extends LitElement {
       <chatlite-milestone-create
         .projectId=${data.projectId || ''}
       ></chatlite-milestone-create>
+    `;
+  }
+
+  private _renderProjectList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<ProjectListContent>;
+
+    return html`
+      <chatlite-project-list
+        .content=${{
+          kind: "project-list",
+          projects: data.projects || [],
+          title: data.title || "项目列表"
+        }}
+        .editable=${this.editable}
+      ></chatlite-project-list>
+    `;
+  }
+
+  private _renderProjectDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<ProjectDetailContent>;
+
+    return html`
+      <chatlite-project-detail
+        .content=${{
+          kind: "project-detail",
+          project: data.project || {
+            id: "",
+            name: "未命名项目",
+            status: "active"
+          }
+        }}
+      ></chatlite-project-detail>
+    `;
+  }
+
+  private _renderProjectCreate() {
+    if (!this.content) return html``;
+
+    return html`
+      <chatlite-project-create
+      ></chatlite-project-create>
     `;
   }
 }

@@ -5,6 +5,7 @@ import { testCaseManagementTools } from "./test-case-tools.js";
 import { documentManagementTools } from "./document-tools.js";
 import { iterationManagementTools } from "./iteration-tools.js";
 import { milestoneManagementTools } from "./milestone-tools.js";
+import { projectManagementTools } from "./project-tools.js";
 
 export const projectCollaborationMCPTools = {
   project_create: {
@@ -149,6 +150,8 @@ export const projectCollaborationMCPTools = {
   ...iterationManagementTools,
   // 里程碑管理工具
   ...milestoneManagementTools,
+  // 项目管理工具
+  ...projectManagementTools,
 };
 
 export const businessSupportMCPTools = {

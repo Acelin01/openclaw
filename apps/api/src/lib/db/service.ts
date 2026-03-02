@@ -1624,9 +1624,10 @@ export class DatabaseService {
     });
   }
 
+  // 项目管理方法
   async getProjects(where: any = {}, options: any = {}) {
     if (!prisma) return [];
-    const { skip = 0, take = 10, sortBy, sortOrder } = options || {};
+    const { skip = 0, take = 50, sortBy, sortOrder } = options || {};
     const queryWhere: any = { ...where };
     if (queryWhere.search) {
       const search = queryWhere.search;
@@ -1681,6 +1682,168 @@ export class DatabaseService {
     if (sortBy) query.orderBy = { [sortBy]: sortOrder === 'asc' ? 'asc' : 'desc' };
     const p: any = prisma;
     return p.project.findMany(query);
+  }
+
+  async getProjectById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.project.findUnique({
+      where: { id },
+      include: {
+        risks: true,
+        tasks: true,
+        requirements: true,
+        milestonesList: true,
+        defects: true,
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true
+              }
+            }
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createProject(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    const project = await p.project.create({
+      data: {
+        userId: data.user_id || data.userId || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0',
+        name: data.name,
+        description: data.description || '',
+        status: data.status || 'active',
+        startDate: data.start_date ? new Date(data.start_date) : null,
+        endDate: data.end_date ? new Date(data.end_date) : null,
+        budget: data.budget || null
+      }
+    });
+    
+    // Automatically create a ProjectCollaboration for every new project
+    try {
+      await p.projectCollaboration.create({
+        data: {
+          projectId: project.id
+        }
+      });
+    } catch (e) {
+      console.warn('Failed to create project collaboration automatically:', e);
+    }
+    
+    return project;
+  }
+
+  async updateProject(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    const updateData: any = {};
+    
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.status !== undefined) updateData.status = data.status;
+    if (data.start_date) updateData.startDate = new Date(data.start_date);
+    if (data.end_date) updateData.endDate = new Date(data.end_date);
+    if (data.budget !== undefined) updateData.budget = data.budget;
+    
+    return p.project.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async deleteProject(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.project.delete({
+      where: { id }
+    });
+  }
+
+  async getProjectOverview(projectId: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    const project = await p.project.findUnique({
+      where: { id: projectId },
+      include: {
+        tasks: {
+          select: {
+            id: true,
+            status: true,
+            priority: true
+          }
+        },
+        requirements: {
+          select: {
+            id: true,
+            status: true,
+            priority: true
+          }
+        },
+        milestonesList: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            dueDate: true
+          }
+        },
+        risks: {
+          select: {
+            id: true,
+            title: true,
+            level: true,
+            status: true
+          }
+        },
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    if (!project) return null;
+    
+    // 计算统计信息
+    const stats = {
+      totalTasks: project.tasks.length,
+      completedTasks: project.tasks.filter((t: any) => t.status === 'DONE').length,
+      totalRequirements: project.requirements.length,
+      approvedRequirements: project.requirements.filter((r: any) => r.status === 'APPROVED').length,
+      totalMilestones: project.milestonesList.length,
+      completedMilestones: project.milestonesList.filter((m: any) => m.status === 'completed').length,
+      totalRisks: project.risks.length,
+      highRisks: project.risks.filter((r: any) => r.level === 'HIGH').length,
+      totalMembers: project.members.length
+    };
+    
+    return {
+      project,
+      stats
+    };
   }
 
   async getProjectsCount(where: any = {}) {
