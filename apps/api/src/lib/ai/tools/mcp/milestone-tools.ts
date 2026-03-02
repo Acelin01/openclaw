@@ -112,7 +112,6 @@ export const milestoneManagementTools = {
         console.error('[milestone_create] Stack:', error.stack);
         throw error;
       }
-      };
     }
   },
 
