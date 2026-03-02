@@ -13,7 +13,7 @@ export const documentManagementTools = {
     parameters: z.object({
       title: z.string().describe("文档标题"),
       content: z.string().describe("文档内容 (JSON 格式)"),
-      kind: z.enum(["testcase", "requirement", "project", "position", "resume", "service"]).describe("文档类型"),
+      kind: z.enum(["testcase", "requirement", "project", "position", "resume", "service", "milestone"]).describe("文档类型"),
       description: z.string().optional().describe("文档描述"),
       projectId: z.string().optional().describe("项目 ID"),
       chatId: z.string().optional().describe("聊天 ID"),
