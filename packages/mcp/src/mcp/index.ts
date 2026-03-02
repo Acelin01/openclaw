@@ -196,6 +196,20 @@ export class MCPRouter {
     const actionParts = request.body.action.split(".");
     const toolNameOrCapability = actionParts[0];
 
+    console.log(
+      `[MCPRouter.route] Received request:`,
+      JSON.stringify(
+        {
+          action: request.body.action,
+          toolNameOrCapability,
+          hasParameters: !!request.body.parameters,
+          parameters: request.body.parameters,
+        },
+        null,
+        2,
+      ),
+    );
+
     // Try tool name first
     let tool: IMCPTool | undefined = this.registry.getTool(toolNameOrCapability);
 
@@ -208,6 +222,8 @@ export class MCPRouter {
       throw new Error(`Tool or capability not found: ${toolNameOrCapability}`);
     }
 
+    console.log(`[MCPRouter.route] Found tool: ${tool.name}`);
+
     // RBAC Check
     if (securityContext && !this.securityGateway.canExecute(tool, securityContext)) {
       throw new Error(
@@ -217,10 +233,20 @@ export class MCPRouter {
 
     const startTime = Date.now();
     try {
-      const result = await tool.handler(request.body.parameters, securityContext);
+      // Ensure parameters is a proper object
+      const params = request.body.parameters || {};
+      console.log(
+        `[MCPRouter.route] Calling tool ${tool.name} with params:`,
+        JSON.stringify(params, null, 2),
+      );
+
+      const result = await tool.handler(params, securityContext);
+
+      console.log(`[MCPRouter.route] Tool ${tool.name} completed in ${Date.now() - startTime}ms`);
       this.registry.updateMetrics(tool.name, true, Date.now() - startTime);
       return result;
-    } catch (error) {
+    } catch (error: any) {
+      console.error(`[MCPRouter.route] Tool ${tool.name} failed:`, error.message);
       this.registry.updateMetrics(tool.name, false, Date.now() - startTime);
       throw error;
     }

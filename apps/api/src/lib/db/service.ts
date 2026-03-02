@@ -12,21 +12,33 @@ export class DatabaseService {
   public iterationService: IterationService;
   
   private constructor() {
-    this.testCaseService = new TestCaseService();
-    this.documentService = new DocumentService();
-    this.iterationService = new IterationService();
+    console.log('[DatabaseService] Initializing...');
+    try {
+      this.testCaseService = new TestCaseService();
+      this.documentService = new DocumentService();
+      this.iterationService = new IterationService();
+      console.log('[DatabaseService] Service sections initialized successfully');
+    } catch (error: any) {
+      console.error('[DatabaseService] Failed to initialize service sections:', error.message);
+      throw error;
+    }
   }
   
   static getInstance(): DatabaseService {
     if (!DatabaseService.instance) {
+      console.log('[DatabaseService] Creating new instance...');
       DatabaseService.instance = new DatabaseService();
+    } else {
+      console.log('[DatabaseService] Returning existing instance');
     }
     return DatabaseService.instance;
   }
 
   // 检查数据库是否可用
   isAvailable() {
-    return prisma !== null;
+    const available = prisma !== null;
+    console.log(`[DatabaseService] isAvailable: ${available}`);
+    return available;
   }
 
   // 获取用户相关数据

@@ -131,16 +131,22 @@ async function executeToolDirectly(toolName: string, args: any) {
     // Project management
     'project_create': { method: 'createProject' },
     'project_query': { method: 'getProjects' },
-    'task_create': { method: 'createTask' },
+    'task_create': { method: 'createProjectTask' },
     'task_list': { method: 'getProjectTasks' },
-    'task_update_status': { method: 'updateTaskStatus' },
-    'milestone_create': { method: 'createMilestone' },
+    'task_update_status': { method: 'updateProjectTask' },
+    'milestone_create': { method: 'createProjectMilestone' },
     'milestone_monitor': { method: 'getProjectMilestones' },
-    'requirement_create': { method: 'createRequirement' },
-    'defect_create': { method: 'createDefect' },
-    'risk_create': { method: 'createRisk' },
-    // Document
-    'document_query': { method: 'getProjectDocuments' },
+    'requirement_create': { method: 'createProjectRequirement' },
+    'defect_create': { method: 'createProjectDefect' },
+    'risk_create': { method: 'createProjectRisk' },
+    // Document - use documentService section
+    'document_query': { method: 'getDocuments', section: 'documentService' },
+    'document_create': { method: 'createDocument', section: 'documentService' },
+    'document_get': { method: 'getDocumentById', section: 'documentService' },
+    'document_update': { method: 'updateDocument', section: 'documentService' },
+    'document_delete': { method: 'deleteDocument', section: 'documentService' },
+    'document_review': { method: 'reviewDocument', section: 'documentService' },
+    'document_stats': { method: 'getDocumentStats', section: 'documentService' },
     // Test Case Management
     'test_case_create': { method: 'createTestCase', section: 'testCaseService' },
     'test_case_query': { method: 'getTestCases', section: 'testCaseService' },
@@ -153,14 +159,6 @@ async function executeToolDirectly(toolName: string, args: any) {
     'test_case_get_executions': { method: 'getTestCaseExecutions', section: 'testCaseService' },
     'test_case_stats': { method: 'getTestCaseStats', section: 'testCaseService' },
     'test_case_batch_create': { method: 'createTestCases', section: 'testCaseService' },
-    // Document Management
-    'document_create': { method: 'createDocument', section: 'documentService' },
-    'document_query': { method: 'getDocuments', section: 'documentService' },
-    'document_get': { method: 'getDocumentById', section: 'documentService' },
-    'document_update': { method: 'updateDocument', section: 'documentService' },
-    'document_delete': { method: 'deleteDocument', section: 'documentService' },
-    'document_review': { method: 'reviewDocument', section: 'documentService' },
-    'document_stats': { method: 'getDocumentStats', section: 'documentService' },
     // Iteration Management
     'iteration_create': { method: 'createIteration', section: 'iterationService' },
     'iteration_query': { method: 'getIterations', section: 'iterationService' },
@@ -173,6 +171,10 @@ async function executeToolDirectly(toolName: string, args: any) {
     'iteration_plan': { method: 'planIteration', section: 'iterationService' },
     'iteration_update': { method: 'updateIteration', section: 'iterationService' },
     'iteration_delete': { method: 'deleteIteration', section: 'iterationService' },
+    // Freelancer services
+    'freelancer_register': { method: 'createResume' },
+    'resume_create': { method: 'createResume' },
+    'service_create': { method: 'createWorkerService' },
   };
 
   const mapping = toolMethodMap[toolName];
@@ -185,7 +187,7 @@ async function executeToolDirectly(toolName: string, args: any) {
   const methodName = mapping.method;
   const section = mapping.section;
   
-  console.log(`[executeToolDirectly] tool=${toolName}, method=${methodName}, section=${section}, args=`, args);
+  console.log(`[executeToolDirectly] tool=${toolName}, method=${methodName}, section=${section || 'DatabaseService'}, args=`, JSON.stringify(args));
   
   let target: any = db;
   
@@ -203,18 +205,17 @@ async function executeToolDirectly(toolName: string, args: any) {
   }
 
   try {
-    console.log(`[executeToolDirectly] Calling ${section}.${methodName} with args:`, JSON.stringify(args, null, 2));
-    const result = await target[methodName](args);
+    // Ensure args is a proper object
+    const callArgs = args && typeof args === 'object' ? args : {};
+    console.log(`[executeToolDirectly] Calling ${section ? section + '.' : ''}${methodName} with args:`, JSON.stringify(callArgs, null, 2));
+    
+    // Call the method with proper argument passing
+    const result = await target[methodName](callArgs);
     console.log(`[executeToolDirectly] Result:`, result ? 'success' : 'null');
     return result;
   } catch (error: any) {
-    console.error(`[executeToolDirectly] Error:`, error.message);
-    // Handle method signature mismatches
-    if (error.message.includes('undefined') || error.message.includes('cannot read')) {
-      // Try calling with just args
-      console.log(`[executeToolDirectly] Retrying without context...`);
-      return await target[methodName](args);
-    }
+    console.error(`[executeToolDirectly] Error calling ${methodName}:`, error.message);
+    console.error(`[executeToolDirectly] Stack:`, error.stack);
     throw error;
   }
 }
