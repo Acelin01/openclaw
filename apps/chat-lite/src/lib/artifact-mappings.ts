@@ -35,6 +35,30 @@ export const ARTIFACT_MAPPINGS: Record<string, ArtifactMapping> = {
     previewEnabled: true,
     previewIcon: '📝',
     previewLabel: '预览需求'
+  },
+  'milestone_create': {
+    skillName: 'milestone_create',
+    artifactKind: 'milestone-create',
+    documentType: 'milestone',
+    previewEnabled: true,
+    previewIcon: '🚩',
+    previewLabel: '新建里程碑'
+  },
+  'milestone_list': {
+    skillName: 'milestone_list',
+    artifactKind: 'milestone-list',
+    documentType: 'milestone',
+    previewEnabled: true,
+    previewIcon: '🚩',
+    previewLabel: '里程碑列表'
+  },
+  'milestone_get': {
+    skillName: 'milestone_get',
+    artifactKind: 'milestone-detail',
+    documentType: 'milestone',
+    previewEnabled: true,
+    previewIcon: '🚩',
+    previewLabel: '里程碑详情'
   }
 };
 

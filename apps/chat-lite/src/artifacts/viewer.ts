@@ -8,6 +8,9 @@ import "./iteration/list-element";
 import "./iteration/workitems-element";
 import "./iteration/create-element";
 import "./iteration/plan-element";
+import "./milestone/list-element";
+import "./milestone/detail-element";
+import "./milestone/create-element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
 import type { TestCaseContent } from "./testcase/element";
 import type { RequirementListItem } from "./project-requirement/list-element";
@@ -16,6 +19,9 @@ import type { IterationListItem } from "./iteration/list-element";
 import type { WorkItem } from "./iteration/workitems-element";
 import type { IterationCreateData } from "./iteration/create-element";
 import type { IterationPlanData } from "./iteration/plan-element";
+import type { Milestone, MilestoneListContent } from "./milestone/list-element";
+import type { MilestoneDetailContent } from "./milestone/detail-element";
+import type { MilestoneCreateData } from "./milestone/create-element";
 
 export type ArtifactKind = 
   | "project-requirement" 
@@ -26,6 +32,9 @@ export type ArtifactKind =
   | "iteration-workitems"
   | "iteration-create"
   | "iteration-plan"
+  | "milestone-list"
+  | "milestone-detail"
+  | "milestone-create"
   | string;
 
 export interface ArtifactContent {
@@ -90,6 +99,12 @@ export class ArtifactViewer extends LitElement {
         return this._renderIterationCreate();
       case "iteration-plan":
         return this._renderIterationPlan();
+      case "milestone-list":
+        return this._renderMilestoneList();
+      case "milestone-detail":
+        return this._renderMilestoneDetail();
+      case "milestone-create":
+        return this._renderMilestoneCreate();
       default:
         return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
     }
@@ -227,6 +242,53 @@ export class ArtifactViewer extends LitElement {
         .availableWorkitems=${data.availableWorkitems || []}
         .assignedWorkitems=${data.assignedWorkitems || []}
       ></chatlite-iteration-plan>
+    `;
+  }
+
+  private _renderMilestoneList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<MilestoneListContent>;
+
+    return html`
+      <chatlite-milestone-list
+        .content=${{
+          kind: "milestone-list",
+          milestones: data.milestones || [],
+          projectId: data.projectId,
+          title: data.title || "里程碑"
+        }}
+        .editable=${this.editable}
+      ></chatlite-milestone-list>
+    `;
+  }
+
+  private _renderMilestoneDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<MilestoneDetailContent>;
+
+    return html`
+      <chatlite-milestone-detail
+        .content=${{
+          kind: "milestone-detail",
+          milestone: data.milestone || {
+            id: "",
+            title: "未命名里程碑",
+            status: "notstarted",
+            dueDate: new Date().toISOString().split('T')[0]
+          }
+        }}
+      ></chatlite-milestone-detail>
+    `;
+  }
+
+  private _renderMilestoneCreate() {
+    if (!this.content) return html``;
+    const data = this.content.data as { projectId?: string };
+
+    return html`
+      <chatlite-milestone-create
+        .projectId=${data.projectId || ''}
+      ></chatlite-milestone-create>
     `;
   }
 }

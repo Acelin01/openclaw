@@ -361,6 +361,93 @@ export class DatabaseService {
     });
   }
 
+  // 里程碑管理方法
+  async getMilestones(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { dueDate: 'asc' } } = options || {};
+    const p: any = prisma;
+    return p.projectMilestone.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        project: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async getMilestoneById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectMilestone.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        requirements: true,
+        tasks: true
+      }
+    });
+  }
+
+  async createMilestone(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectMilestone.create({
+      data: {
+        projectId: data.project_id || data.projectId,
+        title: data.title,
+        description: data.description || '',
+        assigneeId: data.assignee_id || data.assigneeId,
+        dueDate: data.due_date || data.dueDate ? new Date(data.due_date || data.dueDate) : null,
+        status: data.status || 'notstarted',
+        priority: data.priority || 'medium'
+      }
+    });
+  }
+
+  async updateMilestone(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    const updateData: any = {};
+    
+    if (data.title !== undefined) updateData.title = data.title;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.assignee_id || data.assigneeId) updateData.assigneeId = data.assignee_id || data.assigneeId;
+    if (data.due_date || data.dueDate) updateData.dueDate = new Date(data.due_date || data.dueDate);
+    if (data.status) updateData.status = data.status;
+    if (data.priority) updateData.priority = data.priority;
+    
+    return p.projectMilestone.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async deleteMilestone(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectMilestone.delete({
+      where: { id }
+    });
+  }
+
   async createProjectMilestone(data: any) {
     if (!prisma) throw new Error('Database not available');
     return (prisma as any).projectMilestone.create({
