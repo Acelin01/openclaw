@@ -4,7 +4,8 @@ import {
   projectCollaborationMCPTools, 
   businessSupportMCPTools, 
   technicalAnalysisMCPTools, 
-  orchestrationMCPTools 
+  orchestrationMCPTools,
+  projectManagementTools
 } from "./mcp-tools";
 
 /**
@@ -65,7 +66,6 @@ Object.entries(orchestrationMCPTools).forEach(([name, tool]) => {
 });
 
 // 注册项目管理 MCP 工具
-import { projectManagementTools } from "./mcp-tools.js";
 Object.entries(projectManagementTools).forEach(([name, tool]) => {
   registerTool(name, tool, ['project-management', 'mcp', name]);
 });
