@@ -23,6 +23,8 @@ import "./task/create-element";
 import "./defect/list-element";
 import "./defect/detail-element";
 import "./defect/create-element";
+import "./metric/list-element";
+import "./workhour/list-element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
 import type { TestCaseContent } from "./testcase/element";
 import type { RequirementListItem } from "./project-requirement/list-element";
@@ -71,6 +73,8 @@ export type ArtifactKind =
   | "defect-list"
   | "defect-detail"
   | "defect-create"
+  | "metric-list"
+  | "workhour-list"
   | string;
 
 export interface ArtifactContent {
@@ -165,6 +169,10 @@ export class ArtifactViewer extends LitElement {
         return this._renderDefectDetail();
       case "defect-create":
         return this._renderDefectCreate();
+      case "metric-list":
+        return this._renderMetricList();
+      case "workhour-list":
+        return this._renderWorkHourList();
       default:
         return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
     }
@@ -534,6 +542,39 @@ export class ArtifactViewer extends LitElement {
       <chatlite-defect-create
         .projectId=${data.projectId || ''}
       ></chatlite-defect-create>
+    `;
+  }
+
+  private _renderMetricList() {
+    if (!this.content) return html``;
+    const data = this.content.data as { metrics?: any[]; projectId?: string; title?: string };
+
+    return html`
+      <chatlite-metric-list
+        .content=${{
+          kind: "metric-list",
+          metrics: data.metrics || [],
+          projectId: data.projectId,
+          title: data.title || "项目度量"
+        }}
+      ></chatlite-metric-list>
+    `;
+  }
+
+  private _renderWorkHourList() {
+    if (!this.content) return html``;
+    const data = this.content.data as { workHours?: any[]; projectId?: string; title?: string; totalHours?: number };
+
+    return html`
+      <chatlite-workhour-list
+        .content=${{
+          kind: "workhour-list",
+          workHours: data.workHours || [],
+          projectId: data.projectId,
+          title: data.title || "工时统计",
+          totalHours: data.totalHours
+        }}
+      ></chatlite-workhour-list>
     `;
   }
 }

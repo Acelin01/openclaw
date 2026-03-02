@@ -88,6 +88,16 @@ Object.entries(defectManagementTools).forEach(([name, tool]) => {
   registerTool(name, tool, ['defect-management', 'mcp', name]);
 });
 
+// 注册度量管理 MCP 工具
+Object.entries(metricManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['metric-management', 'mcp', name]);
+});
+
+// 注册测试计划管理 MCP 工具
+Object.entries(testPlanManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['testplan-management', 'mcp', name]);
+});
+
 /**
  * 获取所有已注册工具的 AI SDK 兼容格式对象
  * 方便在 streamText 的 tools 属性中使用

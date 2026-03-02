@@ -205,6 +205,13 @@ async function executeToolDirectly(toolName: string, args: any) {
     'defect_create': { method: 'createDefect' },
     'defect_update': { method: 'updateDefect' },
     'defect_delete': { method: 'deleteDefect' },
+    // Metric management
+    'project_metric_query': { method: 'getProjectMetrics' },
+    'workhour_query': { method: 'getWorkHours' },
+    // Test plan management
+    'test_plan_list': { method: 'getTestPlans' },
+    'test_plan_overview': { method: 'getTestPlanById' },
+    'test_plan_cases': { method: 'getTestPlanCases' },
   };
 
   const mapping = toolMethodMap[toolName];

@@ -1818,6 +1818,248 @@ export class DatabaseService {
     });
   }
 
+  // ============================================
+  // 项目度量管理方法
+  // ============================================
+  async getProjectMetrics(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50 } = options || {};
+    
+    // 清理参数
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.metric_type) {
+      cleanWhere.metricType = cleanWhere.metric_type;
+      delete cleanWhere.metric_type;
+    }
+    
+    const p: any = prisma;
+    return p.projectMetric.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy: { recordedAt: 'desc' },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+  }
+
+  async createProjectMetric(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { projectId, project_id, metricType, metric_type, metricValue, metric_value, ...rest } = data;
+    
+    const createData: any = { ...rest };
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (metricType || metric_type) createData.metricType = metricType || metric_type;
+    if (metricValue || metric_value) createData.metricValue = metricValue || metric_value;
+    
+    return p.projectMetric.create({ data: createData });
+  }
+
+  // ============================================
+  // 工时管理方法
+  // ============================================
+  async getWorkHours(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50 } = options || {};
+    
+    // 清理参数
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.user_id) {
+      cleanWhere.userId = cleanWhere.user_id;
+      delete cleanWhere.user_id;
+    }
+    if (cleanWhere.task_id) {
+      cleanWhere.taskId = cleanWhere.task_id;
+      delete cleanWhere.task_id;
+    }
+    if (cleanWhere.start_date) {
+      cleanWhere.workDate = { gte: new Date(cleanWhere.start_date) };
+      delete cleanWhere.start_date;
+    }
+    if (cleanWhere.end_date) {
+      if (typeof cleanWhere.workDate === 'object') {
+        cleanWhere.workDate.lte = new Date(cleanWhere.end_date);
+      } else {
+        cleanWhere.workDate = { lte: new Date(cleanWhere.end_date) };
+      }
+      delete cleanWhere.end_date;
+    }
+    
+    const p: any = prisma;
+    return p.workHour.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy: { workDate: 'desc' },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        task: {
+          select: {
+            id: true,
+            title: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createWorkHour(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      taskId, task_id, 
+      userId, user_id, 
+      workDate, work_date,
+      ...rest 
+    } = data;
+    
+    const createData: any = { ...rest };
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (taskId || task_id) createData.taskId = taskId || task_id;
+    if (userId || user_id) createData.userId = userId || user_id;
+    if (workDate || work_date) createData.workDate = new Date(workDate || work_date);
+    
+    return p.workHour.create({ data: createData });
+  }
+
+  // ============================================
+  // 测试计划管理方法
+  // ============================================
+  async getTestPlans(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50 } = options || {};
+    
+    // 清理参数
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    
+    const p: any = prisma;
+    return p.testPlan.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        testCases: {
+          select: {
+            id: true,
+            title: true,
+            status: true
+          }
+        }
+      }
+    });
+  }
+
+  async getTestPlanById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.testPlan.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        testCases: {
+          include: {
+            assignee: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  async createTestPlan(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { projectId, project_id, startDate, start_date, endDate, end_date, ...rest } = data;
+    
+    const createData: any = { ...rest };
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (startDate || start_date) createData.startDate = new Date(startDate || start_date);
+    if (endDate || end_date) createData.endDate = new Date(endDate || end_date);
+    
+    return p.testPlan.create({ data: createData });
+  }
+
+  async updateTestPlan(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const updateData: any = { ...data };
+    if (updateData.startDate) updateData.startDate = new Date(updateData.startDate);
+    if (updateData.endDate) updateData.endDate = new Date(updateData.endDate);
+    
+    return p.testPlan.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async getTestPlanCases(planId: string) {
+    if (!prisma) return [];
+    const p: any = prisma;
+    return p.testCase.findMany({
+      where: { testPlanId: planId },
+      include: {
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
   // Project Requirements
   async getProjectRequirements(where: any = {}, options: any = {}) {
     if (!prisma) return [];
