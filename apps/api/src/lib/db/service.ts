@@ -1364,7 +1364,23 @@ export class DatabaseService {
   async createProject(data: any) {
     if (!prisma) throw new Error('Database not available');
     const p: any = prisma;
-    const project = await p.project.create({ data });
+    
+    // 确保 userId 存在
+    const userId = data.user_id || data.userId || data.owner_id || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0';
+    
+    const project = await p.project.create({
+      data: {
+        user: {
+          connect: { id: userId }
+        },
+        name: data.name,
+        description: data.description || '',
+        status: data.status || 'active',
+        startDate: data.start_date ? new Date(data.start_date) : null,
+        endDate: data.end_date ? new Date(data.end_date) : null,
+        budget: data.budget || null
+      }
+    });
     
     // Automatically create a ProjectCollaboration for every new project
     try {
