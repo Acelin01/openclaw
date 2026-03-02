@@ -13,7 +13,7 @@ export interface NewAgentData {
 interface AddAgentDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (data: NewAgentData) => void;
+  onAdd: (data: NewAgentData) => Promise<boolean>;
 }
 
 const AddAgentDialog: React.FC<AddAgentDialogProps> = ({
@@ -32,6 +32,9 @@ const AddAgentDialog: React.FC<AddAgentDialogProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [skillCount, setSkillCount] = useState<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitResult, setSubmitResult] = useState<'success' | 'error' | null>(null);
+  const [submitMessage, setSubmitMessage] = useState<string>('');
 
   if (!isOpen) return null;
 
@@ -67,16 +70,34 @@ const AddAgentDialog: React.FC<AddAgentDialogProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const agentData: NewAgentData = {
-      ...formData,
-      skills: formData.skills.filter(s => s.trim())
-    };
+    setIsSubmitting(true);
+    setSubmitResult(null);
 
-    onAdd(agentData);
-    handleClose();
+    try {
+      const agentData: NewAgentData = {
+        ...formData,
+        skills: formData.skills.filter(s => s.trim())
+      };
+
+      const success = await onAdd(agentData);
+      
+      if (success) {
+        setSubmitResult('success');
+        setSubmitMessage('✅ 智能体添加成功！');
+        setTimeout(() => handleClose(), 1000);
+      } else {
+        setSubmitResult('error');
+        setSubmitMessage('❌ 添加失败，请检查网络或 Gateway 配置');
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      setSubmitResult('error');
+      setSubmitMessage('❌ 添加失败：' + (error as Error).message);
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -100,6 +121,11 @@ const AddAgentDialog: React.FC<AddAgentDialogProps> = ({
           <h2>🤖 添加智能体</h2>
           <button className="close-btn" onClick={handleClose}>✕</button>
         </div>
+        {submitResult && (
+          <div className={`submit-result ${submitResult}`}>
+            {submitMessage}
+          </div>
+        )}
 
         <div className="dialog-body">
           <div className="form-group">

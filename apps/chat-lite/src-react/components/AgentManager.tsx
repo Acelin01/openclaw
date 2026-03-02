@@ -6,9 +6,11 @@ interface AgentManagerProps {
   agents: AgentConfig[];
   statusList: AgentStatus[];
   onAgentChange: () => void;
+  onAddAgent?: () => void;
 }
 
-const AgentManager: React.FC<AgentManagerProps> = ({ 
+const AgentManager: React.FC<AgentManagerProps> = ({
+  onAddAgent, 
   agents, 
   statusList, 
   onAgentChange 
@@ -35,7 +37,7 @@ const AgentManager: React.FC<AgentManagerProps> = ({
     <div className="agent-manager">
       <div className="agent-manager-header">
         <h2>🤖 智能体管理</h2>
-        <button className="btn btn-primary btn-sm">+ 添加智能体</button>
+        <button className="btn btn-primary btn-sm" onClick={() => onAddAgent?.()}>+ 添加智能体</button>
       </div>
 
       <div className="agent-list">

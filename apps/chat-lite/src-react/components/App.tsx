@@ -30,13 +30,22 @@ const App: React.FC = () => {
         const client = new MultiAgentClient();
         const response = await fetch('/config/agents.config.json');
         const config = await response.json();
+        
+        // 异步加载智能体，单个失败不影响整体
         await client.loadAgents(config.agents);
         
         setMultiAgentClient(client);
         setAgentList(client.getAgentList());
         setAgentStatusList(client.getAgentStatusList());
-        setIsConnected(true);
-        console.log('✅ 多智能体平台初始化完成');
+        
+        // 至少有一个智能体连接成功就算成功
+        const anyConnected = client.getAgentStatusList().some(s => s.connected);
+        setIsConnected(anyConnected || config.agents.length > 0);
+        
+        console.log('✅ 多智能体平台初始化完成', {
+          total: config.agents.length,
+          connected: client.getAgentStatusList().filter(s => s.connected).length
+        });
       } catch (error) {
         console.error('❌ 多智能体平台初始化失败:', error);
         setIsConnected(false);
@@ -98,28 +107,41 @@ const App: React.FC = () => {
   }, [inputValue, selectedAgentId, multiAgentClient]);
 
   // 添加智能体
-  const handleAddAgent = (data: NewAgentData) => {
-    if (!multiAgentClient) return;
+  const handleAddAgent = async (data: NewAgentData): Promise<boolean> => {
+    if (!multiAgentClient) {
+      console.error('❌ 客户端未初始化');
+      return false;
+    }
 
-    const newAgent: AgentConfig = {
-      id: `agent-${Date.now()}`,
-      name: data.name,
-      description: data.description,
-      gateway: {
-        url: data.gatewayUrl,
-        token: data.gatewayToken,
-        type: data.gatewayUrl.includes('127.0.0.1') ? 'local' : 'public'
-      },
-      model: data.model,
-      skills: data.skills,
-      status: 'active',
-      priority: 99
-    };
+    try {
+      const newAgent: AgentConfig = {
+        id: `agent-${Date.now()}`,
+        name: data.name,
+        description: data.description,
+        gateway: {
+          url: data.gatewayUrl,
+          token: data.gatewayToken,
+          type: data.gatewayUrl.includes('127.0.0.1') ? 'local' : 'public'
+        },
+        model: data.model,
+        skills: data.skills,
+        status: 'active',
+        priority: 99
+      };
 
-    multiAgentClient.addAgent(newAgent);
-    setAgentList(multiAgentClient.getAgentList());
-    setAgentStatusList(multiAgentClient.getAgentStatusList());
-    console.log('✅ 智能体添加成功:', newAgent.name);
+      console.log('🔌 正在添加智能体:', newAgent.name);
+      await multiAgentClient.addAgent(newAgent);
+      
+      // 更新状态
+      setAgentList(multiAgentClient.getAgentList());
+      setAgentStatusList(multiAgentClient.getAgentStatusList());
+      
+      console.log('✅ 智能体添加成功:', newAgent.name);
+      return true;
+    } catch (error) {
+      console.error('❌ 智能体添加失败:', error);
+      return false;
+    }
   };
 
   return (

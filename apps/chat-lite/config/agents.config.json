@@ -3,6 +3,20 @@
   "platform": "ChatLite Multi-Agent",
   "agents": [
     {
+      "id": "local-qwen",
+      "name": "本地 Qwen 助手",
+      "description": "本地运行的 Gateway 服务",
+      "gateway": {
+        "url": "ws://127.0.0.1:18789",
+        "token": "d269134391ac26b0075ea2966b2b66f20cfa65dea6d70c6a",
+        "type": "local"
+      },
+      "model": "bailian/qwen3.5-plus",
+      "skills": ["customer-service", "project-management"],
+      "status": "active",
+      "priority": 1
+    },
+    {
       "id": "uxin-public",
       "name": "Uxin 公网助手",
       "description": "部署在公网的 Uxin 智能体",
@@ -13,8 +27,8 @@
       },
       "model": "bailian/qwen3.5-plus",
       "skills": ["customer-service", "project-management", "document-query"],
-      "status": "active",
-      "priority": 1
+      "status": "inactive",
+      "priority": 2
     },
     {
       "id": "rrvc-local",
@@ -27,8 +41,8 @@
       },
       "model": "deepseek-chat",
       "skills": ["coding", "debugging", "code-review"],
-      "status": "active",
-      "priority": 2
+      "status": "inactive",
+      "priority": 3
     }
   ],
   "platform": {
