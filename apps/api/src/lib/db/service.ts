@@ -1406,6 +1406,390 @@ export class DatabaseService {
     return coll?.id;
   }
 
+  // ============================================
+  // 需求管理方法
+  // ============================================
+  async getRequirements(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    const p: any = prisma;
+    return p.projectRequirement.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        tasks: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+  }
+
+  async getRequirementById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectRequirement.findUnique({
+      where: { id },
+      include: {
+        tasks: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+  }
+
+  async createRequirement(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { projectId, project_id, assigneeId, assignee_id, ...rest } = data;
+    const pid = projectId || project_id;
+    const aid = assigneeId || assignee_id;
+    
+    if (pid) {
+      rest.projectId = pid;
+      if (!rest.collaborationId) {
+        const collaborationId = await this.getCollaborationIdByProjectId(pid);
+        if (collaborationId) {
+          rest.collaborationId = collaborationId;
+        }
+      }
+    }
+    
+    if (aid) {
+      rest.assigneeId = aid;
+    }
+    
+    return p.projectRequirement.create({ data: rest });
+  }
+
+  async updateRequirement(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectRequirement.update({
+      where: { id },
+      data
+    });
+  }
+
+  async deleteRequirement(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectRequirement.delete({
+      where: { id }
+    });
+  }
+
+  // ============================================
+  // 任务管理方法
+  // ============================================
+  async getTasks(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    const p: any = prisma;
+    return p.projectTask.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        requirement: {
+          select: {
+            id: true,
+            title: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async getTaskById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectTask.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        requirement: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createTask(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      assigneeId, assignee_id, 
+      estimatedHours, estimated_hours,
+      startDate, start_date,
+      endDate, end_date,
+      dueDate, due_date,
+      ...rest 
+    } = data;
+    
+    const pid = projectId || project_id;
+    const aid = assigneeId || assignee_id;
+    const eh = estimatedHours || estimated_hours;
+    const sd = startDate || start_date;
+    const ed = endDate || end_date;
+    const dd = dueDate || due_date;
+    
+    const createData: any = { ...rest };
+    
+    delete createData.project_id;
+    delete createData.assignee_id;
+    delete createData.estimated_hours;
+    delete createData.start_date;
+    delete createData.end_date;
+    delete createData.due_date;
+    
+    if (pid) {
+      createData.projectId = pid;
+      if (!createData.collaborationId) {
+        const collaborationId = await this.getCollaborationIdByProjectId(pid);
+        if (collaborationId) {
+          createData.collaborationId = collaborationId;
+        }
+      }
+    }
+    
+    if (aid) createData.assigneeId = aid;
+    if (eh !== undefined && eh !== null) createData.estimatedHours = Number(eh);
+    if (sd) createData.startDate = new Date(sd);
+    if (ed) createData.endDate = new Date(ed);
+    if (dd) createData.dueDate = new Date(dd);
+    
+    return p.projectTask.create({ data: createData });
+  }
+
+  async updateTask(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      assigneeId, assignee_id, 
+      estimatedHours, estimated_hours,
+      startDate, start_date,
+      endDate, end_date,
+      dueDate, due_date,
+      ...rest 
+    } = data;
+    
+    const updateData: any = { ...rest };
+    
+    const pid = projectId || project_id;
+    const aid = assigneeId || assignee_id;
+    const eh = estimatedHours || estimated_hours;
+    const sd = startDate || start_date;
+    const ed = endDate || end_date;
+    const dd = dueDate || due_date;
+    
+    delete updateData.project_id;
+    delete updateData.assignee_id;
+    delete updateData.estimated_hours;
+    delete updateData.start_date;
+    delete updateData.end_date;
+    delete updateData.due_date;
+    
+    if (pid) updateData.projectId = pid;
+    if (aid) updateData.assigneeId = aid;
+    if (eh !== undefined && eh !== null) updateData.estimatedHours = Number(eh);
+    if (sd) updateData.startDate = new Date(sd);
+    if (ed) updateData.endDate = new Date(ed);
+    if (dd) updateData.dueDate = new Date(dd);
+    
+    return p.projectTask.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async deleteTask(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectTask.delete({
+      where: { id }
+    });
+  }
+
+  async updateTaskStatus(id: string, status: string, progress?: number) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    const updateData: any = { status };
+    if (progress !== undefined) updateData.progress = progress;
+    return p.projectTask.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  // ============================================
+  // 缺陷管理方法
+  // ============================================
+  async getDefects(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    const p: any = prisma;
+    return p.projectDefect.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        iteration: {
+          select: {
+            id: true,
+            title: true
+          }
+        },
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async getDefectById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectDefect.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        iteration: true,
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createDefect(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      iterationId, iteration_id,
+      reporterId, reporter_id,
+      assigneeId, assignee_id,
+      ...rest 
+    } = data;
+    
+    const createData: any = { ...rest };
+    
+    delete createData.project_id;
+    delete createData.iteration_id;
+    delete createData.reporter_id;
+    delete createData.assignee_id;
+    
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (iterationId || iteration_id) createData.iterationId = iterationId || iteration_id;
+    if (reporterId || reporter_id) createData.reporterId = reporterId || reporter_id;
+    if (assigneeId || assignee_id) createData.assigneeId = assigneeId || assignee_id;
+    
+    return p.projectDefect.create({ data: createData });
+  }
+
+  async updateDefect(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectDefect.update({
+      where: { id },
+      data
+    });
+  }
+
+  async deleteDefect(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectDefect.delete({
+      where: { id }
+    });
+  }
+
   // Project Requirements
   async getProjectRequirements(where: any = {}, options: any = {}) {
     if (!prisma) return [];
