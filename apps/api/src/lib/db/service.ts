@@ -1722,9 +1722,13 @@ export class DatabaseService {
   async createProject(data: any) {
     if (!prisma) throw new Error('Database not available');
     const p: any = prisma;
+    
+    // 确保 userId 存在
+    const userId = data.user_id || data.userId || data.owner_id || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0';
+    
     const project = await p.project.create({
       data: {
-        userId: data.user_id || data.userId || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0',
+        userId: userId,
         name: data.name,
         description: data.description || '',
         status: data.status || 'active',
