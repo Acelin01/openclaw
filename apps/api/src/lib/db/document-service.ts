@@ -43,7 +43,7 @@ export class DocumentService {
         title: data.title,
         content: data.content,
         kind: data.kind,
-        userId: data.userId || 'admin-user-id', // 默认用户 ID
+        userId: data.userId || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0', // 默认用户 ID
         projectId: data.projectId,
         chatId: data.chatId,
         agentId: data.agentId,
