@@ -13,9 +13,14 @@ interface Message {
   timestamp: number;
 }
 
+interface AgentConfigWithStatus extends AgentConfig {
+  connected?: boolean;
+  agentStatus?: AgentStatus;
+}
+
 const App: React.FC = () => {
   const [multiAgentClient, setMultiAgentClient] = useState<MultiAgentClient | null>(null);
-  const [agentList, setAgentList] = useState<AgentConfig[]>([]);
+  const [agentList, setAgentList] = useState<AgentConfigWithStatus[]>([]);
   const [agentStatusList, setAgentStatusList] = useState<AgentStatus[]>([]);
   const [selectedAgentId, setSelectedAgentId] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -30,21 +35,27 @@ const App: React.FC = () => {
         const client = new MultiAgentClient();
         const response = await fetch('/config/agents.config.json');
         const config = await response.json();
-        
+
         // 异步加载智能体，单个失败不影响整体
         await client.loadAgents(config.agents);
-        
+
         setMultiAgentClient(client);
-        setAgentList(client.getAgentList());
+        // 映射类型，将 status 改为 agentStatus
+        const agentList = client.getAgentList().map(agent => ({
+          ...agent,
+          agentStatus: agent.status,
+          status: agent.status // 保留原始 status 属性，避免类型冲突
+        }));
+        setAgentList(agentList as any);
         setAgentStatusList(client.getAgentStatusList());
-        
-        // 至少有一个智能体连接成功就算成功
-        const anyConnected = client.getAgentStatusList().some(s => s.connected);
-        setIsConnected(anyConnected || config.agents.length > 0);
-        
+
+        // 只有至少有一个智能体真正连接成功才算成功
+        const connectedCount = client.getAgentStatusList().filter(s => s.connected).length;
+        setIsConnected(connectedCount > 0);
+
         console.log('✅ 多智能体平台初始化完成', {
           total: config.agents.length,
-          connected: client.getAgentStatusList().filter(s => s.connected).length
+          connected: connectedCount
         });
       } catch (error) {
         console.error('❌ 多智能体平台初始化失败:', error);
@@ -55,12 +66,24 @@ const App: React.FC = () => {
     return () => { multiAgentClient?.disconnect(); };
   }, []);
 
-  // 定时更新状态
+  // 定时更新状态（包括连接状态）
   useEffect(() => {
     if (!multiAgentClient) return;
+    
+    // 立即更新一次
+    const statusList = multiAgentClient.getAgentStatusList();
+    const connectedCount = statusList.filter(s => s.connected).length;
+    setIsConnected(connectedCount > 0);
+    setAgentStatusList(statusList);
+    
+    // 然后定时更新
     const interval = setInterval(() => {
-      setAgentStatusList(multiAgentClient.getAgentStatusList());
-    }, 30000);
+      const newStatusList = multiAgentClient.getAgentStatusList();
+      const newConnectedCount = newStatusList.filter(s => s.connected).length;
+      setIsConnected(newConnectedCount > 0);
+      setAgentStatusList(newStatusList);
+    }, 5000); // 缩短为 5 秒，更快响应离线状态
+    
     return () => clearInterval(interval);
   }, [multiAgentClient]);
 
@@ -97,12 +120,27 @@ const App: React.FC = () => {
               content: `[${result.agentName}] ${(result.data as any).reply || '收到消息'}`,
               timestamp: Date.now()
             }]);
+          } else {
+            // 显示失败信息
+            setMessages(prev => [...prev, {
+              id: `msg-${Date.now()}-${result.agentId}-error`,
+              role: 'system',
+              content: `❌ [${result.agentName}] 发送失败：${result.error?.message || '未知错误'}`,
+              timestamp: Date.now()
+            }]);
           }
         });
       }
       setAgentStatusList(multiAgentClient.getAgentStatusList());
     } catch (error) {
       console.error('发送消息失败:', error);
+      // 显示错误消息给用户
+      setMessages(prev => [...prev, {
+        id: `msg-${Date.now()}-error`,
+        role: 'system',
+        content: `❌ 发送失败：${(error as Error).message || '未知错误'}`,
+        timestamp: Date.now()
+      }]);
     }
   }, [inputValue, selectedAgentId, multiAgentClient]);
 
@@ -131,11 +169,15 @@ const App: React.FC = () => {
 
       console.log('🔌 正在添加智能体:', newAgent.name);
       await multiAgentClient.addAgent(newAgent);
-      
-      // 更新状态
-      setAgentList(multiAgentClient.getAgentList());
+
+      // 更新状态（映射类型）
+      const agentList = multiAgentClient.getAgentList().map(agent => ({
+        ...agent,
+        agentStatus: agent.status
+      }));
+      setAgentList(agentList as any);
       setAgentStatusList(multiAgentClient.getAgentStatusList());
-      
+
       console.log('✅ 智能体添加成功:', newAgent.name);
       return true;
     } catch (error) {
@@ -172,23 +214,28 @@ const App: React.FC = () => {
       <div className="main">
         <div className="chat-panel">
           <MessageList messages={messages} />
-          <InputArea 
+          <InputArea
             value={inputValue}
             onChange={setInputValue}
             onSend={handleSendMessage}
             disabled={!isConnected}
+            connected={isConnected}
           />
         </div>
       </div>
 
       <div className="agent-manager-panel">
-        <AgentManager 
+        <AgentManager
           agents={agentList}
           statusList={agentStatusList}
           onAddAgent={() => setShowAddDialog(true)}
           onAgentChange={() => {
             if (multiAgentClient) {
-              setAgentList(multiAgentClient.getAgentList());
+              const agentList = multiAgentClient.getAgentList().map(agent => ({
+                ...agent,
+                agentStatus: agent.status
+              }));
+              setAgentList(agentList as any);
               setAgentStatusList(multiAgentClient.getAgentStatusList());
             }
           }}
