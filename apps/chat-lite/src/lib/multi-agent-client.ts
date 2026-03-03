@@ -71,57 +71,111 @@ export class MultiAgentClient {
   }
 
   /**
-   * 连接单个智能体
+   * 连接单个智能体（实现 Gateway 挑战 - 响应认证）
    */
   private async connectAgent(config: AgentConfig) {
-    try {
-      console.log(`🔌 连接智能体：${config.name} (${config.gateway.url})`);
-      
-      // 创建 WebSocket 连接
-      const wsUrl = new URL(config.gateway.url);
-      wsUrl.searchParams.set('token', config.gateway.token);
-      const ws = new WebSocket(wsUrl.toString());
+    return new Promise<void>((resolve, reject) => {
+      try {
+        console.log(`🔌 连接智能体：${config.name} (${config.gateway.url})`);
 
-      // 等待连接（带超时）
-      await new Promise((resolve, reject) => {
-        const timeoutId: any = setTimeout(() => {
-          ws.close();
-          reject(new Error('连接超时（5 秒）'));
-        }, 5000);
+        // 创建 WebSocket 连接（不直接在 URL 中传 token）
+        const ws = new WebSocket(config.gateway.url);
+        let connectTimeoutId: any;
 
-        // 浏览器 WebSocket API 使用属性而非 on() 方法
+        // 连接超时
+        const startTimeout = () => {
+          connectTimeoutId = setTimeout(() => {
+            ws.close();
+            reject(new Error('连接超时（10 秒）'));
+          }, 10000);
+        };
+
+        // 监听消息（处理挑战 - 响应认证）
+        ws.onmessage = (event: MessageEvent) => {
+          try {
+            const message = JSON.parse(event.data as string);
+            
+            // 处理 connect.challenge 事件
+            if (message.type === 'event' && message.event === 'connect.challenge') {
+              const nonce = message.payload?.nonce;
+              if (nonce) {
+                console.log(`[Gateway] 收到挑战 nonce: ${nonce.substring(0, 8)}...`);
+                
+                // 发送 connect 请求响应挑战
+                const connectFrame = {
+                  type: 'req' as const,
+                  id: `connect-${Date.now()}`,
+                  method: 'connect',
+                  params: {
+                    minProtocol: 3,
+                    maxProtocol: 3,
+                    client: {
+                      id: 'webchat-ui',  // Gateway 要求的固定值
+                      version: '0.1.0',
+                      platform: 'web',
+                      mode: 'webchat'
+                    },
+                    role: 'operator',
+                    scopes: ['operator.admin', 'operator.approvals'],
+                    caps: [],
+                    auth: {
+                      token: config.gateway.token
+                    }
+                  }
+                };
+                
+                ws.send(JSON.stringify(connectFrame));
+              }
+              return;
+            }
+            
+            // 处理 connect 响应
+            if (message.type === 'res' && message.id?.startsWith('connect-')) {
+              if (message.ok) {
+                console.log(`✅ ${config.name} 认证成功`);
+                clearTimeout(connectTimeoutId);
+                this.agents.set(config.id, { config, ws });
+                this.updateStatus(config.id, { connected: true });
+                resolve();
+              } else {
+                console.error(`❌ ${config.name} 认证失败:`, message.error?.message);
+                clearTimeout(connectTimeoutId);
+                ws.close();
+                reject(new Error(message.error?.message || '认证失败'));
+              }
+              return;
+            }
+          } catch (parseError) {
+            console.warn('[Gateway] 解析消息失败:', parseError);
+          }
+        };
+
         ws.onopen = () => {
-          clearTimeout(timeoutId);
-          console.log(`✅ ${config.name} 连接成功`);
-          this.agents.set(config.id, { config, ws });
-          this.updateStatus(config.id, { connected: true });
-          resolve(true);
+          console.log(`[Gateway] WebSocket 已打开，等待挑战...`);
+          startTimeout();
         };
 
         ws.onerror = (_err: Event) => {
-          clearTimeout(timeoutId);
+          clearTimeout(connectTimeoutId);
           console.error(`❌ ${config.name} 连接错误`);
-          this.updateStatus(config.id, { 
-            connected: false, 
-            error: '连接失败' 
+          this.updateStatus(config.id, {
+            connected: false,
+            error: 'WebSocket 连接失败'
           });
           reject(new Error('WebSocket 连接失败'));
         };
 
-        ws.onclose = () => {
-          clearTimeout(timeoutId);
-          console.log(`🔌 ${config.name} 连接关闭`);
+        ws.onclose = (event: CloseEvent) => {
+          clearTimeout(connectTimeoutId);
+          console.log(`🔌 ${config.name} 连接关闭：code=${event.code}, reason=${event.reason}`);
           this.updateStatus(config.id, { connected: false });
-          
-          // 注意：addAgent 时的连接失败不自动重连，由用户手动重试
-          // 只有初始化加载时的智能体才会自动重连
         };
-      });
 
-    } catch (error) {
-      console.error(`连接智能体 ${config.name} 失败:`, error);
-      throw error;
-    }
+      } catch (error) {
+        console.error(`连接智能体 ${config.name} 失败:`, error);
+        reject(error);
+      }
+    });
   }
 
   /**
@@ -129,7 +183,7 @@ export class MultiAgentClient {
    */
   async sendMessage(agentId: string, message: string) {
     const agent = this.agents.get(agentId);
-    
+
     if (!agent) {
       throw new Error(`智能体 ${agentId} 不存在`);
     }
@@ -140,40 +194,174 @@ export class MultiAgentClient {
 
     console.log(`📤 发送消息到 ${agent.config.name}: ${message}`);
 
+    const requestId = `req-${Date.now()}-${Math.random()}`;
+    const sessionKey = `session-${agentId}`;
+    const idempotencyKey = `idem-${Date.now()}-${Math.random()}`;
+    let runId: string | null = null;
+    let replyContent = '';
+    let replyReceived = false;
+
     return new Promise((resolve, reject) => {
-      const requestId = `req-${Date.now()}-${Math.random()}`;
-      
       // 设置超时
       const timeout = setTimeout(() => {
-        reject(new Error('消息发送超时'));
+        if (!replyReceived) {
+          reject(new Error('消息发送超时（30 秒）'));
+        }
       }, 30000);
 
-      // 监听响应
-      const messageHandler = (data: any) => {
-        const response = JSON.parse(data.toString());
-        
-        if (response.id === requestId) {
-          clearTimeout(timeout);
-          agent.ws.removeListener('message', messageHandler);
+      // 监听响应和事件
+      const originalOnMessage = agent.ws.onmessage;
+      agent.ws.onmessage = (event: MessageEvent) => {
+        try {
+          const data = JSON.parse(event.data as string);
+          console.log('[Gateway] 收到消息:', JSON.stringify(data, null, 2).substring(0, 500));
           
-          this.updateStatus(agentId, { 
-            messageCount: (this.statusMap.get(agentId)?.messageCount || 0) + 1 
-          });
+          // 处理 chat.send 的响应（返回 runId）
+          if (data.type === 'res' && data.id === requestId) {
+            console.log('[Gateway] 收到 chat.send 响应:', data.ok ? '成功' : '失败', data);
+            if (data.ok) {
+              runId = data.payload?.runId;
+              console.log(`✅ 消息已发送，runId: ${runId}`);
+            } else {
+              clearTimeout(timeout);
+              agent.ws.onmessage = originalOnMessage;
+              reject(new Error(data.error?.message || '发送失败'));
+            }
+            return;
+          }
           
-          resolve(response);
+          // 处理所有 event 类型消息
+          if (data.type === 'event') {
+            console.log('[Gateway] 收到事件:', data.event, data.payload);
+            
+            // 处理 chat 事件（AI 回复）- Gateway 使用的事件名
+            if (data.event === 'chat') {
+              const payload = data.payload;
+              // 只处理 final 状态的完整回复
+              if (payload?.runId === runId && payload?.state === 'final' && payload?.message?.role === 'assistant') {
+                // 提取文本内容
+                const content = payload.message.content;
+                if (Array.isArray(content)) {
+                  replyContent = content.map(c => c.text || c.content || JSON.stringify(c)).join('\n');
+                } else {
+                  replyContent = content?.text || content?.content || JSON.stringify(content);
+                }
+                replyReceived = true;
+                clearTimeout(timeout);
+                agent.ws.onmessage = originalOnMessage;
+                
+                this.updateStatus(agentId, {
+                  messageCount: (this.statusMap.get(agentId)?.messageCount || 0) + 1
+                });
+                
+                console.log('[Gateway] 收到 AI 完整回复:', replyContent.substring(0, 200));
+                resolve({
+                  id: requestId,
+                  runId,
+                  reply: replyContent,
+                  payload
+                });
+              }
+              // delta 状态的消息只记录，不返回
+              if (payload?.state === 'delta') {
+                console.log('[Gateway] 收到 AI 流式片段:', payload?.message?.content?.[0]?.text);
+              }
+              return;
+            }
+            
+            // 处理 chat.message 事件（AI 回复）
+            if (data.event === 'chat.message') {
+              const payload = data.payload;
+              if (payload?.runId === runId && payload?.role === 'assistant') {
+                replyContent = payload?.content || payload?.text || JSON.stringify(payload);
+                replyReceived = true;
+                clearTimeout(timeout);
+                agent.ws.onmessage = originalOnMessage;
+                
+                this.updateStatus(agentId, {
+                  messageCount: (this.statusMap.get(agentId)?.messageCount || 0) + 1
+                });
+                
+                console.log('[Gateway] 收到 AI 回复:', replyContent.substring(0, 100));
+                resolve({
+                  id: requestId,
+                  runId,
+                  reply: replyContent,
+                  payload
+                });
+              }
+              return;
+            }
+            
+            // 处理 chat.reply 事件（另一种回复格式）
+            if (data.event === 'chat.reply') {
+              const payload = data.payload;
+              if (payload?.runId === runId) {
+                replyContent = payload?.content || payload?.text || JSON.stringify(payload);
+                replyReceived = true;
+                clearTimeout(timeout);
+                agent.ws.onmessage = originalOnMessage;
+                
+                this.updateStatus(agentId, {
+                  messageCount: (this.statusMap.get(agentId)?.messageCount || 0) + 1
+                });
+                
+                console.log('[Gateway] 收到 AI 回复:', replyContent.substring(0, 100));
+                resolve({
+                  id: requestId,
+                  runId,
+                  reply: replyContent,
+                  payload
+                });
+              }
+              return;
+            }
+            
+            // 处理 assistant.response 事件
+            if (data.event === 'assistant.response') {
+              const payload = data.payload;
+              if (payload?.runId === runId) {
+                replyContent = payload?.content || payload?.text || payload?.reply || JSON.stringify(payload);
+                replyReceived = true;
+                clearTimeout(timeout);
+                agent.ws.onmessage = originalOnMessage;
+                
+                this.updateStatus(agentId, {
+                  messageCount: (this.statusMap.get(agentId)?.messageCount || 0) + 1
+                });
+                
+                console.log('[Gateway] 收到 AI 回复:', replyContent.substring(0, 100));
+                resolve({
+                  id: requestId,
+                  runId,
+                  reply: replyContent,
+                  payload
+                });
+              }
+              return;
+            }
+            return;
+          }
+          
+          // 其他消息交给原始处理器
+          if (originalOnMessage) {
+            originalOnMessage(event);
+          }
+        } catch (parseError) {
+          console.error('解析消息失败:', parseError);
         }
       };
 
-      agent.ws.on('message', messageHandler);
-
-      // 发送消息
+      // 发送 chat.send 请求
       agent.ws.send(JSON.stringify({
+        type: 'req',
         id: requestId,
-        kind: 'req',
         method: 'chat.send',
         params: {
+          sessionKey: sessionKey,
           message: message,
-          timestamp: Date.now()
+          idempotencyKey: idempotencyKey,
+          timeoutMs: 60000
         }
       }));
     });

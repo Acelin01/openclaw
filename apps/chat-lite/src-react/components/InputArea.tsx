@@ -6,18 +6,20 @@ interface InputAreaProps {
   onChange: (value: string) => void;
   onSend: () => void;
   disabled?: boolean;
+  connected?: boolean;
 }
 
-const InputArea: React.FC<InputAreaProps> = ({ 
-  value, 
-  onChange, 
+const InputArea: React.FC<InputAreaProps> = ({
+  value,
+  onChange,
   onSend,
-  disabled = false 
+  disabled = false,
+  connected = true
 }) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (!disabled && value.trim()) {
+      if (!disabled && connected && value.trim()) {
         onSend();
       }
     }
@@ -30,15 +32,16 @@ const InputArea: React.FC<InputAreaProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="输入消息... (Enter 发送，Shift+Enter 换行)"
-          disabled={disabled}
+          placeholder={connected ? "输入消息... (Enter 发送，Shift+Enter 换行)" : "智能体未连接，无法发送消息"}
+          disabled={disabled || !connected}
           rows={1}
         />
       </div>
       <button
         className="btn btn-primary"
         onClick={onSend}
-        disabled={disabled || !value.trim()}
+        disabled={disabled || !connected || !value.trim()}
+        title={connected ? '' : '智能体未连接'}
       >
         发送
       </button>

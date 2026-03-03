@@ -3,7 +3,7 @@ import { AgentConfig, AgentStatus } from '../lib/multi-agent-client';
 import './AgentManager.css';
 
 interface AgentManagerProps {
-  agents: AgentConfig[];
+  agents: (AgentConfig & { connected?: boolean; agentStatus?: AgentStatus })[];
   statusList: AgentStatus[];
   onAgentChange: () => void;
   onAddAgent?: () => void;
