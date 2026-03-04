@@ -4,7 +4,13 @@ import {
   projectCollaborationMCPTools, 
   businessSupportMCPTools, 
   technicalAnalysisMCPTools, 
-  orchestrationMCPTools 
+  orchestrationMCPTools,
+  projectManagementTools,
+  requirementManagementTools,
+  taskManagementTools,
+  defectManagementTools,
+  metricManagementTools,
+  testPlanManagementTools
 } from "./mcp-tools";
 
 /**
@@ -62,6 +68,36 @@ Object.entries(technicalAnalysisMCPTools).forEach(([name, tool]) => {
 // 注册编排 MCP 工具
 Object.entries(orchestrationMCPTools).forEach(([name, tool]) => {
   registerTool(name, tool, ['orchestration', 'mcp', name]);
+});
+
+// 注册项目管理 MCP 工具
+Object.entries(projectManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['project-management', 'mcp', name]);
+});
+
+// 注册需求管理 MCP 工具
+Object.entries(requirementManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['requirement-management', 'mcp', name]);
+});
+
+// 注册任务管理 MCP 工具
+Object.entries(taskManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['task-management', 'mcp', name]);
+});
+
+// 注册缺陷管理 MCP 工具
+Object.entries(defectManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['defect-management', 'mcp', name]);
+});
+
+// 注册度量管理 MCP 工具
+Object.entries(metricManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['metric-management', 'mcp', name]);
+});
+
+// 注册测试计划管理 MCP 工具
+Object.entries(testPlanManagementTools).forEach(([name, tool]) => {
+  registerTool(name, tool, ['testplan-management', 'mcp', name]);
 });
 
 /**

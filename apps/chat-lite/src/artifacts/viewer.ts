@@ -11,6 +11,20 @@ import "./iteration/plan-element";
 import "./milestone/list-element";
 import "./milestone/detail-element";
 import "./milestone/create-element";
+import "./project/list-element";
+import "./project/detail-element";
+import "./project/create-element";
+import "./requirement/list-element";
+import "./requirement/detail-element";
+import "./requirement/create-element";
+import "./task/list-element";
+import "./task/detail-element";
+import "./task/create-element";
+import "./defect/list-element";
+import "./defect/detail-element";
+import "./defect/create-element";
+import "./metric/list-element";
+import "./workhour/list-element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
 import type { TestCaseContent } from "./testcase/element";
 import type { RequirementListItem } from "./project-requirement/list-element";
@@ -22,6 +36,18 @@ import type { IterationPlanData } from "./iteration/plan-element";
 import type { Milestone, MilestoneListContent } from "./milestone/list-element";
 import type { MilestoneDetailContent } from "./milestone/detail-element";
 import type { MilestoneCreateData } from "./milestone/create-element";
+import type { Project, ProjectListContent } from "./project/list-element";
+import type { ProjectDetailContent } from "./project/detail-element";
+import type { ProjectCreateData } from "./project/create-element";
+import type { Requirement, RequirementListContent } from "./requirement/list-element";
+import type { RequirementDetailContent } from "./requirement/detail-element";
+import type { RequirementCreateData } from "./requirement/create-element";
+import type { Task, TaskListContent } from "./task/list-element";
+import type { TaskDetailContent } from "./task/detail-element";
+import type { TaskCreateData } from "./task/create-element";
+import type { Defect, DefectListContent } from "./defect/list-element";
+import type { DefectDetailContent } from "./defect/detail-element";
+import type { DefectCreateData } from "./defect/create-element";
 
 export type ArtifactKind = 
   | "project-requirement" 
@@ -35,6 +61,20 @@ export type ArtifactKind =
   | "milestone-list"
   | "milestone-detail"
   | "milestone-create"
+  | "project-list"
+  | "project-detail"
+  | "project-create"
+  | "requirement-list"
+  | "requirement-detail"
+  | "requirement-create"
+  | "task-list"
+  | "task-detail"
+  | "task-create"
+  | "defect-list"
+  | "defect-detail"
+  | "defect-create"
+  | "metric-list"
+  | "workhour-list"
   | string;
 
 export interface ArtifactContent {
@@ -105,6 +145,34 @@ export class ArtifactViewer extends LitElement {
         return this._renderMilestoneDetail();
       case "milestone-create":
         return this._renderMilestoneCreate();
+      case "project-list":
+        return this._renderProjectList();
+      case "project-detail":
+        return this._renderProjectDetail();
+      case "project-create":
+        return this._renderProjectCreate();
+      case "requirement-list":
+        return this._renderRequirementList();
+      case "requirement-detail":
+        return this._renderRequirementDetail();
+      case "requirement-create":
+        return this._renderRequirementCreate();
+      case "task-list":
+        return this._renderTaskList();
+      case "task-detail":
+        return this._renderTaskDetail();
+      case "task-create":
+        return this._renderTaskCreate();
+      case "defect-list":
+        return this._renderDefectList();
+      case "defect-detail":
+        return this._renderDefectDetail();
+      case "defect-create":
+        return this._renderDefectCreate();
+      case "metric-list":
+        return this._renderMetricList();
+      case "workhour-list":
+        return this._renderWorkHourList();
       default:
         return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
     }
@@ -289,6 +357,224 @@ export class ArtifactViewer extends LitElement {
       <chatlite-milestone-create
         .projectId=${data.projectId || ''}
       ></chatlite-milestone-create>
+    `;
+  }
+
+  private _renderProjectList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<ProjectListContent>;
+
+    return html`
+      <chatlite-project-list
+        .content=${{
+          kind: "project-list",
+          projects: data.projects || [],
+          title: data.title || "项目列表"
+        }}
+        .editable=${this.editable}
+      ></chatlite-project-list>
+    `;
+  }
+
+  private _renderProjectDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<ProjectDetailContent>;
+
+    return html`
+      <chatlite-project-detail
+        .content=${{
+          kind: "project-detail",
+          project: data.project || {
+            id: "",
+            name: "未命名项目",
+            status: "active"
+          }
+        }}
+      ></chatlite-project-detail>
+    `;
+  }
+
+  private _renderProjectCreate() {
+    if (!this.content) return html``;
+
+    return html`
+      <chatlite-project-create
+      ></chatlite-project-create>
+    `;
+  }
+
+  private _renderRequirementList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<RequirementListContent>;
+
+    return html`
+      <chatlite-requirement-list
+        .content=${{
+          kind: "requirement-list",
+          requirements: data.requirements || [],
+          projectId: data.projectId,
+          title: data.title || "需求列表"
+        }}
+        .editable=${this.editable}
+      ></chatlite-requirement-list>
+    `;
+  }
+
+  private _renderRequirementDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<RequirementDetailContent>;
+
+    return html`
+      <chatlite-requirement-detail
+        .content=${{
+          kind: "requirement-detail",
+          requirement: data.requirement || {
+            id: "",
+            title: "未命名需求",
+            status: "draft",
+            priority: "medium"
+          }
+        }}
+      ></chatlite-requirement-detail>
+    `;
+  }
+
+  private _renderRequirementCreate() {
+    if (!this.content) return html``;
+    const data = this.content.data as { projectId?: string };
+
+    return html`
+      <chatlite-requirement-create
+        .projectId=${data.projectId || ''}
+      ></chatlite-requirement-create>
+    `;
+  }
+
+  private _renderTaskList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<TaskListContent>;
+
+    return html`
+      <chatlite-task-list
+        .content=${{
+          kind: "task-list",
+          tasks: data.tasks || [],
+          projectId: data.projectId,
+          title: data.title || "任务列表"
+        }}
+        .editable=${this.editable}
+      ></chatlite-task-list>
+    `;
+  }
+
+  private _renderTaskDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<TaskDetailContent>;
+
+    return html`
+      <chatlite-task-detail
+        .content=${{
+          kind: "task-detail",
+          task: data.task || {
+            id: "",
+            title: "未命名任务",
+            status: "todo",
+            priority: "medium"
+          }
+        }}
+      ></chatlite-task-detail>
+    `;
+  }
+
+  private _renderTaskCreate() {
+    if (!this.content) return html``;
+    const data = this.content.data as { projectId?: string; requirementId?: string };
+
+    return html`
+      <chatlite-task-create
+        .projectId=${data.projectId || ''}
+        .requirementId=${data.requirementId || ''}
+      ></chatlite-task-create>
+    `;
+  }
+
+  private _renderDefectList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<DefectListContent>;
+
+    return html`
+      <chatlite-defect-list
+        .content=${{
+          kind: "defect-list",
+          defects: data.defects || [],
+          projectId: data.projectId,
+          title: data.title || "缺陷列表"
+        }}
+        .editable=${this.editable}
+      ></chatlite-defect-list>
+    `;
+  }
+
+  private _renderDefectDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<DefectDetailContent>;
+
+    return html`
+      <chatlite-defect-detail
+        .content=${{
+          kind: "defect-detail",
+          defect: data.defect || {
+            id: "",
+            title: "未命名缺陷",
+            status: "open",
+            severity: "major"
+          }
+        }}
+      ></chatlite-defect-detail>
+    `;
+  }
+
+  private _renderDefectCreate() {
+    if (!this.content) return html``;
+    const data = this.content.data as { projectId?: string };
+
+    return html`
+      <chatlite-defect-create
+        .projectId=${data.projectId || ''}
+      ></chatlite-defect-create>
+    `;
+  }
+
+  private _renderMetricList() {
+    if (!this.content) return html``;
+    const data = this.content.data as { metrics?: any[]; projectId?: string; title?: string };
+
+    return html`
+      <chatlite-metric-list
+        .content=${{
+          kind: "metric-list",
+          metrics: data.metrics || [],
+          projectId: data.projectId,
+          title: data.title || "项目度量"
+        }}
+      ></chatlite-metric-list>
+    `;
+  }
+
+  private _renderWorkHourList() {
+    if (!this.content) return html``;
+    const data = this.content.data as { workHours?: any[]; projectId?: string; title?: string; totalHours?: number };
+
+    return html`
+      <chatlite-workhour-list
+        .content=${{
+          kind: "workhour-list",
+          workHours: data.workHours || [],
+          projectId: data.projectId,
+          title: data.title || "工时统计",
+          totalHours: data.totalHours
+        }}
+      ></chatlite-workhour-list>
     `;
   }
 }

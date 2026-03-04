@@ -187,7 +187,7 @@
       },
       "bailian": {
         "baseUrl": "https://coding.dashscope.aliyuncs.com/v1",
-        "apiKey": "sk-sp-f0ca3214e82b43eeb4f5079015f26a4d",
+        "apiKey": "sk-sp-a1b6f1cddec848ba8020aa7db7523fce",
         "api": "openai-completions",
         "models": [
           {

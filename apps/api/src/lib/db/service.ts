@@ -1364,7 +1364,23 @@ export class DatabaseService {
   async createProject(data: any) {
     if (!prisma) throw new Error('Database not available');
     const p: any = prisma;
-    const project = await p.project.create({ data });
+    
+    // 确保 userId 存在
+    const userId = data.user_id || data.userId || data.owner_id || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0';
+    
+    const project = await p.project.create({
+      data: {
+        user: {
+          connect: { id: userId }
+        },
+        name: data.name,
+        description: data.description || '',
+        status: data.status || 'active',
+        startDate: data.start_date ? new Date(data.start_date) : null,
+        endDate: data.end_date ? new Date(data.end_date) : null,
+        budget: data.budget || null
+      }
+    });
     
     // Automatically create a ProjectCollaboration for every new project
     try {
@@ -1388,6 +1404,660 @@ export class DatabaseService {
       where: { projectId }
     });
     return coll?.id;
+  }
+
+  // ============================================
+  // 需求管理方法
+  // ============================================
+  async getRequirements(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    
+    // 转换字段名：project_id -> projectId
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.limit) {
+      delete cleanWhere.limit;
+    }
+    if (cleanWhere.offset) {
+      delete cleanWhere.offset;
+    }
+    
+    const p: any = prisma;
+    return p.projectRequirement.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy,
+      include: {
+        tasks: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+  }
+
+  async getRequirementById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectRequirement.findUnique({
+      where: { id },
+      include: {
+        tasks: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+  }
+
+  async createRequirement(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { projectId, project_id, assigneeId, assignee_id, ...rest } = data;
+    const pid = projectId || project_id;
+    const aid = assigneeId || assignee_id;
+    
+    if (pid) {
+      rest.projectId = pid;
+      if (!rest.collaborationId) {
+        const collaborationId = await this.getCollaborationIdByProjectId(pid);
+        if (collaborationId) {
+          rest.collaborationId = collaborationId;
+        }
+      }
+    }
+    
+    if (aid) {
+      rest.assigneeId = aid;
+    }
+    
+    return p.projectRequirement.create({ data: rest });
+  }
+
+  async updateRequirement(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectRequirement.update({
+      where: { id },
+      data
+    });
+  }
+
+  async deleteRequirement(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectRequirement.delete({
+      where: { id }
+    });
+  }
+
+  // ============================================
+  // 任务管理方法
+  // ============================================
+  async getTasks(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    const p: any = prisma;
+    return p.projectTask.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        requirement: {
+          select: {
+            id: true,
+            title: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async getTaskById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectTask.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        requirement: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createTask(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      assigneeId, assignee_id, 
+      estimatedHours, estimated_hours,
+      startDate, start_date,
+      endDate, end_date,
+      dueDate, due_date,
+      ...rest 
+    } = data;
+    
+    const pid = projectId || project_id;
+    const aid = assigneeId || assignee_id;
+    const eh = estimatedHours || estimated_hours;
+    const sd = startDate || start_date;
+    const ed = endDate || end_date;
+    const dd = dueDate || due_date;
+    
+    const createData: any = { ...rest };
+    
+    delete createData.project_id;
+    delete createData.assignee_id;
+    delete createData.estimated_hours;
+    delete createData.start_date;
+    delete createData.end_date;
+    delete createData.due_date;
+    
+    if (pid) {
+      createData.projectId = pid;
+      if (!createData.collaborationId) {
+        const collaborationId = await this.getCollaborationIdByProjectId(pid);
+        if (collaborationId) {
+          createData.collaborationId = collaborationId;
+        }
+      }
+    }
+    
+    if (aid) createData.assigneeId = aid;
+    if (eh !== undefined && eh !== null) createData.estimatedHours = Number(eh);
+    if (sd) createData.startDate = new Date(sd);
+    if (ed) createData.endDate = new Date(ed);
+    if (dd) createData.dueDate = new Date(dd);
+    
+    return p.projectTask.create({ data: createData });
+  }
+
+  async updateTask(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      assigneeId, assignee_id, 
+      estimatedHours, estimated_hours,
+      startDate, start_date,
+      endDate, end_date,
+      dueDate, due_date,
+      ...rest 
+    } = data;
+    
+    const updateData: any = { ...rest };
+    
+    const pid = projectId || project_id;
+    const aid = assigneeId || assignee_id;
+    const eh = estimatedHours || estimated_hours;
+    const sd = startDate || start_date;
+    const ed = endDate || end_date;
+    const dd = dueDate || due_date;
+    
+    delete updateData.project_id;
+    delete updateData.assignee_id;
+    delete updateData.estimated_hours;
+    delete updateData.start_date;
+    delete updateData.end_date;
+    delete updateData.due_date;
+    
+    if (pid) updateData.projectId = pid;
+    if (aid) updateData.assigneeId = aid;
+    if (eh !== undefined && eh !== null) updateData.estimatedHours = Number(eh);
+    if (sd) updateData.startDate = new Date(sd);
+    if (ed) updateData.endDate = new Date(ed);
+    if (dd) updateData.dueDate = new Date(dd);
+    
+    return p.projectTask.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async deleteTask(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectTask.delete({
+      where: { id }
+    });
+  }
+
+  async updateTaskStatus(id: string, status: string, progress?: number) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    const updateData: any = { status };
+    if (progress !== undefined) updateData.progress = progress;
+    return p.projectTask.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  // ============================================
+  // 缺陷管理方法
+  // ============================================
+  async getDefects(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50, orderBy = { createdAt: 'desc' } } = options || {};
+    
+    // 转换字段名：project_id -> projectId
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.limit) {
+      delete cleanWhere.limit;
+    }
+    if (cleanWhere.offset) {
+      delete cleanWhere.offset;
+    }
+    
+    const p: any = prisma;
+    return p.projectDefect.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        iteration: {
+          select: {
+            id: true,
+            title: true
+          }
+        },
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async getDefectById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectDefect.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        iteration: true,
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createDefect(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      iterationId, iteration_id,
+      reporterId, reporter_id,
+      assigneeId, assignee_id,
+      ...rest 
+    } = data;
+    
+    const createData: any = { ...rest };
+    
+    delete createData.project_id;
+    delete createData.iteration_id;
+    delete createData.reporter_id;
+    delete createData.assignee_id;
+    
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (iterationId || iteration_id) createData.iterationId = iterationId || iteration_id;
+    if (reporterId || reporter_id) createData.reporterId = reporterId || reporter_id;
+    if (assigneeId || assignee_id) createData.assigneeId = assigneeId || assignee_id;
+    
+    return p.projectDefect.create({ data: createData });
+  }
+
+  async updateDefect(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectDefect.update({
+      where: { id },
+      data
+    });
+  }
+
+  async deleteDefect(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectDefect.delete({
+      where: { id }
+    });
+  }
+
+  // ============================================
+  // 项目度量管理方法
+  // ============================================
+  async getProjectMetrics(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50 } = options || {};
+    
+    // 清理参数
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.metric_type) {
+      cleanWhere.metricType = cleanWhere.metric_type;
+      delete cleanWhere.metric_type;
+    }
+    
+    const p: any = prisma;
+    return p.projectMetric.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy: { recordedAt: 'desc' },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+  }
+
+  async createProjectMetric(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { projectId, project_id, metricType, metric_type, metricValue, metric_value, ...rest } = data;
+    
+    const createData: any = { ...rest };
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (metricType || metric_type) createData.metricType = metricType || metric_type;
+    if (metricValue || metric_value) createData.metricValue = metricValue || metric_value;
+    
+    return p.projectMetric.create({ data: createData });
+  }
+
+  // ============================================
+  // 工时管理方法
+  // ============================================
+  async getWorkHours(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50 } = options || {};
+    
+    // 清理参数
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    if (cleanWhere.user_id) {
+      cleanWhere.userId = cleanWhere.user_id;
+      delete cleanWhere.user_id;
+    }
+    if (cleanWhere.task_id) {
+      cleanWhere.taskId = cleanWhere.task_id;
+      delete cleanWhere.task_id;
+    }
+    if (cleanWhere.start_date) {
+      cleanWhere.workDate = { gte: new Date(cleanWhere.start_date) };
+      delete cleanWhere.start_date;
+    }
+    if (cleanWhere.end_date) {
+      if (typeof cleanWhere.workDate === 'object') {
+        cleanWhere.workDate.lte = new Date(cleanWhere.end_date);
+      } else {
+        cleanWhere.workDate = { lte: new Date(cleanWhere.end_date) };
+      }
+      delete cleanWhere.end_date;
+    }
+    
+    const p: any = prisma;
+    return p.workHour.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy: { workDate: 'desc' },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        task: {
+          select: {
+            id: true,
+            title: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createWorkHour(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { 
+      projectId, project_id, 
+      taskId, task_id, 
+      userId, user_id, 
+      workDate, work_date,
+      ...rest 
+    } = data;
+    
+    const createData: any = { ...rest };
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (taskId || task_id) createData.taskId = taskId || task_id;
+    if (userId || user_id) createData.userId = userId || user_id;
+    if (workDate || work_date) createData.workDate = new Date(workDate || work_date);
+    
+    return p.workHour.create({ data: createData });
+  }
+
+  // ============================================
+  // 测试计划管理方法
+  // ============================================
+  async getTestPlans(where: any = {}, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 50 } = options || {};
+    
+    // 清理参数
+    const cleanWhere: any = { ...where };
+    if (cleanWhere.project_id) {
+      cleanWhere.projectId = cleanWhere.project_id;
+      delete cleanWhere.project_id;
+    }
+    
+    const p: any = prisma;
+    return p.testPlan.findMany({
+      where: cleanWhere,
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        testCases: {
+          select: {
+            id: true,
+            title: true,
+            status: true
+          }
+        }
+      }
+    });
+  }
+
+  async getTestPlanById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.testPlan.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        testCases: {
+          include: {
+            assignee: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  async createTestPlan(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const { projectId, project_id, startDate, start_date, endDate, end_date, ...rest } = data;
+    
+    const createData: any = { ...rest };
+    if (projectId || project_id) createData.projectId = projectId || project_id;
+    if (startDate || start_date) createData.startDate = new Date(startDate || start_date);
+    if (endDate || end_date) createData.endDate = new Date(endDate || end_date);
+    
+    return p.testPlan.create({ data: createData });
+  }
+
+  async updateTestPlan(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    const updateData: any = { ...data };
+    if (updateData.startDate) updateData.startDate = new Date(updateData.startDate);
+    if (updateData.endDate) updateData.endDate = new Date(updateData.endDate);
+    
+    return p.testPlan.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async getTestPlanCases(planId: string) {
+    if (!prisma) return [];
+    const p: any = prisma;
+    return p.testCase.findMany({
+      where: { testPlanId: planId },
+      include: {
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
   }
 
   // Project Requirements
@@ -1624,9 +2294,10 @@ export class DatabaseService {
     });
   }
 
+  // 项目管理方法
   async getProjects(where: any = {}, options: any = {}) {
     if (!prisma) return [];
-    const { skip = 0, take = 10, sortBy, sortOrder } = options || {};
+    const { skip = 0, take = 50, sortBy, sortOrder } = options || {};
     const queryWhere: any = { ...where };
     if (queryWhere.search) {
       const search = queryWhere.search;
@@ -1681,6 +2352,174 @@ export class DatabaseService {
     if (sortBy) query.orderBy = { [sortBy]: sortOrder === 'asc' ? 'asc' : 'desc' };
     const p: any = prisma;
     return p.project.findMany(query);
+  }
+
+  async getProjectById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.project.findUnique({
+      where: { id },
+      include: {
+        risks: true,
+        tasks: true,
+        requirements: true,
+        milestonesList: true,
+        defects: true,
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true
+              }
+            }
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async createProject(data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    
+    // 确保 userId 存在
+    const userId = data.user_id || data.userId || data.owner_id || '19e0a8e1-cad9-420d-9d10-5cc5be8fb2f0';
+    
+    const project = await p.project.create({
+      data: {
+        user: {
+          connect: { id: userId }
+        },
+        name: data.name,
+        description: data.description || '',
+        status: data.status || 'active',
+        startDate: data.start_date ? new Date(data.start_date) : null,
+        endDate: data.end_date ? new Date(data.end_date) : null,
+        budget: data.budget || null
+      }
+    });
+    
+    // Automatically create a ProjectCollaboration for every new project
+    try {
+      await p.projectCollaboration.create({
+        data: {
+          projectId: project.id
+        }
+      });
+    } catch (e) {
+      console.warn('Failed to create project collaboration automatically:', e);
+    }
+    
+    return project;
+  }
+
+  async updateProject(id: string, data: any) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    const updateData: any = {};
+    
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.status !== undefined) updateData.status = data.status;
+    if (data.start_date) updateData.startDate = new Date(data.start_date);
+    if (data.end_date) updateData.endDate = new Date(data.end_date);
+    if (data.budget !== undefined) updateData.budget = data.budget;
+    
+    return p.project.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  async deleteProject(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.project.delete({
+      where: { id }
+    });
+  }
+
+  async getProjectOverview(projectId: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    const project = await p.project.findUnique({
+      where: { id: projectId },
+      include: {
+        tasks: {
+          select: {
+            id: true,
+            status: true,
+            priority: true
+          }
+        },
+        requirements: {
+          select: {
+            id: true,
+            status: true,
+            priority: true
+          }
+        },
+        milestonesList: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            dueDate: true
+          }
+        },
+        risks: {
+          select: {
+            id: true,
+            title: true,
+            level: true,
+            status: true
+          }
+        },
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    if (!project) return null;
+    
+    // 计算统计信息
+    const stats = {
+      totalTasks: project.tasks.length,
+      completedTasks: project.tasks.filter((t: any) => t.status === 'DONE').length,
+      totalRequirements: project.requirements.length,
+      approvedRequirements: project.requirements.filter((r: any) => r.status === 'APPROVED').length,
+      totalMilestones: project.milestonesList.length,
+      completedMilestones: project.milestonesList.filter((m: any) => m.status === 'completed').length,
+      totalRisks: project.risks.length,
+      highRisks: project.risks.filter((r: any) => r.level === 'HIGH').length,
+      totalMembers: project.members.length
+    };
+    
+    return {
+      project,
+      stats
+    };
   }
 
   async getProjectsCount(where: any = {}) {

@@ -5,6 +5,12 @@ import { testCaseManagementTools } from "./test-case-tools.js";
 import { documentManagementTools } from "./document-tools.js";
 import { iterationManagementTools } from "./iteration-tools.js";
 import { milestoneManagementTools } from "./milestone-tools.js";
+import { projectManagementTools } from "./project-tools.js";
+import { requirementManagementTools } from "./requirement-tools.js";
+import { taskManagementTools } from "./task-tools.js";
+import { defectManagementTools } from "./defect-tools.js";
+import { metricManagementTools } from "./metric-tools.js";
+import { testPlanManagementTools } from "./testplan-tools.js";
 
 export const projectCollaborationMCPTools = {
   project_create: {
@@ -149,6 +155,22 @@ export const projectCollaborationMCPTools = {
   ...iterationManagementTools,
   // 里程碑管理工具
   ...milestoneManagementTools,
+  // 需求管理工具
+  ...requirementManagementTools,
+  // 任务管理工具
+  ...taskManagementTools,
+  // 缺陷管理工具
+  ...defectManagementTools,
+};
+
+// 导出工具集
+export { 
+  projectManagementTools, 
+  requirementManagementTools, 
+  taskManagementTools, 
+  defectManagementTools,
+  metricManagementTools,
+  testPlanManagementTools
 };
 
 export const businessSupportMCPTools = {

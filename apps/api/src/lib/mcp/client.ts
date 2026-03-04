@@ -179,6 +179,39 @@ async function executeToolDirectly(toolName: string, args: any) {
     'freelancer_register': { method: 'createResume' },
     'resume_create': { method: 'createResume' },
     'service_create': { method: 'createWorkerService' },
+    // Project management
+    'project_list': { method: 'getProjects' },
+    'project_get': { method: 'getProjectById' },
+    'project_create': { method: 'createProject' },
+    'project_update': { method: 'updateProject' },
+    'project_delete': { method: 'deleteProject' },
+    'project_overview': { method: 'getProjectOverview' },
+    // Requirement management
+    'requirement_list': { method: 'getRequirements' },
+    'requirement_get': { method: 'getRequirementById' },
+    'requirement_create': { method: 'createRequirement' },
+    'requirement_update': { method: 'updateRequirement' },
+    'requirement_delete': { method: 'deleteRequirement' },
+    // Task management
+    'task_list': { method: 'getTasks' },
+    'task_get': { method: 'getTaskById' },
+    'task_create': { method: 'createTask' },
+    'task_update': { method: 'updateTask' },
+    'task_delete': { method: 'deleteTask' },
+    'task_update_status': { method: 'updateTaskStatus' },
+    // Defect management
+    'defect_list': { method: 'getDefects' },
+    'defect_get': { method: 'getDefectById' },
+    'defect_create': { method: 'createDefect' },
+    'defect_update': { method: 'updateDefect' },
+    'defect_delete': { method: 'deleteDefect' },
+    // Metric management
+    'project_metric_query': { method: 'getProjectMetrics' },
+    'workhour_query': { method: 'getWorkHours' },
+    // Test plan management
+    'test_plan_list': { method: 'getTestPlans' },
+    'test_plan_overview': { method: 'getTestPlanById' },
+    'test_plan_cases': { method: 'getTestPlanCases' },
   };
 
   const mapping = toolMethodMap[toolName];

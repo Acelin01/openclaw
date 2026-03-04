@@ -2170,3 +2170,83 @@ enum worker_services_status {
   PENDING_APPROVAL
   PUBLISHED
 }
+
+// ============================================
+// 项目度量模型
+// ============================================
+model ProjectMetric {
+  id              String                @id @default(uuid())
+  projectId       String?
+  collaborationId String?
+  metricType      String                // total_tasks, completed_tasks, total_defects, etc.
+  metricValue     Int                   @default(0)
+  metricUnit      String?               // count, percentage, hours
+  period          String?               // daily, weekly, monthly
+  recordedAt      DateTime              @default(now())
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
+  project         Project?              @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@index([collaborationId])
+  @@index([metricType])
+  @@map("project_metrics")
+}
+
+// ============================================
+// 工时统计模型
+// ============================================
+model WorkHour {
+  id              String                @id @default(uuid())
+  projectId       String?
+  collaborationId String?
+  taskId          String?
+  userId          String?
+  hours           Float                 @default(0)
+  description     String?               @db.Text
+  workDate        DateTime
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
+  project         Project?              @relation(fields: [projectId], references: [id])
+  task            ProjectTask?          @relation(fields: [taskId], references: [id])
+  user            User?                 @relation(fields: [userId], references: [id])
+
+  @@index([projectId])
+  @@index([collaborationId])
+  @@index([taskId])
+  @@index([userId])
+  @@index([workDate])
+  @@map("work_hours")
+}
+
+// ============================================
+// 测试计划模型
+// ============================================
+model TestPlan {
+  id              String                @id @default(uuid())
+  projectId       String?
+  collaborationId String?
+  title           String
+  description     String?               @db.Text
+  status          TestPlanStatus        @default(DRAFT)
+  startDate       DateTime?
+  endDate         DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  testCases       TestCase[]
+  collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
+  project         Project?              @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@index([collaborationId])
+  @@map("test_plans")
+}
+
+enum TestPlanStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
