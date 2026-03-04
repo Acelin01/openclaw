@@ -164,7 +164,14 @@ export const projectCollaborationMCPTools = {
 };
 
 // 导出工具集
-export { projectManagementTools, requirementManagementTools, taskManagementTools, defectManagementTools };
+export { 
+  projectManagementTools, 
+  requirementManagementTools, 
+  taskManagementTools, 
+  defectManagementTools,
+  metricManagementTools,
+  testPlanManagementTools
+};
 
 export const businessSupportMCPTools = {
   resume_create: {

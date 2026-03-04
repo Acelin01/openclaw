@@ -8,7 +8,9 @@ import {
   projectManagementTools,
   requirementManagementTools,
   taskManagementTools,
-  defectManagementTools
+  defectManagementTools,
+  metricManagementTools,
+  testPlanManagementTools
 } from "./mcp-tools";
 
 /**
