@@ -19,9 +19,9 @@
     {
       "id": "uxin-customer-bot",
       "name": "客户机器人 uxin",
-      "description": "远程服务器上的智能客服机器人",
+      "description": "客户机器上的独立客服机器人",
       "gateway": {
-        "url": "ws://192.168.31.154:60123",
+        "url": "ws://192.168.31.204:60123",
         "token": "openclaw-platform-token-2026",
         "type": "remote"
       },
@@ -29,22 +29,6 @@
       "skills": ["customer-service", "sales", "faq", "technical-support"],
       "status": "active",
       "priority": 2,
-      "server": {
-        "address": "192.168.31.154",
-        "port": 7000,
-        "clientId": "machine-XLY.local"
-      },
-      "proxy": {
-        "name": "openclaw-gateway",
-        "type": "tcp",
-        "localIp": "127.0.0.1",
-        "localPort": 18789,
-        "remotePort": 60123,
-        "healthCheck": {
-          "type": "tcp",
-          "interval": 30
-        }
-      },
       "config": {
         "autoReply": true,
         "workingHours": {
