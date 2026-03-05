@@ -5,10 +5,10 @@
     {
       "id": "local-qwen",
       "name": "本地 Qwen 助手",
-      "description": "本地运行的 Gateway 服务",
+      "description": "本地运行的 openclaw1 Gateway 服务",
       "gateway": {
         "url": "ws://127.0.0.1:19001",
-        "token": "58614bf1ea5d4d30b9f84019c79d85107e2e96a60278e952",
+        "token": "123456",
         "type": "local"
       },
       "model": "deepseek/deepseek-chat",
@@ -17,28 +17,25 @@
       "priority": 1
     },
     {
-      "id": "uxin-customer-bot",
-      "name": "客户机器人 uxin",
-      "description": "客户机器上的独立客服机器人",
+      "id": "machine-xly-customer-bot",
+      "name": "客户机器人 (machine-XLY)",
+      "description": "客户机器上的独立客服机器人 - FRP 公网访问",
       "gateway": {
-        "url": "ws://192.168.31.204:60123",
-        "token": "openclaw-platform-token-2026",
+        "url": "ws://120.26.178.246:60124",
+        "token": "123456",
         "type": "remote"
       },
       "model": "deepseek/deepseek-chat",
       "skills": ["customer-service", "sales", "faq", "technical-support"],
       "status": "active",
       "priority": 2,
-      "config": {
-        "autoReply": true,
-        "workingHours": {
-          "start": "09:00",
-          "end": "18:00"
-        },
-        "greeting": "您好！我是 uxin 客服助手，有什么可以帮助您的吗？",
-        "fallback": "抱歉，我暂时无法回答您的问题，我会为您转接人工客服。",
-        "maxResponseTime": 30000,
-        "language": "zh-CN"
+      "meta": {
+        "machineId": "machine-XLY.local",
+        "deployTime": "2026-03-05T00:31:24",
+        "os": "macOS arm64",
+        "frpServer": "120.26.178.246:7000",
+        "frpProxy": "openclaw-gateway-test",
+        "remotePort": 60124
       }
     }
   ],
