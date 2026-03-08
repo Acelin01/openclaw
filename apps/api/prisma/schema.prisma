@@ -82,6 +82,7 @@ model User {
   userTasks               UserTask[]
   wallet                  Wallet?
   workerProfile           WorkerProfile?
+  WorkHour                WorkHour[]
 
   @@index([departmentId], map: "users_departmentId_fkey")
   @@index([teamId], map: "users_teamId_fkey")
@@ -895,6 +896,9 @@ model Project {
   transactions     Transaction[]
   userTasks        UserTask[]
   agents           Agent[]               @relation("AgentToProject")
+  ProjectMetric    ProjectMetric[]
+  WorkHour         WorkHour[]
+  TestPlan         TestPlan[]
 
   @@index([userId])
   @@index([createdAt])
@@ -923,6 +927,9 @@ model ProjectCollaboration {
   risks            ProjectRisk[]
   tasks            ProjectTask[]
   testCases        TestCase[]
+  ProjectMetric    ProjectMetric[]
+  WorkHour         WorkHour[]
+  TestPlan         TestPlan[]
 
   @@index([aiAppId])
   @@map("project_collaborations")
@@ -1246,6 +1253,7 @@ model ProjectTask {
   project         Project?              @relation(fields: [projectId], references: [id])
   requirement     ProjectRequirement?   @relation(fields: [requirementId], references: [id])
   agents          Agent[]               @relation("AgentToProjectTask")
+  WorkHour        WorkHour[]
 
   @@index([projectId])
   @@index([iterationId])
@@ -1459,6 +1467,8 @@ model TestCase {
   collaboration   ProjectCollaboration? @relation(fields: [collaborationId], references: [id], onDelete: Cascade)
   project         Project?              @relation(fields: [projectId], references: [id])
   testSuite       TestSuite?            @relation(fields: [testSuiteId], references: [id])
+  TestPlan        TestPlan?             @relation(fields: [testPlanId], references: [id])
+  testPlanId      String?
 
   @@index([collaborationId], map: "test_cases_collaborationId_fkey")
   @@index([projectId], map: "test_cases_projectId_fkey")
@@ -2178,10 +2188,10 @@ model ProjectMetric {
   id              String                @id @default(uuid())
   projectId       String?
   collaborationId String?
-  metricType      String                // total_tasks, completed_tasks, total_defects, etc.
+  metricType      String // total_tasks, completed_tasks, total_defects, etc.
   metricValue     Int                   @default(0)
-  metricUnit      String?               // count, percentage, hours
-  period          String?               // daily, weekly, monthly
+  metricUnit      String? // count, percentage, hours
+  period          String? // daily, weekly, monthly
   recordedAt      DateTime              @default(now())
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
