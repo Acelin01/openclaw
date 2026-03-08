@@ -247,6 +247,42 @@ export const getProjectCollaborationTools = (
       ),
     },
     {
+      name: "document_list",
+      description: "获取文档列表。参数可选：project_id(项目 ID), kind(文档类型), status(状态), limit(数量限制), offset(偏移量)",
+      inputSchema: {
+        type: "object",
+        properties: {
+          project_id: { type: "string" },
+          kind: { type: "string" },
+          status: { type: "string", enum: ["draft", "published", "archived"] },
+          limit: { type: "number" },
+          offset: { type: "number" },
+        },
+      },
+      handler: async (args: any) => projectApp.listDocuments(
+        {
+          project_id: args.project_id,
+          kind: args.kind,
+          status: args.status,
+          limit: args.limit,
+          offset: args.offset
+        },
+        context
+      ),
+    },
+    {
+      name: "document_get",
+      description: "获取文档详情。参数：document_id(文档 ID)",
+      inputSchema: {
+        type: "object",
+        properties: {
+          document_id: { type: "string" },
+        },
+        required: ["document_id"],
+      },
+      handler: async (args: any) => projectApp.getDocument(args.document_id, context),
+    },
+    {
       name: "document_query",
       description: "查询文档。参数可选：project_id(项目 ID), kind(文档类型), chat_id(聊天 ID)",
       inputSchema: {
