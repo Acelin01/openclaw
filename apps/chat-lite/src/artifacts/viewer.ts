@@ -25,6 +25,8 @@ import "./defect/detail-element";
 import "./defect/create-element";
 import "./metric/list-element";
 import "./workhour/list-element";
+import "./document/list-element";
+import "./document/detail-element";
 import type { ProjectRequirementArtifactContent } from "./project-requirement/element";
 import type { TestCaseContent } from "./testcase/element";
 import type { RequirementListItem } from "./project-requirement/list-element";
@@ -48,11 +50,13 @@ import type { TaskCreateData } from "./task/create-element";
 import type { Defect, DefectListContent } from "./defect/list-element";
 import type { DefectDetailContent } from "./defect/detail-element";
 import type { DefectCreateData } from "./defect/create-element";
+import type { Document, DocumentListContent } from "./document/list-element";
+import type { DocumentDetailContent } from "./document/detail-element";
 
-export type ArtifactKind = 
-  | "project-requirement" 
-  | "project-requirement-list" 
-  | "testcase" 
+export type ArtifactKind =
+  | "project-requirement"
+  | "project-requirement-list"
+  | "testcase"
   | "iteration-overview"
   | "iteration-list"
   | "iteration-workitems"
@@ -75,6 +79,8 @@ export type ArtifactKind =
   | "defect-create"
   | "metric-list"
   | "workhour-list"
+  | "document-list"
+  | "document-detail"
   | string;
 
 export interface ArtifactContent {
@@ -173,6 +179,10 @@ export class ArtifactViewer extends LitElement {
         return this._renderMetricList();
       case "workhour-list":
         return this._renderWorkHourList();
+      case "document-list":
+        return this._renderDocumentList();
+      case "document-detail":
+        return this._renderDocumentDetail();
       default:
         return html`<div class="empty">未知 artifact 类型：${this.content.kind}</div>`;
     }
@@ -575,6 +585,43 @@ export class ArtifactViewer extends LitElement {
           totalHours: data.totalHours
         }}
       ></chatlite-workhour-list>
+    `;
+  }
+
+  private _renderDocumentList() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<DocumentListContent>;
+
+    return html`
+      <chatlite-document-list
+        .content=${{
+          kind: "document-list",
+          documents: data.documents || [],
+          projectId: data.projectId,
+          title: data.title || "文档列表"
+        }}
+        .editable=${this.editable}
+      ></chatlite-document-list>
+    `;
+  }
+
+  private _renderDocumentDetail() {
+    if (!this.content) return html``;
+    const data = this.content.data as Partial<DocumentDetailContent>;
+
+    return html`
+      <chatlite-document-detail
+        .content=${{
+          kind: "document-detail",
+          document: data.document || {
+            id: "",
+            title: "未命名文档",
+            kind: "text",
+            status: "draft"
+          }
+        }}
+        .editable=${this.editable}
+      ></chatlite-document-detail>
     `;
   }
 }
