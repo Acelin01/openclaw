@@ -1,5 +1,4 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
 import type { ProjectRequirement } from "../../client/chat-client";
 
 export interface ProjectRequirementArtifactContent {
@@ -9,7 +8,7 @@ export interface ProjectRequirementArtifactContent {
   onSave?: (content: string) => void;
 }
 
-@customElement("chatlite-project-requirement")
+// 不使用任何装饰器的纯 Lit 组件
 export class ProjectRequirementArtifact extends LitElement {
   static styles = css`
     :host {
@@ -47,53 +46,35 @@ export class ProjectRequirementArtifact extends LitElement {
       font-weight: 500;
     }
 
-    .status-draft {
-      background: #fef3c7;
-      color: #92400e;
-    }
+    .status-draft { background: #f3f4f6; color: #6b7280; }
+    .status-pending { background: #fef3c7; color: #d97706; }
+    .status-in-progress { background: #dbeafe; color: #2563eb; }
+    .status-completed { background: #d1fae5; color: #059669; }
+    .status-cancelled { background: #fee2e2; color: #dc2626; }
 
-    .status-pending_review {
-      background: #dbeafe;
-      color: #1e40af;
-    }
+    .section { margin-bottom: 16px; }
 
-    .status-approved {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    .status-rejected {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .section {
-      margin-bottom: 16px;
-    }
-
-    .section-label {
+    .section-title {
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600;
       color: #6b7280;
       margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .description {
-      font-size: 0.875rem;
-      line-height: 1.6;
+      font-size: 0.938rem;
       color: #374151;
-      white-space: pre-wrap;
+      line-height: 1.6;
     }
 
     .meta {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 12px;
-      padding: 12px;
-      background: #f9fafb;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      color: #6b7280;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
     }
 
     .meta-item {
@@ -103,205 +84,91 @@ export class ProjectRequirementArtifact extends LitElement {
     }
 
     .meta-label {
-      font-weight: 500;
-      color: #9ca3af;
+      font-size: 0.75rem;
+      color: #6b7280;
     }
 
-    .actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid #e5e7eb;
-    }
-
-    button {
-      padding: 8px 16px;
-      border-radius: 6px;
+    .meta-value {
       font-size: 0.875rem;
+      color: #111827;
       font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
     }
 
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-      border: none;
-    }
-
-    .btn-primary:hover {
-      background: #2563eb;
-    }
-
-    .btn-secondary {
-      background: white;
-      color: #374151;
-      border: 1px solid #d1d5db;
-    }
-
-    .btn-secondary:hover {
-      background: #f9fafb;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 100px;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-family: inherit;
-      resize: vertical;
-    }
-
-    textarea:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
+    .priority-high { color: #dc2626; }
+    .priority-medium { color: #d97706; }
+    .priority-low { color: #2563eb; }
   `;
 
-  @property({ type: Object })
-  content: ProjectRequirementArtifactContent | null = null;
+  // 使用静态 properties 定义（不使用装饰器）
+  static properties = {
+    requirement: { type: Object },
+    editable: { type: Boolean },
+    onSave: { attribute: false },
+    isEditing: { type: Boolean },
+    editContent: { type: String },
+  };
 
-  @property({ type: Boolean })
+  requirement: ProjectRequirement | null = null;
   editable = false;
-
-  @state()
+  onSave?: (content: string) => void;
   private isEditing = false;
-
-  @state()
-  private editDescription = "";
+  private editContent = "";
 
   render() {
-    if (!this.content?.requirement) {
-      return html`<div class="container">暂无需求内容</div>`;
+    if (!this.requirement) {
+      return html`<div class="container">暂无数据</div>`;
     }
 
-    const req = this.content.requirement;
-    const statusClass = `status status-${req.status}`;
-    const statusText = this._getStatusText(req.status);
+    const statusClass = `status-${(this.requirement.status || "draft").toLowerCase()}`;
+    const statusLabels: Record<string, string> = {
+      draft: "草稿",
+      pending: "待处理",
+      "in-progress": "进行中",
+      completed: "已完成",
+      cancelled: "已取消",
+    };
+
+    const priorityClass = `priority-${(this.requirement.priority || "medium").toLowerCase()}`;
+    const priorityLabels: Record<string, string> = {
+      low: "低",
+      medium: "中",
+      high: "高",
+    };
 
     return html`
       <div class="container">
         <div class="header">
-          <h2 class="title">${req.title}</h2>
-          <span class="${statusClass}">${statusText}</span>
+          <h2 class="title">${this.requirement.title}</h2>
+          <span class="status ${statusClass}">${statusLabels[this.requirement.status || "draft"] || this.requirement.status}</span>
         </div>
 
-        ${this.isEditing && this.editable
-          ? html`
-              <div class="section">
-                <label class="section-label">描述</label>
-                <textarea
-                  value=${this.editDescription}
-                  @input=${this._handleDescriptionInput}
-                ></textarea>
-              </div>
-              <div class="actions">
-                <button class="btn-primary" @click=${this._handleSave}>
-                  保存
-                </button>
-                <button class="btn-secondary" @click=${this._handleCancel}>
-                  取消
-                </button>
-              </div>
-            `
-          : html`
-              <div class="section">
-                <div class="section-label">描述</div>
-                <div class="description">${req.description}</div>
-              </div>
+        ${this.requirement.description ? html`
+          <div class="section">
+            <div class="section-title">描述</div>
+            <div class="description">${this.requirement.description}</div>
+          </div>
+        ` : ""}
 
-              <div class="meta">
-                <div class="meta-item">
-                  <span class="meta-label">ID</span>
-                  <span>${req.id}</span>
-                </div>
-                <div class="meta-item">
-                  <span class="meta-label">创建时间</span>
-                  <span>${this._formatTime(req.createdAt)}</span>
-                </div>
-                <div class="meta-item">
-                  <span class="meta-label">更新时间</span>
-                  <span>${this._formatTime(req.updatedAt)}</span>
-                </div>
-              </div>
-
-              ${this.editable
-                ? html`
-                    <div class="actions">
-                      <button
-                        class="btn-primary"
-                        @click=${this._handleEdit}
-                      >
-                        编辑
-                      </button>
-                      <button class="btn-secondary">
-                        提交审核
-                      </button>
-                    </div>
-                  `
-                : html`
-                    <div class="meta" style="margin-top: 12px;">
-                      <div class="meta-item">
-                        <span class="meta-label">Artifact Kind</span>
-                        <span>${this.content.kind}</span>
-                      </div>
-                    </div>
-                  `}
-            `}
+        <div class="meta">
+          <div class="meta-item">
+            <span class="meta-label">优先级</span>
+            <span class="meta-value ${priorityClass}">${priorityLabels[this.requirement.priority || "medium"] || this.requirement.priority}</span>
+          </div>
+          ${this.requirement.assigneeId ? html`
+            <div class="meta-item">
+              <span class="meta-label">负责人</span>
+              <span class="meta-value">${this.requirement.assigneeId}</span>
+            </div>
+          ` : ""}
+          <div class="meta-item">
+            <span class="meta-label">创建时间</span>
+            <span class="meta-value">${this.requirement.createdAt ? new Date(this.requirement.createdAt).toLocaleDateString("zh-CN") : "-"}</span>
+          </div>
+        </div>
       </div>
     `;
   }
-
-  private _getStatusText(status: string): string {
-    const statusMap: Record<string, string> = {
-      draft: "草稿",
-      pending_review: "待审核",
-      approved: "已批准",
-      rejected: "已拒绝",
-    };
-    return statusMap[status] || status;
-  }
-
-  private _formatTime(timestamp: number): string {
-    return new Date(timestamp).toLocaleString("zh-CN");
-  }
-
-  private _handleEdit() {
-    if (this.content?.requirement) {
-      this.editDescription = this.content.requirement.description;
-      this.isEditing = true;
-    }
-  }
-
-  private _handleDescriptionInput(e: Event) {
-    const target = e.target as HTMLTextAreaElement;
-    this.editDescription = target.value;
-  }
-
-  private _handleSave() {
-    if (this.content && this.content.onSave) {
-      const updated = {
-        ...this.content.requirement,
-        description: this.editDescription,
-        updatedAt: Date.now(),
-      };
-      this.content.onSave(JSON.stringify(updated, null, 2));
-      this.isEditing = false;
-    }
-  }
-
-  private _handleCancel() {
-    this.isEditing = false;
-    this.editDescription = "";
-  }
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "chatlite-project-requirement": ProjectRequirementArtifact;
-  }
-}
+// 手动注册组件
+customElements.define("chatlite-project-requirement", ProjectRequirementArtifact);

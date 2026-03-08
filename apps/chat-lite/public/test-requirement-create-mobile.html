@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>新建需求 - ChatLite</title>
+  <style>
+    :root {
+      --primary: #52c41a;
+      --primary-hover: #73d13d;
+      --error: #ff4d4f;
+      --warning: #faad14;
+      --text-primary: #262626;
+      --text-secondary: #595959;
+      --text-tertiary: #8c8c8c;
+      --border: #d9d9d9;
+      --bg: #f5f5f5;
+      --card: #ffffff;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 12px;
+      padding-top: calc(12px + var(--safe-top));
+      padding-bottom: calc(12px + var(--safe-bottom));
+    }
+
+    .container { max-width: 100%; margin: 0 auto; }
+    
+    .header {
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 { font-size: 20px; color: var(--text-primary); }
+    #status { font-size: 13px; }
+    #status.success { color: var(--primary); }
+    #status.error { color: var(--error); }
+    
+    /* 触发按钮卡片 */
+    .trigger-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 32px 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+    }
+    .trigger-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      background: var(--primary);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+    }
+    .trigger-icon svg { stroke: white; }
+    .trigger-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .trigger-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
+    .trigger-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+      transition: all 0.2s;
+    }
+    .trigger-btn:active { transform: scale(0.98); }
+    
+    /* 抽屉式弹框 */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+      animation: fadeIn 0.3s;
+    }
+    .drawer-overlay.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    .drawer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      background: var(--bg);
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
+    }
+    .drawer.active { transform: translateY(0); }
+    
+    /* 抽屉头部 */
+    .drawer-header {
+      background: var(--card);
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .drawer-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+    .drawer-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+    .drawer-header-title { font-size: 17px; font-weight: 600; }
+    .drawer-save-btn {
+      padding: 8px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    /* 抽屉内容 */
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 16px;
+    }
+    
+    /* 表单卡片 */
+    .form-card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .form-section {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .form-section:last-child { border-bottom: none; }
+    
+    .form-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .form-label.required::after { content: '*'; color: var(--error); }
+    
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      background: white;
+      transition: all 0.2s;
+      font-family: inherit;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1);
+    }
+    .form-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+    
+    /* 标题输入 */
+    .title-wrapper { position: relative; }
+    .char-count {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      pointer-events: none;
+    }
+    .char-count.warning { color: var(--warning); }
+    .char-count.error { color: var(--error); }
+    
+    /* 富文本工具栏 */
+    .toolbar {
+      display: flex;
+      gap: 4px;
+      padding: 8px;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .toolbar::-webkit-scrollbar { display: none; }
+    .toolbar-btn {
+      padding: 8px;
+      border: 1px solid transparent;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-secondary);
+      min-width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toolbar-btn:active { background: #f5f5f5; }
+    .toolbar-sep { width: 1px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
+    
+    /* 优先级选择器 */
+    .priority-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .priority-option {
+      padding: 10px 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .priority-option:active { transform: scale(0.95); }
+    .priority-option.selected { border-color: transparent; color: white; }
+    .priority-option[data-value="LOW"] { background: #f6ffed; color: #389e0d; }
+    .priority-option[data-value="MEDIUM"] { background: #f0f5ff; color: #2f54eb; }
+    .priority-option[data-value="HIGH"] { background: #fff7e6; color: #d46b08; }
+    .priority-option[data-value="CRITICAL"] { background: #fff1f0; color: #cf1322; }
+    .priority-option.selected[data-value="LOW"] { background: #52c41a; }
+    .priority-option.selected[data-value="MEDIUM"] { background: #2f54eb; }
+    .priority-option.selected[data-value="HIGH"] { background: #d46b08; }
+    .priority-option.selected[data-value="CRITICAL"] { background: #cf1322; }
+    
+    /* 父项选择器 */
+    .parent-selector {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: white;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    .parent-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--primary);
+    }
+    .parent-chip-remove {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(82, 196, 26, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .parent-placeholder {
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+    
+    /* 父项搜索弹框 */
+    .parent-modal {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+      z-index: 2000;
+      max-height: 70vh;
+      overflow: hidden;
+      animation: slideUp 0.3s;
+    }
+    .parent-modal.active { display: block; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    
+    .parent-modal-header {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .parent-modal-title { font-size: 16px; font-weight: 600; }
+    .parent-modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .parent-search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 15px;
+      outline: none;
+    }
+    .parent-results {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .parent-item {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+    .parent-item:active { background: #f5f5f5; }
+    .parent-item-title {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .parent-item-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    
+    /* 迭代选择器 */
+    .iteration-select-wrapper { position: relative; }
+    .iteration-dropdown {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+      z-index: 2000;
+      max-height: 60vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s;
+    }
+    .iteration-dropdown.active { display: block; }
+    .iteration-option {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+    .iteration-option:active { background: #f5f5f5; }
+    .iteration-option.selected { background: #e6f7ff; }
+    .iteration-option-title {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .iteration-option-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    
+    /* 底部操作栏 */
+    .drawer-footer {
+      padding: 16px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      padding-bottom: calc(16px + var(--safe-bottom));
+    }
+    .drawer-footer .btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-cancel { background: white; color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:disabled { background: var(--text-tertiary); cursor: not-allowed; }
+    
+    /* 错误提示 */
+    .error-message {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 6px;
+      display: none;
+    }
+    .error-message.show { display: block; }
+    .form-input.error { border-color: var(--error); }
+    
+    /* 提示信息 */
+    .tip-box {
+      margin: 16px;
+      padding: 14px;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      border-radius: 8px;
+    }
+    .tip-box-content {
+      font-size: 13px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* 桌面端适配 */
+    @media (min-width: 768px) {
+      .drawer {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+        border-radius: 16px 16px 0 0;
+      }
+      .drawer.active { transform: translateX(-50%) translateY(0); }
+      .parent-modal, .iteration-dropdown {
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+      }
+      .parent-modal.active, .iteration-dropdown.active {
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📝 新建需求</h1>
+      <span id="status">准备就绪</span>
+    </div>
+    
+    <div class="trigger-card">
+      <div class="trigger-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="trigger-title">创建新需求</div>
+      <div class="trigger-desc">使用 uxin-mcp 技能服务创建项目需求</div>
+      <button class="trigger-btn" onclick="openDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        新建需求
+      </button>
+    </div>
+  </div>
+  
+  <!-- 抽屉式弹框 -->
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-header-top">
+        <button class="drawer-close" onclick="closeDrawer()">✕</button>
+        <span class="drawer-header-title">新建需求</span>
+        <button class="drawer-save-btn" onclick="createRequirement()">保存</button>
+      </div>
+    </div>
+    
+    <div class="drawer-body">
+      <!-- 基本信息卡片 -->
+      <div class="form-card">
+        <div class="form-section">
+          <label class="form-label required">标题</label>
+          <div class="title-wrapper">
+            <input type="text" id="req-title" class="form-input" placeholder="请输入需求标题" maxlength="200" oninput="updateCharCount()">
+            <span class="char-count" id="char-count">0/200</span>
+          </div>
+          <div class="error-message" id="title-error">请输入需求标题</div>
+        </div>
+        
+        <div class="form-section">
+          <label class="form-label">描述</label>
+          <div class="toolbar">
+            <button class="toolbar-btn" onclick="formatDoc('bold')"><b>B</b></button>
+            <button class="toolbar-btn" onclick="formatDoc('italic')"><i>I</i></button>
+            <button class="toolbar-btn" onclick="formatDoc('underline')"><u>U</u></button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn" onclick="formatDoc('insertUnorderedList')">•</button>
+            <button class="toolbar-btn" onclick="formatDoc('insertOrderedList')">1.</button>
+          </div>
+          <textarea id="req-description" class="form-textarea" placeholder="请详细描述需求内容..."></textarea>
+        </div>
+      </div>
+      
+      <!-- 详细信息卡片 -->
+      <div class="form-card">
+        <div class="form-section">
+          <label class="form-label">项目</label>
+          <select id="req-project" class="form-select">
+            <option value="proj-uxin">uxin 项目</option>
+          </select>
+        </div>
+        
+        <div class="form-section">
+          <label class="form-label">父项需求</label>
+          <div class="parent-selector" onclick="openParentSearch()">
+            <div id="parent-selected">
+              <span class="parent-placeholder">+ 选择父项需求（可选）</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-section">
+          <label class="form-label">优先级</label>
+          <div class="priority-options" id="priority-options">
+            <div class="priority-option" data-value="LOW" onclick="selectPriority('LOW')">低</div>
+            <div class="priority-option selected" data-value="MEDIUM" onclick="selectPriority('MEDIUM')">中</div>
+            <div class="priority-option" data-value="HIGH" onclick="selectPriority('HIGH')">高</div>
+            <div class="priority-option" data-value="CRITICAL" onclick="selectPriority('CRITICAL')">紧急</div>
+          </div>
+          <input type="hidden" id="req-priority" value="MEDIUM">
+        </div>
+        
+        <div class="form-section">
+          <label class="form-label">负责人</label>
+          <select id="req-assignee" class="form-select">
+            <option value="">未分配</option>
+            <option value="test@uxin.com">test@uxin.com</option>
+            <option value="lenny540101@163.com">lenny540101@163.com</option>
+          </select>
+        </div>
+        
+        <div class="form-section">
+          <label class="form-label">迭代</label>
+          <div class="iteration-select-wrapper">
+            <select id="req-iteration" class="form-select" onclick="toggleIterationDropdown()">
+              <option value="">未分配</option>
+            </select>
+            <div class="iteration-dropdown" id="iteration-dropdown"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <div class="tip-box-content">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          创建后会自动通知相关人员
+        </div>
+      </div>
+    </div>
+    
+    <div class="drawer-footer">
+      <button class="btn btn-cancel" onclick="closeDrawer()">取消</button>
+      <button class="btn btn-primary" id="create-btn" onclick="createRequirement()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        创建需求
+      </button>
+    </div>
+  </div>
+  
+  <!-- 父项搜索弹框 -->
+  <div class="parent-modal" id="parent-modal">
+    <div class="parent-modal-header">
+      <span class="parent-modal-title">选择父项需求</span>
+      <button class="parent-modal-close" onclick="closeParentSearch()">✕</button>
+    </div>
+    <input type="text" class="parent-search-input" id="parent-search" placeholder="搜索需求标题..." oninput="searchParentRequirements()">
+    <div class="parent-results" id="parent-results"></div>
+  </div>
+  
+  <!-- 迭代选择弹框 -->
+  <div class="iteration-dropdown" id="iteration-dropdown-full"></div>
+
+  <script>
+    let authToken = '';
+    let currentPriority = 'MEDIUM';
+    let selectedParent = null;
+    let allRequirements = [];
+    
+    // 打开抽屉
+    function openDrawer() {
+      document.getElementById('drawer-overlay').classList.add('active');
+      document.getElementById('drawer').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      loadAllRequirements();
+      loadIterations();
+    }
+    
+    // 关闭抽屉
+    function closeDrawer() {
+      document.getElementById('drawer-overlay').classList.remove('active');
+      document.getElementById('drawer').classList.remove('active');
+      document.body.style.overflow = '';
+      clearForm();
+    }
+    
+    // 清空表单
+    function clearForm() {
+      document.getElementById('req-title').value = '';
+      document.getElementById('req-description').value = '';
+      document.getElementById('req-priority').value = 'MEDIUM';
+      document.getElementById('req-assignee').value = '';
+      document.getElementById('req-iteration').value = '';
+      currentPriority = 'MEDIUM';
+      selectedParent = null;
+      updatePriorityUI();
+      updateCharCount();
+      updateParentUI();
+      clearErrors();
+    }
+    
+    // 清除错误
+    function clearErrors() {
+      document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+    }
+    
+    // 更新字符计数
+    function updateCharCount() {
+      const title = document.getElementById('req-title').value;
+      const countEl = document.getElementById('char-count');
+      const count = title.length;
+      countEl.textContent = `${count}/200`;
+      countEl.classList.remove('warning', 'error');
+      if (count > 180) countEl.classList.add('error');
+      else if (count > 150) countEl.classList.add('warning');
+    }
+    
+    // 选择优先级
+    function selectPriority(value) {
+      currentPriority = value;
+      document.getElementById('req-priority').value = value;
+      updatePriorityUI();
+    }
+    
+    // 更新优先级 UI
+    function updatePriorityUI() {
+      document.querySelectorAll('.priority-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.value === currentPriority);
+      });
+    }
+    
+    // 格式化文档
+    function formatDoc(cmd) {
+      document.execCommand(cmd, false, null);
+    }
+    
+    // 加载所有需求
+    async function loadAllRequirements() {
+      try {
+        const res = await fetch('http://localhost:8000/api/v1/project-requirements?projectId=proj-uxin&take=100', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          allRequirements = data.data.filter(r => r.status !== 'COMPLETED');
+        }
+      } catch (e) { console.error(e); }
+    }
+    
+    // 打开父项搜索
+    function openParentSearch() {
+      document.getElementById('parent-modal').classList.add('active');
+      document.getElementById('parent-search').focus();
+      renderParentResults(allRequirements);
+    }
+    
+    // 关闭父项搜索
+    function closeParentSearch() {
+      document.getElementById('parent-modal').classList.remove('active');
+    }
+    
+    // 搜索父项
+    function searchParentRequirements() {
+      const query = document.getElementById('parent-search').value.toLowerCase();
+      const filtered = allRequirements.filter(r => r.title.toLowerCase().includes(query));
+      renderParentResults(filtered);
+    }
+    
+    // 渲染父项结果
+    function renderParentResults(requirements) {
+      const container = document.getElementById('parent-results');
+      if (requirements.length === 0) {
+        container.innerHTML = '<div class="parent-item"><div class="parent-item-title">暂无匹配</div></div>';
+        return;
+      }
+      container.innerHTML = requirements.map(req => `
+        <div class="parent-item" onclick="selectParent('${req.id}', '${req.title.replace(/'/g, "\\'")}')">
+          <div class="parent-item-title">${req.title}</div>
+          <div class="parent-item-meta">ID: ${req.id} · ${formatDate(req.createdAt)}</div>
+        </div>
+      `).join('');
+    }
+    
+    // 选择父项
+    function selectParent(id, title) {
+      selectedParent = { id, title };
+      updateParentUI();
+      closeParentSearch();
+    }
+    
+    // 更新父项 UI
+    function updateParentUI() {
+      const container = document.getElementById('parent-selected');
+      if (selectedParent) {
+        container.innerHTML = `<span class="parent-chip">${selectedParent.title}<span class="parent-chip-remove" onclick="clearParent(event)">✕</span></span>`;
+      } else {
+        container.innerHTML = '<span class="parent-placeholder">+ 选择父项需求（可选）</span>';
+      }
+    }
+    
+    // 清除父项
+    function clearParent(e) {
+      e.stopPropagation();
+      selectedParent = null;
+      updateParentUI();
+    }
+    
+    // 加载迭代
+    function loadIterations() {
+      const iterations = [
+        { id: 'iter-1', title: '迭代 1 - 基础功能', startDate: '2026-03-01', endDate: '2026-03-15' },
+        { id: 'iter-2', title: '迭代 2 - 高级功能', startDate: '2026-03-16', endDate: '2026-03-31' },
+        { id: 'iter-3', title: '迭代 3 - 性能优化', startDate: '2026-04-01', endDate: '2026-04-15' }
+      ];
+      
+      const select = document.getElementById('req-iteration');
+      const dropdown = document.getElementById('iteration-dropdown');
+      const dropdownFull = document.getElementById('iteration-dropdown-full');
+      
+      iterations.forEach(iter => {
+        const option = document.createElement('option');
+        option.value = iter.id;
+        option.textContent = iter.title;
+        select.appendChild(option);
+      });
+      
+      const html = iterations.map(iter => `
+        <div class="iteration-option" onclick="selectIteration('${iter.id}')">
+          <div class="iteration-option-title">${iter.title}</div>
+          <div class="iteration-option-meta">${iter.startDate} ~ ${iter.endDate}</div>
+        </div>
+      `).join('');
+      
+      dropdown.innerHTML = html;
+      dropdownFull.innerHTML = html;
+    }
+    
+    // 切换迭代下拉
+    function toggleIterationDropdown() {
+      const dropdown = document.getElementById('iteration-dropdown');
+      const dropdownFull = document.getElementById('iteration-dropdown-full');
+      if (window.innerWidth < 768) {
+        dropdownFull.classList.add('active');
+      } else {
+        dropdown.classList.toggle('active');
+      }
+    }
+    
+    // 选择迭代
+    function selectIteration(id) {
+      document.getElementById('req-iteration').value = id;
+      document.querySelectorAll('.iteration-option').forEach(opt => opt.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+      document.getElementById('iteration-dropdown').classList.remove('active');
+      document.getElementById('iteration-dropdown-full').classList.remove('active');
+    }
+    
+    // 登录
+    async function login() {
+      try {
+        const res = await fetch('http://localhost:8000/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'test@uxin.com', password: 'test123' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          authToken = data.data.token;
+          return true;
+        }
+        return false;
+      } catch (e) { return false; }
+    }
+    
+    // 创建需求
+    async function createRequirement() {
+      clearErrors();
+      const title = document.getElementById('req-title').value.trim();
+      const description = document.getElementById('req-description').value.trim();
+      const priority = document.getElementById('req-priority').value;
+      const projectId = document.getElementById('req-project').value;
+      const assigneeId = document.getElementById('req-assignee').value;
+      const iterationId = document.getElementById('req-iteration').value;
+      
+      if (!title) {
+        document.getElementById('req-title').classList.add('error');
+        document.getElementById('title-error').classList.add('show');
+        return;
+      }
+      
+      const btn = document.getElementById('create-btn');
+      btn.disabled = true;
+      btn.innerHTML = '创建中...';
+      
+      try {
+        const res = await fetch('http://localhost:8000/api/v1/project-requirements', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            title, description, priority, projectId,
+            status: 'PENDING',
+            assigneeId: assigneeId || null,
+            iterationId: iterationId || null,
+            parentId: selectedParent?.id || null
+          })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          alert('✅ 创建成功！');
+          closeDrawer();
+          window.location.href = '/test-requirement-list.html';
+        } else {
+          alert('❌ 创建失败：' + data.message);
+          btn.disabled = false;
+          btn.innerHTML = '创建需求';
+        }
+      } catch (e) {
+        alert('❌ 创建失败：' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = '创建需求';
+      }
+    }
+    
+    function getStatusLabel(status) {
+      const map = { PENDING: '待处理', IN_PROGRESS: '进行中', COMPLETED: '已完成' };
+      return map[status] || status;
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      return new Date(dateStr).toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+    }
+    
+    // 点击外部关闭弹框
+    document.addEventListener('click', function(e) {
+      const parentModal = document.getElementById('parent-modal');
+      const iterationDropdown = document.getElementById('iteration-dropdown-full');
+      if (!parentModal.contains(e.target) && !e.target.closest('.parent-selector')) {
+        parentModal.classList.remove('active');
+      }
+      if (!iterationDropdown.contains(e.target) && !e.target.closest('#req-iteration')) {
+        iterationDropdown.classList.remove('active');
+      }
+    });
+    
+    // 初始化
+    async function init() {
+      const success = await login();
+      const statusEl = document.getElementById('status');
+      if (success) {
+        statusEl.textContent = '✅ 已登录';
+        statusEl.className = 'success';
+      } else {
+        statusEl.textContent = '❌ 登录失败';
+        statusEl.className = 'error';
+      }
+    }
+    
+    init();
+  </script>
+</body>
+</html>

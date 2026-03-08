@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>需求列表 Artifact 测试 - ChatLite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      font-size: 24px;
+      color: #1f1f1f;
+    }
+    .status {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .status.success { color: #10b981; }
+    .status.error { color: #ef4444; }
+    #artifact-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      min-height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 需求列表 Artifact 测试</h1>
+      <span id="status" class="status">加载中...</span>
+    </div>
+    
+    <div id="artifact-container">
+      <chatlite-artifact-viewer id="viewer"></chatlite-artifact-viewer>
+    </div>
+  </div>
+
+  <script type="module" src="/test-artifact.js"></script>
+</body>
+</html>

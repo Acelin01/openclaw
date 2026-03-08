@@ -413,23 +413,6 @@ export class ArtifactViewer extends LitElement {
     `;
   }
 
-  private _renderRequirementList() {
-    if (!this.content) return html``;
-    const data = this.content.data as Partial<RequirementListContent>;
-
-    return html`
-      <chatlite-requirement-list
-        .content=${{
-          kind: "requirement-list",
-          requirements: data.requirements || [],
-          projectId: data.projectId,
-          title: data.title || "需求列表"
-        }}
-        .editable=${this.editable}
-      ></chatlite-requirement-list>
-    `;
-  }
-
   private _renderRequirementDetail() {
     if (!this.content) return html``;
     const data = this.content.data as Partial<RequirementDetailContent>;

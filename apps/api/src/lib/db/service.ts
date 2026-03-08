@@ -2105,6 +2105,77 @@ export class DatabaseService {
     return p.projectRequirement.update({ where: { id }, data });
   }
 
+  async getProjectRequirementById(id: string) {
+    if (!prisma) return null;
+    const p: any = prisma;
+    return p.projectRequirement.findUnique({
+      where: { id },
+      include: { 
+        tasks: true, 
+        assignee: true, 
+        reporter: true,
+        project: true,
+        iteration: true,
+        collaboration: true
+      }
+    });
+  }
+
+  async deleteProjectRequirement(id: string) {
+    if (!prisma) throw new Error('Database not available');
+    const p: any = prisma;
+    return p.projectRequirement.delete({ where: { id } });
+  }
+
+  async searchRequirements(query: string, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 20, projectId } = options;
+    const p: any = prisma;
+    
+    const where: any = {
+      OR: [
+        { title: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } }
+      ]
+    };
+    
+    if (projectId) {
+      where.projectId = projectId;
+    }
+    
+    return p.projectRequirement.findMany({
+      where,
+      skip,
+      take,
+      include: { tasks: true, assignee: true, reporter: true },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+
+  async getRequirementsByProject(projectId: string, options: any = {}) {
+    if (!prisma) return [];
+    const { skip = 0, take = 20, sortBy = 'createdAt', sortOrder = 'desc', status, priority } = options;
+    const p: any = prisma;
+    
+    const where: any = { projectId };
+    if (status) where.status = status;
+    if (priority) where.priority = priority;
+    
+    return p.projectRequirement.findMany({
+      where,
+      skip,
+      take,
+      include: { tasks: true, assignee: true, reporter: true },
+      orderBy: { [sortBy]: sortOrder }
+    });
+  }
+
+  async getRequirementsCount(where: any = {}) {
+    if (!prisma) return 0;
+    const p: any = prisma;
+    return p.projectRequirement.count({ where });
+  }
+
   // Project Tasks
   async getProjectTasks(where: any = {}, options: any = {}) {
     if (!prisma) return [];

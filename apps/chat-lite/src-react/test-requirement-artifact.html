@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>需求列表 Artifact 测试 - ChatLite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      font-size: 24px;
+      color: #1f1f1f;
+    }
+    .status {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .status.success { color: #10b981; }
+    .status.error { color: #ef4444; }
+    #artifact-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      min-height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 需求列表 Artifact 测试</h1>
+      <span id="status" class="status">加载中...</span>
+    </div>
+    
+    <div id="artifact-container">
+      <chatlite-artifact-viewer id="viewer"></chatlite-artifact-viewer>
+    </div>
+  </div>
+
+  <script type="module">
+    // 导入 Lit Web Components (使用绝对路径从 apps/chat-lite 根目录)
+    import './artifacts/viewer.js';
+    import './artifacts/project-requirement/list-element.js';
+    import './artifacts/requirement/list-element.js';
+
+    const statusEl = document.getElementById('status');
+    const viewer = document.getElementById('viewer');
+
+    // 获取认证 token
+    async function login() {
+      try {
+        const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'test@uxin.com', password: 'test123' })
+        });
+        const data = await response.json();
+        if (data.success) {
+          return data.data.token;
+        }
+        throw new Error('登录失败');
+      } catch (error) {
+        console.error('登录错误:', error);
+        return null;
+      }
+    }
+
+    // 获取需求列表
+    async function loadRequirements(token) {
+      try {
+        const response = await fetch('http://localhost:8000/api/v1/project-requirements?projectId=proj-uxin', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+          return data.data;
+        }
+        throw new Error('获取需求失败');
+      } catch (error) {
+        console.error('获取需求错误:', error);
+        return null;
+      }
+    }
+
+    // 主函数
+    async function init() {
+      const token = await login();
+      if (!token) {
+        statusEl.textContent = '❌ 登录失败';
+        statusEl.className = 'status error';
+        return;
+      }
+
+      const requirements = await loadRequirements(token);
+      if (!requirements) {
+        statusEl.textContent = '❌ 加载失败';
+        statusEl.className = 'status error';
+        return;
+      }
+
+      // 设置 artifact 内容
+      const artifactContent = {
+        kind: 'project-requirement-list',
+        data: {
+          title: '全部需求',
+          requirements: requirements.map(req => ({
+            id: req.id,
+            title: req.title,
+            description: req.description,
+            status: (req.status || 'PENDING').toLowerCase(),
+            priority: (req.priority || 'MEDIUM').toLowerCase(),
+            assignee: req.assigneeId,
+            creator: req.reporterId,
+            createdAt: new Date(req.createdAt).getTime()
+          }))
+        }
+      };
+
+      // 渲染 artifact
+      viewer.content = artifactContent;
+
+      statusEl.textContent = `✅ 成功加载 ${requirements.length} 条需求`;
+      statusEl.className = 'status success';
+
+      console.log('✅ Artifact 渲染成功:', artifactContent);
+    }
+
+    // 启动
+    init();
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 ---
 name: uxin-mcp
-description: 综合项目管理工具，支持项目创建、任务管理、团队协作、里程碑追踪、需求管理、缺陷追踪、风险管理及自由职业者服务管理。
+description: 综合项目管理工具，支持项目创建、任务管理、团队协作、里程碑追踪、需求管理、缺陷追踪、风险管理、文档管理及自由职业者服务管理。
 homepage: http://localhost:8000
 metadata:
   {
@@ -92,30 +92,30 @@ metadata:
 ### 项目操作
 
 - 创建项目：`project_create` - 需要参数：name(项目名称), description(描述)
-- 查询项目：`project_query` - 参数：project_id(项目ID) 或 filter(筛选条件)
+- 查询项目：`project_query` - 参数：project_id(项目 ID) 或 filter(筛选条件)
 
 ### 里程碑管理
 
-- 创建里程碑：`milestone_create` - 参数：project_id(项目ID), title(里程碑标题)
+- 创建里程碑：`milestone_create` - 参数：project_id(项目 ID), title(里程碑标题)
 - 监控里程碑：`milestone_monitor` - 获取项目所有里程碑的当前进展、截止日期等信息
 
 ### 需求管理
 
-- 创建需求：`requirement_create` - 参数：project_id(项目ID), title(需求标题)
+- 创建需求：`requirement_create` - 参数：project_id(项目 ID), title(需求标题)
 
 ## 任务管理
 
 ### 任务操作
 
-- 创建任务：`task_create` - 参数：project_id(项目ID), requirement_id(可选)
-- 更新任务状态：`task_update_status` - 参数：task_id(任务ID), status(新状态：pending/in_progress/completed)
+- 创建任务：`task_create` - 参数：project_id(项目 ID), requirement_id(可选)
+- 更新任务状态：`task_update_status` - 参数：task_id(任务 ID), status(新状态：pending/in_progress/completed)
 - 任务列表：`task_list` - 查看项目下的所有任务列表及当前进度，参数：project_id
 
 ## 团队协作
 
 ### 团队管理
 
-- 添加成员：`team_add_member` - 参数：project_id(项目ID), user_id(用户ID)
+- 添加成员：`team_add_member` - 参数：project_id(项目 ID), user_id(用户 ID)
 
 ### 智能协作
 
@@ -126,24 +126,56 @@ metadata:
 
 ### 缺陷管理
 
-- 创建缺陷报告：`defect_create` - 参数：project_id(项目ID), title(缺陷标题)
+- 创建缺陷报告：`defect_create` - 参数：project_id(项目 ID), title(缺陷标题)
 
 ### 风险管理
 
-- 创建项目风险：`risk_create` - 参数：project_id(项目ID), title(风险标题)
+- 创建项目风险：`risk_create` - 参数：project_id(项目 ID), title(风险标题)
+
+## 文档管理
+
+### 文档操作
+
+- 创建文档：`document_create` - 参数：project_id(项目 ID), title(文档标题), content(内容), kind(文档类型)
+- 文档列表：`document_list` - 参数：project_id(项目 ID), kind(文档类型), status(状态), limit(数量限制)
+- 获取文档详情：`document_get` - 参数：document_id(文档 ID)
+- 查询文档：`document_query` - 参数：project_id(项目 ID), kind(文档类型), chat_id(聊天 ID)
+- 更新文档：`document_update` - 参数：document_id(文档 ID), title(标题), content(内容), status(状态)
+- 删除文档：`document_delete` - 参数：document_id(文档 ID)
+
+### 文档类型
+
+| 类型        | 说明     |
+| ----------- | -------- |
+| testcase    | 测试用例 |
+| requirement | 需求文档 |
+| project     | 项目文档 |
+| milestone   | 里程碑   |
+| report      | 报告     |
+| text        | 文本     |
+| code        | 代码     |
+| sheet       | 表格     |
+
+### 文档状态
+
+| 状态      | 说明   |
+| --------- | ------ |
+| draft     | 草稿   |
+| published | 已发布 |
+| archived  | 已归档 |
 
 ## 自由职业者服务
 
 ### 职业者管理
 
 - 注册自由职业者：`freelancer_register` - 参数：name(姓名), email(邮箱), phone(电话)
-- 创建/更新简历：`resume_create` - 参数：freelancer_id(自由职业者ID)
+- 创建/更新简历：`resume_create` - 参数：freelancer_id(自由职业者 ID)
 
 ### 服务与交易
 
-- 创建服务：`service_create` - 参数：freelancer_id(自由职业者ID)
-- 创建服务交易：`transaction_create` - 参数：client_id(客户ID), freelancer_id(自由职业者ID)
-- 创建/更新合同：`contract_create` - 参数：transaction_id(交易ID), terms(条款)
+- 创建服务：`service_create` - 参数：freelancer_id(自由职业者 ID)
+- 创建服务交易：`transaction_create` - 参数：client_id(客户 ID), freelancer_id(自由职业者 ID)
+- 创建/更新合同：`contract_create` - 参数：transaction_id(交易 ID), terms(条款)
 
 ### 智能匹配
 
@@ -176,3 +208,11 @@ metadata:
 4. 智能匹配：`talent_match`
 5. 创建交易：`transaction_create`
 6. 签订合同：`contract_create`
+
+### 文档管理流程
+
+1. 创建文档：`document_create`
+2. 查看文档列表：`document_list`
+3. 查看文档详情：`document_get`
+4. 更新文档：`document_update`
+5. 发布/归档文档：`document_update` (修改 status)

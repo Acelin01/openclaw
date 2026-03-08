@@ -6,16 +6,35 @@ import InputArea from './InputArea';
 import AddAgentDialog, { NewAgentData } from './AddAgentDialog';
 import './App.css';
 
+// 导入 Lit Web Components for Artifact 渲染 (使用相对路径)
+import '../../src/artifacts/viewer';
+import '../../src/artifacts/project-requirement/list-element';
+import '../../src/artifacts/requirement/list-element';
+import '../../src/artifacts/task/list-element';
+import '../../src/artifacts/iteration/list-element';
+import '../../src/artifacts/iteration/overview-element';
+import '../../src/artifacts/milestone/list-element';
+import '../../src/artifacts/project/list-element';
+import '../../src/artifacts/defect/list-element';
+import '../../src/artifacts/document/list-element';
+import '../../src/artifacts/testcase/element';
+
 interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: number;
+  artifact?: { kind: string; content: any };
 }
 
 interface AgentConfigWithStatus extends AgentConfig {
   connected?: boolean;
   agentStatus?: AgentStatus;
+}
+
+interface ArtifactState {
+  kind: string;
+  data: any;
 }
 
 const App: React.FC = () => {
@@ -27,6 +46,63 @@ const App: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
+  const [currentArtifact, setCurrentArtifact] = useState<ArtifactState | null>(null);
+  const [authToken, setAuthToken] = useState<string>('');
+
+  // 初始化：获取 token 并加载 artifact
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        // 尝试登录获取 token
+        const loginResponse = await fetch('http://localhost:8000/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'test@uxin.com', password: 'test123' })
+        });
+        const loginData = await loginResponse.json();
+        if (loginData.success) {
+          setAuthToken(loginData.data.token);
+          console.log('✅ 登录成功，Token 已获取');
+          // 自动加载需求列表
+          await loadRequirementList();
+        }
+      } catch (error) {
+        console.error('❌ 登录失败:', error);
+      }
+    };
+    initAuth();
+  }, []);
+
+  // 加载需求列表
+  const loadRequirementList = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/project-requirements?projectId=proj-uxin', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCurrentArtifact({
+          kind: 'project-requirement-list',
+          data: {
+            title: '全部需求',
+            requirements: data.data.map((req: any) => ({
+              id: req.id,
+              title: req.title,
+              description: req.description,
+              status: req.status?.toLowerCase() || 'pending',
+              priority: req.priority?.toLowerCase() || 'medium',
+              assignee: req.assigneeId || null,
+              creator: req.reporterId || null,
+              createdAt: new Date(req.createdAt).getTime()
+            }))
+          }
+        });
+        console.log('✅ 需求列表加载成功:', data.data.length, '条');
+      }
+    } catch (error) {
+      console.error('❌ 加载需求列表失败:', error);
+    }
+  };
 
   // 初始化多智能体客户端
   useEffect(() => {
@@ -209,6 +285,13 @@ const App: React.FC = () => {
           <span className={`status-dot ${isConnected ? 'connected' : ''}`}></span>
           <span>{isConnected ? '已连接' : '未连接'}</span>
         </div>
+        <button 
+          className="refresh-btn"
+          onClick={loadRequirementList}
+          style={{ marginLeft: 'auto', padding: '6px 12px', cursor: 'pointer' }}
+        >
+          🔄 刷新需求
+        </button>
       </header>
 
       <div className="main">
@@ -221,6 +304,34 @@ const App: React.FC = () => {
             disabled={!isConnected}
             connected={isConnected}
           />
+        </div>
+
+        {/* Artifact 显示区域 */}
+        <div className="artifact-panel" style={{ 
+          flex: 1, 
+          overflow: 'auto', 
+          background: '#f3f4f6',
+          borderLeft: '1px solid #e5e7eb',
+          minWidth: '400px'
+        }}>
+          {currentArtifact ? (
+            <chatlite-artifact-viewer
+              content={JSON.stringify(currentArtifact)}
+              style={{ width: '100%', height: '100%' }}
+            />
+          ) : (
+            <div style={{ 
+              padding: '40px', 
+              textAlign: 'center', 
+              color: '#6b7280',
+              fontSize: '14px'
+            }}>
+              <p>📦 暂无 Artifact 显示</p>
+              <p style={{ marginTop: '8px', fontSize: '12px' }}>
+                点击"刷新需求"加载项目需求列表
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
