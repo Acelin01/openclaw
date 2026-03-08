@@ -459,4 +459,7 @@ export class ChatliteRequirementList extends LitElement {
   }
 }
 
-customElements.define("chatlite-requirement-list", ChatliteRequirementList);
+// 防止重复注册
+if (!customElements.get("chatlite-requirement-list")) {
+  customElements.define("chatlite-requirement-list", ChatliteRequirementList);
+}

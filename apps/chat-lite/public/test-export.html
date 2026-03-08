@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>导出功能 - ChatLite</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    
+    .header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 { font-size: 24px; color: #1f1f1f; }
+    
+    .export-card {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .export-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .export-option {
+      border: 2px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .export-option:hover {
+      border-color: #52c41a;
+      background: #f6ffed;
+    }
+    .export-option.selected {
+      border-color: #52c41a;
+      background: #f6ffed;
+    }
+    
+    .export-option-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      color: #52c41a;
+    }
+    .export-option-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #262626;
+      margin-bottom: 8px;
+    }
+    .export-option-desc {
+      font-size: 13px;
+      color: #8c8c8c;
+      line-height: 1.6;
+    }
+    
+    .export-settings {
+      background: #fafafa;
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .setting-row:last-child { border-bottom: none; }
+    
+    .setting-label {
+      font-size: 14px;
+      color: #262626;
+    }
+    .setting-desc {
+      font-size: 12px;
+      color: #8c8c8c;
+      margin-top: 4px;
+    }
+    
+    .setting-control select, .setting-control input {
+      padding: 8px 12px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-size: 14px;
+      min-width: 200px;
+    }
+    
+    /* 开关按钮 */
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: #d9d9d9;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .switch.on {
+      background: #52c41a;
+    }
+    .switch-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+    .switch.on .switch-knob {
+      transform: translateX(20px);
+    }
+    
+    /* 导出按钮 */
+    .export-btn {
+      width: 100%;
+      padding: 16px;
+      background: #52c41a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+    .export-btn:hover {
+      background: #73d13d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+    }
+    .export-btn:disabled {
+      background: #d9d9d9;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* 导出进度 */
+    .export-progress {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .export-progress.active { display: block; }
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #52c41a;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    
+    .progress-text {
+      font-size: 14px;
+      color: #595959;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📤 导出功能</h1>
+    </div>
+    
+    <!-- 导出格式选择 -->
+    <div class="export-card">
+      <h2 style="margin-bottom: 16px; font-size: 18px;">选择导出格式</h2>
+      <div class="export-options">
+        <div class="export-option selected" onclick="selectFormat('excel')">
+          <svg class="export-option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <div class="export-option-title">Excel 表格</div>
+          <div class="export-option-desc">导出为 .xlsx 格式，可在 Excel 中编辑和分析</div>
+        </div>
+        
+        <div class="export-option" onclick="selectFormat('pdf')">
+          <svg class="export-option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <div class="export-option-title">PDF 文档</div>
+          <div class="export-option-desc">导出为 PDF 格式，适合打印和分享</div>
+        </div>
+        
+        <div class="export-option" onclick="selectFormat('csv')">
+          <svg class="export-option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <div class="export-option-title">CSV 文件</div>
+          <div class="export-option-desc">导出为 .csv 格式，轻量级数据格式</div>
+        </div>
+      </div>
+      
+      <!-- 导出设置 -->
+      <div class="export-settings">
+        <h3 style="margin-bottom: 16px; font-size: 16px;">导出设置</h3>
+        
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">数据范围</div>
+            <div class="setting-desc">选择要导出的数据范围</div>
+          </div>
+          <div class="setting-control">
+            <select id="data-range">
+              <option value="all">全部数据</option>
+              <option value="selected">已选数据</option>
+              <option value="current">当前页</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">包含字段</div>
+            <div class="setting-desc">选择要导出的字段</div>
+          </div>
+          <div class="setting-control">
+            <select id="fields" onchange="toggleCustomFields()">
+              <option value="all">所有字段</option>
+              <option value="basic">基本信息</option>
+              <option value="custom">自定义字段...</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">包含附件</div>
+            <div class="setting-desc">导出时包含附件文件</div>
+          </div>
+          <div class="setting-control">
+            <div class="switch" id="include-attachments" onclick="toggleSwitch(this)">
+              <div class="switch-knob"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">文件名</div>
+            <div class="setting-desc">导出文件的名称</div>
+          </div>
+          <div class="setting-control">
+            <input type="text" id="filename" value="需求列表_20260308" style="width: 250px;">
+          </div>
+        </div>
+      </div>
+      
+      <button class="export-btn" onclick="startExport()" id="export-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        开始导出
+      </button>
+      
+      <!-- 导出进度 -->
+      <div class="export-progress" id="export-progress">
+        <div style="font-size: 16px; font-weight: 600; color: #262626; margin-bottom: 8px;">正在导出数据...</div>
+        <div class="progress-bar">
+          <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progress-text">准备中...</div>
+      </div>
+    </div>
+    
+    <!-- 导出历史 -->
+    <div class="export-card">
+      <h2 style="margin-bottom: 16px; font-size: 18px;">导出历史</h2>
+      <div id="export-history" style="color: #8c8c8c; text-align: center; padding: 40px;">暂无导出记录</div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFormat = 'excel';
+    let exportHistory = [];
+    
+    // 选择格式
+    function selectFormat(format) {
+      selectedFormat = format;
+      document.querySelectorAll('.export-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.onclick.toString().includes(format));
+      });
+    }
+    
+    // 切换开关
+    function toggleSwitch(el) {
+      el.classList.toggle('on');
+    }
+    
+    // 切换自定义字段
+    function toggleCustomFields() {
+      const value = document.getElementById('fields').value;
+      if (value === 'custom') {
+        alert('自定义字段功能开发中...');
+        document.getElementById('fields').value = 'all';
+      }
+    }
+    
+    // 开始导出
+    function startExport() {
+      const btn = document.getElementById('export-btn');
+      const progress = document.getElementById('export-progress');
+      const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      
+      btn.disabled = true;
+      progress.classList.add('active');
+      
+      // 模拟导出进度
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 10;
+        progressFill.style.width = progress + '%';
+        
+        if (progress < 30) {
+          progressText.textContent = '正在查询数据...';
+        } else if (progress < 60) {
+          progressText.textContent = '正在生成文件...';
+        } else if (progress < 90) {
+          progressText.textContent = '正在保存文件...';
+        } else {
+          progressText.textContent = '完成！';
+        }
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          finishExport();
+        }
+      }, 300);
+    }
+    
+    // 完成导出
+    function finishExport() {
+      const btn = document.getElementById('export-btn');
+      const progress = document.getElementById('export-progress');
+      
+      btn.disabled = false;
+      progress.classList.remove('active');
+      
+      // 添加到历史记录
+      const history = document.getElementById('export-history');
+      const format = selectedFormat.toUpperCase();
+      const filename = document.getElementById('filename').value || '导出文件';
+      const time = new Date().toLocaleString('zh-CN');
+      
+      if (exportHistory.length === 0) {
+        history.innerHTML = '';
+      }
+      
+      exportHistory.unshift({ format, filename, time });
+      
+      history.innerHTML = exportHistory.map(item => `
+        <div style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 500; color: #262626;">${item.filename}.${item.format.toLowerCase()}</div>
+            <div style="font-size: 12px; color: #8c8c8c; margin-top: 4px;">${item.time}</div>
+          </div>
+          <button onclick="downloadFile('${item.filename}.${item.format.toLowerCase()}')" style="padding: 6px 12px; background: #52c41a; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            下载
+          </button>
+        </div>
+      `).join('');
+      
+      alert(`✅ 导出成功！文件：${filename}.${format.toLowerCase()}`);
+    }
+    
+    // 下载文件
+    function downloadFile(filename) {
+      alert(`开始下载：${filename}`);
+      // 实际应用中这里会触发文件下载
+    }
+  </script>
+</body>
+</html>

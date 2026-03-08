@@ -170,5 +170,7 @@ export class ProjectRequirementArtifact extends LitElement {
   }
 }
 
-// 手动注册组件
-customElements.define("chatlite-project-requirement", ProjectRequirementArtifact);
+// 防止重复注册
+if (!customElements.get("chatlite-project-requirement")) {
+  customElements.define("chatlite-project-requirement", ProjectRequirementArtifact);
+}
