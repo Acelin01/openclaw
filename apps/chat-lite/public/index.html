@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat-Lite · 预览中心</title>
+<style>
+:root {
+  --bg: #050810;
+  --bg2: #0a0f1a;
+  --bg3: #101828;
+  --teal: #00e5cc;
+  --teal2: #00b8a8;
+  --blue: #3b82f6;
+  --violet: #a78bfa;
+  --amber: #fbbf24;
+  --text: #e2f0ef;
+  --text2: #7aada8;
+  --text3: #3d6b68;
+  --border: rgba(0, 229, 204, 0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 40px 24px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, var(--teal), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.subtitle { color: var(--text2); margin-bottom: 40px; }
+
+.section { margin-bottom: 40px; }
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::before {
+  content: '';
+  width: 20px;
+  height: 2px;
+  background: var(--teal);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.card:hover {
+  border-color: var(--teal);
+  box-shadow: 0 0 30px rgba(0, 229, 204, 0.15);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.card-desc {
+  font-size: 12.5px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.card-tag {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--teal2);
+  border: 1px solid var(--border);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.badge-new { background: var(--teal); color: var(--bg); }
+.badge-hot { background: var(--amber); color: var(--bg); }
+.badge-core { background: var(--blue); color: #fff; }
+
+footer {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 12px;
+  color: var(--text3);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🚀 Chat-Lite · 预览中心</h1>
+  <p class="subtitle">机器人技能共享平台 · 全功能界面预览</p>
+
+  <div class="section">
+    <div class="section-title">核心功能</div>
+    <div class="grid">
+      <a href="robot-manage.html" class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">机器人管理 <span class="badge badge-new">NEW</span></div>
+        <div class="card-desc">绑定、认证、监控所有 OpenClaw 机器人，Token 管理，项目绑定，技能上架</div>
+        <div class="card-tag">F07-01 ~ F07-12 · 12 模块</div>
+      </a>
+
+      <a href="chat-view.html" class="card">
+        <div class="card-icon">💬</div>
+        <div class="card-title">聊天沟通 <span class="badge badge-core">CORE</span></div>
+        <div class="card-desc">聊天主界面，支持机器人/人工对话，需求分析 Artifact，智能服务菜单</div>
+        <div class="card-tag">M01 · 核心交互</div>
+      </a>
+
+      <a href="skill-service.html" class="card">
+        <div class="card-icon">🛠️</div>
+        <div class="card-title">技能服务市场</div>
+        <div class="card-desc">浏览、搜索、购买技能服务，服务者详情页，评价系统</div>
+        <div class="card-tag">M02 · 服务交易</div>
+      </a>
+
+      <a href="order-system.html" class="card">
+        <div class="card-icon">📋</div>
+        <div class="card-title">订单系统</div>
+        <div class="card-desc">订单创建、支付、执行、验收全流程，实时计费，资金托管</div>
+        <div class="card-tag">M03 · 交易闭环</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">项目协作</div>
+    <div class="grid">
+      <a href="project-overview.html" class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">项目概览</div>
+        <div class="card-desc">项目仪表盘，进度追踪，团队概览，度量指标</div>
+        <div class="card-tag">项目管理</div>
+      </a>
+
+      <a href="task-list.html" class="card">
+        <div class="card-icon">✅</div>
+        <div class="card-title">任务列表</div>
+        <div class="card-desc">任务看板，状态管理，筛选排序，批量操作</div>
+        <div class="card-tag">任务管理</div>
+      </a>
+
+      <a href="task-management.html" class="card">
+        <div class="card-icon">📝</div>
+        <div class="card-title">任务管理</div>
+        <div class="card-desc">任务详情，子任务，工时记录，评论协作</div>
+        <div class="card-tag">任务执行</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">测试页面</div>
+    <div class="grid">
+      <a href="test-requirement-list.html" class="card">
+        <div class="card-icon">📄</div>
+        <div class="card-title">需求列表</div>
+        <div class="card-desc">需求文档列表，筛选，搜索</div>
+        <div class="card-tag">Artifact</div>
+      </a>
+
+      <a href="test-requirement-create.html" class="card">
+        <div class="card-icon">➕</div>
+        <div class="card-title">需求新建</div>
+        <div class="card-desc">创建需求文档，表单填写</div>
+        <div class="card-tag">Artifact</div>
+      </a>
+
+      <a href="test-requirement-detail.html" class="card">
+        <div class="card-icon">📖</div>
+        <div class="card-title">需求详情</div>
+        <div class="card-desc">需求文档详情，版本历史</div>
+        <div class="card-tag">Artifact</div>
+      </a>
+
+      <a href="test-attachments.html" class="card">
+        <div class="card-icon">📎</div>
+        <div class="card-title">附件管理</div>
+        <div class="card-desc">上传、预览、管理附件</div>
+        <div class="card-tag">功能测试</div>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <p>Chat-Lite Preview Center · v1.2 · 2026</p>
+    <p style="margin-top: 8px; color: var(--text3);">本地服务器运行中 · http://localhost:8888</p>
+  </footer>
+</div>
+</body>
+</html>
