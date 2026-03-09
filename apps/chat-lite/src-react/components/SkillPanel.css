@@ -1,0 +1,330 @@
+/* 技能面板覆盖层 */
+.skill-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 35, 0.45);
+  z-index: 200;
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 技能面板 */
+.skill-panel {
+  width: 500px;
+  max-width: calc(100vw - 40px);
+  max-height: 550px;
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 头部 */
+.skill-panel-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--bg3);
+}
+
+.skill-panel-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.skill-panel-header h4 svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+.skill-panel-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.skill-panel-close:hover {
+  background: var(--bg4);
+  color: var(--text);
+}
+
+.skill-panel-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 标签页 */
+.skill-panel-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg3);
+}
+
+.skill-panel-tab {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text3);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition);
+}
+
+.skill-panel-tab:hover {
+  background: rgba(79, 142, 247, 0.1);
+  color: var(--text);
+}
+
+.skill-panel-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* 搜索框 */
+.skill-panel-search {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.skill-panel-search svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+.skill-panel-search input {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.skill-panel-search input:focus {
+  border-color: var(--accent);
+}
+
+.skill-panel-search input::placeholder {
+  color: var(--text3);
+}
+
+/* 技能列表 */
+.skill-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.skill-panel-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.skill-panel-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.skill-panel-body::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 3px;
+}
+
+/* 技能分类 */
+.skill-category {
+  margin-bottom: 24px;
+}
+
+.skill-category-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: var(--bg4);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+}
+
+.skill-category-title svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+.skill-count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* 技能卡片 */
+.category-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.command-item {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.command-item:hover {
+  border-color: var(--accent);
+  background: var(--bg3);
+  transform: translateX(4px);
+}
+
+.command-item.selected {
+  border-color: var(--accent);
+  background: rgba(79, 142, 247, 0.1);
+}
+
+.command-item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--robot-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.command-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.command-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.command-item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.command-item-desc {
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.command-item-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.command-item-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text3);
+}
+
+.empty-state svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 13px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .skill-panel {
+    width: calc(100vw - 40px);
+    max-height: 70vh;
+  }
+  
+  .skill-panel-overlay {
+    padding: 10px;
+  }
+}
