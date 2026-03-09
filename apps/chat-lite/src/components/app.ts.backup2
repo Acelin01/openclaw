@@ -8,19 +8,10 @@ import { testcaseManager } from "../services/testcase-manager";
 import { generateUUID, formatTime } from "../lib/utils";
 import "../artifacts/viewer";
 import type { ArtifactContent } from "../artifacts/viewer";
-
-// 新增组件导入
-import "./components/skill-panel";
-import "./components/skill-input";
-import type { SkillInput } from "./components/skill-input";
 import type { TestCaseContent } from "../artifacts/testcase/element";
 
 @customElement("chatlite-app")
 export class ChatLiteApp extends LitElement {
-  @state() private skillPanelVisible = false;
-  @state() private artifactPanelExpanded = false;
-  @state() private currentSkill?: string;
-  @state() private currentArtifactData?: unknown;
   static styles = css`
     :host {
       display: flex;
@@ -773,42 +764,3 @@ declare global {
     "chatlite-app": ChatLiteApp;
   }
 }
-
-  // 新增技能面板相关方法
-  private toggleSkillPanel() {
-    this.skillPanelVisible = !this.skillPanelVisible;
-  }
-
-  private closeSkillPanel() {
-    this.skillPanelVisible = false;
-  }
-
-  private handleSkillSelect(e: CustomEvent) {
-    const { skill } = e.detail;
-    const skillInput = this.shadowRoot?.querySelector('chatlite-skill-input') as SkillInput | null;
-    skillInput?.startEdit(skill);
-    this.closeSkillPanel();
-  }
-
-  private handleSkillSend(e: CustomEvent) {
-    const { skill, command, params } = e.detail;
-    this.sendMessage(command);
-    this.currentSkill = skill;
-  }
-
-  private handleSkillCancel() {
-    // 取消技能输入
-  }
-
-  private toggleArtifactPanel() {
-    this.artifactPanelExpanded = !this.artifactPanelExpanded;
-  }
-
-  private handleSearch() {
-    // 搜索功能
-  }
-
-  private sendMessage(message: string) {
-    // 发送消息
-    console.log('Sending message:', message);
-  }
