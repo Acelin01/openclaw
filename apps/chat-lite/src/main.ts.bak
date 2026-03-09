@@ -4,10 +4,6 @@ import "./components/testcase-library";
 import "./components/add-agent-dialog";
 import "./components/edit-agent-dialog";
 
-// 新增组件注册
-import "./components/skill-panel";
-import "./components/skill-input";
-
 // 注册所有 Web Components
 import "./artifacts/project-requirement/element";
 import "./artifacts/testcase/element";
