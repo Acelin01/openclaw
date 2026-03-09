@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2, staleTime: 5 * 60 * 1000 } },
 });
 
-export const App: React.FC = () => (
+const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Routes>
@@ -42,3 +42,5 @@ export const App: React.FC = () => (
     </BrowserRouter>
   </QueryClientProvider>
 );
+
+export default App;
