@@ -1,19 +1,17 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3002,
     host: true,
+    cors: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:18789',
         changeOrigin: true,
-      },
-      '/ws': {
-        target: 'ws://localhost:8000',
-        ws: true,
       },
       '/tools': {
         target: 'http://localhost:18789',
@@ -30,7 +28,7 @@ export default defineConfig({
   },
   // 支持 Lit
   optimizeDeps: {
-    include: ['lit', '@lit/reactive-element', 'lit/decorators.js'],
+    include: ['lit', '@lit/reactive-element', 'lit/decorators.js', '@tanstack/react-query', 'zustand'],
     esbuildOptions: {
       target: 'es2022',
     },
@@ -48,7 +46,8 @@ export default defineConfig({
   // 自定义处理 .tsx 文件用于 Lit 组件
   resolve: {
     alias: {
-      '@': '/src',
+      '@': path.resolve(__dirname, './src'),
+      '@src': path.resolve(__dirname, './src'),
     },
   },
 });

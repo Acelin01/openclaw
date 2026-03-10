@@ -233,7 +233,7 @@ export const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="billing-body">
-              <div style={{fontFamily:'DM Mono',monospace',fontSize:'10px',color:'#6b7280',marginBottom:'8px'}}>当前订单累计费用</div>
+              <div style={{fontFamily:'DM Mono', fontSize:'10px',color:'#6b7280',marginBottom:'8px'}}>当前订单累计费用</div>
               <div className="billing-ticker">
                 <div className="ticker-num">¥ {ticker.toFixed(2)}</div>
                 <div className="ticker-unit">实时计算中</div>

@@ -5,6 +5,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useChatStore } from '../store/chat-store';
+import { OpenClawConfig } from './OpenClawConfig';
 import { Markdown } from './Markdown';
 import { SkillPanel } from './SkillPanel';
 import { ArtifactViewer } from './ArtifactViewer';
@@ -41,6 +42,23 @@ export const Chat: React.FC = () => {
     loadSessions();
   }, []);
 
+  // 监听 artifact 更新事件
+  useEffect(() => {
+    const handleArtifactUpdate = (event: CustomEvent) => {
+      const { skillName, artifactType, data } = event.detail;
+      // 确保 data 是对象
+      const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+      setCurrentArtifactData(parsedData);
+      setSelectedSkill(skillName ? { name: skillName } as SkillPattern : undefined);
+      setShowArtifactPanel(true);
+    };
+
+    window.addEventListener('artifact-update', handleArtifactUpdate as EventListener);
+    return () => {
+      window.removeEventListener('artifact-update', handleArtifactUpdate as EventListener);
+    };
+  }, []);
+
   // 滚动到底部
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,13 +77,31 @@ export const Chat: React.FC = () => {
     const content = inputValue.trim();
     if (!content || isLoading) return;
 
+    // 构建发送内容（包含技能信息）
+    const messageContent = selectedSkill
+      ? `[@${selectedSkill.name}] ${content}`
+      : content;
+
     setInputValue('');
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
 
     try {
-      await sendMessage(content);
+      await sendMessage(messageContent);
+      
+      // 如果选择了技能，发送后显示 Artifact
+      if (selectedSkill) {
+        setTimeout(() => {
+          setShowArtifactPanel(true);
+          setCurrentArtifactData({
+            skill: selectedSkill,
+            query: content,
+            timestamp: Date.now(),
+          });
+          setSelectedSkill(undefined);
+        }, 500);
+      }
     } catch (err) {
       console.error('发送失败:', err);
     }
@@ -108,6 +144,9 @@ export const Chat: React.FC = () => {
 
   return (
     <div className="chat-container">
+      {/* OpenClaw 配置入口 */}
+      <OpenClawConfig />
+
       {/* 侧边栏 */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
@@ -144,7 +183,7 @@ export const Chat: React.FC = () => {
               <div className="session-info">
                 <div className="session-title">{session.label || '新会话'}</div>
                 <div className="session-preview">
-                  {messages[session.sessionKey]?.[messages[session.sessionKey].length - 1]?.content.slice(0, 30) || '暂无消息'}...
+                  {(messages[session.sessionKey] || [])?.slice(-1)[0]?.content?.slice(0, 30) || '暂无消息'}...
                 </div>
               </div>
               <div className="session-time">{session.lastMessageAt ? formatTime(session.lastMessageAt) : ''}</div>
@@ -228,7 +267,7 @@ export const Chat: React.FC = () => {
                   })
                   .map((msg) => (
                   <div
-                    key={`${msg.id}-${msg.timestamp || Date.now()}`}
+                    key={msg.id}
                     className={`message-group ${msg.role === 'user' ? 'self' : ''}`}
                   >
                     <div className={`message-avatar ${msg.role}`}>
@@ -255,7 +294,7 @@ export const Chat: React.FC = () => {
                   </div>
                 ))}
                 {isStreaming && (
-                  <div className="message-group typing">
+                  <div key="typing-indicator" className="message-group typing">
                     <div className="message-avatar assistant">🤖</div>
                     <div className="message-content">
                       <div className="message-bubble assistant typing-indicator">
@@ -305,10 +344,31 @@ export const Chat: React.FC = () => {
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
           </button>
+          
+          {/* 技能预览 */}
+          {selectedSkill && (
+            <div className="skill-preview">
+              <span className="skill-preview-icon">{selectedSkill.icon}</span>
+              <div className="skill-preview-info">
+                <span className="skill-preview-name">{selectedSkill.name}</span>
+                <span className="skill-preview-desc">{selectedSkill.description}</span>
+              </div>
+              <button
+                className="skill-preview-remove"
+                onClick={() => setSelectedSkill(undefined)}
+                title="取消选择"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          )}
+          
           <textarea
             ref={textareaRef}
             className="message-input"
-            placeholder="输入消息... (Enter 发送，Shift+Enter 换行)"
+            placeholder={selectedSkill ? `使用 ${selectedSkill.name} 技能...` : "输入消息... (Enter 发送，Shift+Enter 换行)"}
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);
@@ -333,6 +393,7 @@ export const Chat: React.FC = () => {
         {/* 技能面板 */}
         {showSkillPanel && (
           <SkillPanel
+            visible={showSkillPanel}
             onSelectSkill={(skill) => {
               setSelectedSkill(skill);
               setShowSkillPanel(false);

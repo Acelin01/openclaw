@@ -34,6 +34,10 @@ export interface ChatResponse {
   sessionId: string;
   skillMatched?: string;
   modelUsed?: string;
+  artifact?: {
+    kind: string;
+    content: string;
+  };
   done: boolean;
 }
 
@@ -92,25 +96,78 @@ class OpenClawClient {
 
   /**
    * 发送消息到 OpenClaw 会话
-   * 使用 sessions_send 工具
+   * 直接使用 /tools/invoke 端点
    */
   async sendMessage(request: ChatRequest): Promise<ChatResponse> {
     const sessionKey = request.sessionId || 'main';
-    
-    // 使用 sessions_send 工具发送消息
-    await this.invokeTool('sessions_send', {
-      message: request.message,
-      sessionKey,
-    }, sessionKey);
 
-    // 获取最新消息历史
-    const messages = await this.getSessionMessages(sessionKey);
-    const lastMessage = messages[messages.length - 1];
+    // 直接调用 /tools/invoke
+    const response = await fetch('/tools/invoke', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+      },
+      body: JSON.stringify({
+        tool: 'sessions_send',
+        args: {
+          message: request.message,
+          sessionKey,
+        },
+        sessionKey,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`发送消息失败：${response.status} - ${errorText}`);
+    }
+
+    const result = await response.json();
+    
+    // 解析响应
+    let content = '';
+    let artifact = undefined;
+    let skillMatched = undefined;
+
+    if (result.ok && result.result) {
+      // 解析 result.content 数组
+      if (result.result.content && Array.isArray(result.result.content)) {
+        for (const item of result.result.content) {
+          if (item.type === 'text' && item.text) {
+            try {
+              const parsed = JSON.parse(item.text);
+              if (parsed.artifact) {
+                artifact = parsed.artifact;
+              }
+              if (parsed.details?.skillName) {
+                skillMatched = parsed.details.skillName;
+              }
+              content = item.text;
+            } catch {
+              content = item.text;
+            }
+          }
+        }
+      }
+      
+      // 检查 details
+      if (result.result.details) {
+        if (result.result.details.artifact) {
+          artifact = result.result.details.artifact;
+        }
+        if (result.result.details.skillName) {
+          skillMatched = result.result.details.skillName;
+        }
+      }
+    }
 
     return {
-      messageId: lastMessage?.id || `msg-${Date.now()}`,
-      content: lastMessage?.content || '',
+      messageId: `msg-${Date.now()}`,
+      content,
       sessionId: sessionKey,
+      skillMatched,
+      artifact,
       done: true,
     };
   }

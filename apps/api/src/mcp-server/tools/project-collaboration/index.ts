@@ -119,14 +119,8 @@ export const getProjectCollaborationTools = (
           offset: { type: "number" },
         },
       },
-      handler: async (args: any) => projectApp.listTasks(
-        {
-          project_id: args.project_id,
-          status: args.status,
-          assignee_id: args.assignee_id,
-          limit: args.limit,
-          offset: args.offset
-        },
+      handler: async (args: any) => projectApp.getTasks(
+        args.project_id,
         context
       ),
     },
