@@ -56,17 +56,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ isLoading: true });
     try {
       const sessions = await openclawClient.getSessions();
-      set({ sessions, isLoading: false });
+      // 确保 sessions 是数组
+      const sessionsArray = Array.isArray(sessions) ? sessions : [];
+      set({ sessions: sessionsArray, isLoading: false });
       
       // 如果有会话但没有选中，选中最新的
-      if (sessions.length > 0 && !get().currentSessionKey) {
-        set({ currentSessionKey: sessions[0].sessionKey });
-        get().loadMessages(sessions[0].sessionKey);
+      if (sessionsArray.length > 0 && !get().currentSessionKey) {
+        set({ currentSessionKey: sessionsArray[0].sessionKey });
+        get().loadMessages(sessionsArray[0].sessionKey);
       }
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : '加载会话失败',
-        isLoading: false 
+        isLoading: false,
+        sessions: []
       });
     }
   },
