@@ -318,7 +318,7 @@ export class ChatliteTaskList extends LitElement {
                 <circle cx="10" cy="10" r="2" fill="#1890ff"/>
                 <path d="M4 8H16M4 12H16" stroke="#1890ff" stroke-width="1.8"/>
               </svg>
-              ${this.content.title || '任务列表'}
+              ${this.content?.title || '任务列表'}
             </h2>
           </div>
           ${this.editable ? html`

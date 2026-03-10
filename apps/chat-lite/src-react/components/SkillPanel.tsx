@@ -1,167 +1,152 @@
 /**
- * 技能面板组件 - 底部弹出式
- * 显示可用技能列表，支持搜索和选择
+ * 技能面板组件 - 从 OpenClaw uxin-mcp 获取技能服务
  */
 
-import React, { useState, useMemo } from 'react';
-import { skillPatterns, type SkillPattern, CATEGORIES } from '../lib/skill-matcher';
+import React, { useState, useEffect } from 'react';
+import { fetchSkills, type MCPSkill } from '../lib/skill-api';
 import './SkillPanel.css';
 
 interface SkillPanelProps {
   visible: boolean;
-  selectedSkill?: SkillPattern;
-  onSkillSelect: (skill: SkillPattern) => void;
+  onSelectSkill: (skill: MCPSkill) => void;
   onClose: () => void;
 }
 
+// 静态技能列表（降级方案）
+const FALLBACK_SKILLS: MCPSkill[] = [
+  { name: 'project_create', description: '创建新项目' },
+  { name: 'project_query', description: '查询项目信息' },
+  { name: 'task_create', description: '创建任务' },
+  { name: 'task_list', description: '获取任务列表' },
+  { name: 'task_update_status', description: '更新任务状态' },
+  { name: 'requirement_create', description: '创建需求' },
+  { name: 'milestone_create', description: '创建里程碑' },
+  { name: 'milestone_monitor', description: '监控里程碑' },
+  { name: 'defect_create', description: '创建缺陷报告' },
+  { name: 'risk_create', description: '创建项目风险' },
+  { name: 'document_query', description: '查询文档' },
+  { name: 'iteration_create', description: '创建迭代' },
+  { name: 'iteration_query', description: '查询迭代' },
+  { name: 'iteration_list', description: '获取迭代列表' },
+  { name: 'iteration_planning', description: '迭代规划' },
+];
+
 export const SkillPanel: React.FC<SkillPanelProps> = ({
   visible,
-  selectedSkill,
-  onSkillSelect,
-  onClose
+  onSelectSkill,
+  onClose,
 }) => {
+  const [skills, setSkills] = useState<MCPSkill[]>([]);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'all' | 'commands' | 'skills'>('all');
+  const [error, setError] = useState<string | null>(null);
 
-  // 过滤技能列表
-  const filteredSkills = useMemo(() => {
-    if (!searchQuery) return skillPatterns;
-    
-    const query = searchQuery.toLowerCase();
-    return skillPatterns.filter(skill => {
-      return (
-        skill.name.toLowerCase().includes(query) ||
-        skill.description.toLowerCase().includes(query) ||
-        skill.patterns.some(p => p.toLowerCase().includes(query))
-      );
-    });
-  }, [searchQuery]);
+  // 从 uxin-mcp 加载技能列表
+  useEffect(() => {
+    if (visible) {
+      loadSkills();
+    }
+  }, [visible]);
 
-  // 按分类分组
-  const groupedSkills = useMemo(() => {
-    const groups: Record<string, SkillPattern[]> = {};
-    
-    filteredSkills.forEach(skill => {
-      const category = CATEGORIES[skill.category as keyof typeof CATEGORIES] || '其他';
-      if (!groups[category]) {
-        groups[category] = [];
+  async function loadSkills() {
+    try {
+      setLoading(true);
+      setError(null);
+      const skillList = await fetchSkills();
+      
+      // 如果没有获取到技能，使用降级方案
+      if (skillList.length === 0) {
+        console.log('使用静态技能列表');
+        setSkills(FALLBACK_SKILLS);
+      } else {
+        setSkills(skillList);
       }
-      groups[category].push(skill);
-    });
-    
-    return groups;
-  }, [filteredSkills]);
+    } catch (err) {
+      console.error('加载技能失败:', err);
+      setError('加载技能失败，使用离线模式');
+      setSkills(FALLBACK_SKILLS);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 过滤技能
+  const filteredSkills = skills.filter(skill => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      skill.name.toLowerCase().includes(query) ||
+      skill.description?.toLowerCase().includes(query)
+    );
+  });
 
   if (!visible) return null;
 
   return (
     <div className="skill-panel-overlay" onClick={onClose}>
-      <div className="skill-panel" onClick={e => e.stopPropagation()}>
-        {/* 头部 */}
+      <div className="skill-panel" onClick={(e) => e.stopPropagation()}>
         <div className="skill-panel-header">
           <h4>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
-            技能服务
+            uxin-mcp 技能服务
           </h4>
-          <button className="skill-panel-close" onClick={onClose}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
+          <button className="skill-panel-close" onClick={onClose}>×</button>
         </div>
 
-        {/* 标签页 */}
-        <div className="skill-panel-tabs">
-          <button 
-            className={`skill-panel-tab ${activeTab === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveTab('all')}
-          >
-            全部
-          </button>
-          <button 
-            className={`skill-panel-tab ${activeTab === 'commands' ? 'active' : ''}`}
-            onClick={() => setActiveTab('commands')}
-          >
-            命令
-          </button>
-          <button 
-            className={`skill-panel-tab ${activeTab === 'skills' ? 'active' : ''}`}
-            onClick={() => setActiveTab('skills')}
-          >
-            技能
-          </button>
-        </div>
-
-        {/* 搜索框 */}
         <div className="skill-panel-search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
           </svg>
           <input
             type="text"
-            placeholder="搜索技能或命令..."
+            placeholder="搜索技能..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        {/* 技能列表 */}
-        <div className="skill-panel-body">
-          {Object.entries(groupedSkills).map(([category, skills]) => (
-            <div key={category} className="skill-category">
-              <div className="skill-category-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                </svg>
-                {category}
-                <span className="skill-count">{skills.length}</span>
-              </div>
-              
-              <div className="category-skills">
-                {skills.map(skill => (
-                  <div
-                    key={skill.id}
-                    className={`command-item ${selectedSkill?.id === skill.id ? 'selected' : ''}`}
-                    onClick={() => {
-                      onSkillSelect(skill);
-                      onClose();
-                    }}
-                  >
-                    <div className="command-item-icon">
-                      {skill.icon}
-                    </div>
-                    <div className="command-item-content">
-                      <div className="command-item-header">
-                        <div className="command-item-title">{skill.name}</div>
-                      </div>
-                      <div className="command-item-desc">{skill.description}</div>
-                      <div className="command-item-tags">
-                        {skill.patterns.slice(0, 3).map((pattern, i) => (
-                          <span key={i} className="command-item-tag">{pattern}</span>
-                        ))}
-                        {skill.patterns.length > 3 && (
-                          <span className="command-item-tag">+{skill.patterns.length - 3}</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <div className="skill-panel-content">
+          {loading ? (
+            <div className="skill-loading">
+              <div className="loading-spinner"></div>
+              <p>正在加载技能列表...</p>
             </div>
-          ))}
-          
-          {filteredSkills.length === 0 && (
-            <div className="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
-              </svg>
-              <p>未找到匹配的技能</p>
+          ) : error ? (
+            <div className="skill-error">
+              <p>⚠️ {error}</p>
+              <button onClick={loadSkills}>重试</button>
+            </div>
+          ) : filteredSkills.length === 0 ? (
+            <div className="skill-empty">
+              <p>暂无技能</p>
+            </div>
+          ) : (
+            <div className="skill-list">
+              {filteredSkills.map((skill) => (
+                <div
+                  key={skill.name}
+                  className="skill-card"
+                  onClick={() => onSelectSkill(skill)}
+                >
+                  <div className="skill-icon">🔧</div>
+                  <div className="skill-body">
+                    <div className="skill-name">{skill.name}</div>
+                    {skill.description && (
+                      <div className="skill-desc">{skill.description}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
+        </div>
+
+        <div className="skill-panel-footer">
+          <span className="skill-count">共 {filteredSkills.length} 个技能</span>
+          <span className="skill-source">{skills.length > 0 ? 'uxin-mcp' : '离线模式'}</span>
         </div>
       </div>
     </div>
