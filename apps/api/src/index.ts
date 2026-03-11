@@ -71,6 +71,8 @@ import collaborationRoutes from './routes/collaboration.js';
 import externalMcpRoutes from './routes/external-mcp.js';
 import externalUsageRoutes from './routes/external-usage.js';
 import externalAdminRoutes from './routes/external-admin.js';
+import billingRoutes from './routes/billing.js';
+import orderRoutes from './routes/orders.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -294,6 +296,8 @@ app.use('/api/v1/iterations', authenticateToken, iterationsRoutes);
 app.use('/api/v1/ai-apps', optionalAuthenticateToken, aiAppRoutes);
 app.use('/api/v1/devtools', authenticateToken, devtoolsRoutes);
 app.use('/api/v1/collaboration', authenticateToken, collaborationRoutes);
+app.use('/api/v1/billing', optionalAuthenticateToken, billingRoutes);
+app.use('/api/v1/orders', optionalAuthenticateToken, orderRoutes);
 
 // Serve static admin files
 const adminPath = path.join(process.cwd(), 'public', 'admin');
