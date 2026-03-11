@@ -180,7 +180,7 @@ export const Chat: React.FC = () => {
         </button>
 
         <div className="session-list">
-          {sessions.map((session) => (
+          {Array.isArray(sessions) && sessions.map((session) => (
             <div
               key={session.sessionKey}
               className={`session-item ${currentSessionKey === session.sessionKey ? 'active' : ''}`}

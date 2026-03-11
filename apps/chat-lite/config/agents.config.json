@@ -7,11 +7,11 @@
       "name": "本地 Qwen 助手",
       "description": "本地运行的 openclaw1 Gateway 服务",
       "gateway": {
-        "url": "ws://127.0.0.1:19001",
-        "token": "123456",
+        "url": "ws://127.0.0.1:18789",
+        "token": "",
         "type": "local"
       },
-      "model": "deepseek/deepseek-chat",
+      "model": "bailian/qwen3.5-plus",
       "skills": ["customer-service", "project-management"],
       "status": "active",
       "priority": 1
