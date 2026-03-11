@@ -114,6 +114,13 @@ export class OpenClawConnector {
     return newId;
   }
 
+  // 生成假的设备签名（用于浏览器客户端）
+  private getDeviceSignature(deviceId: string, timestamp: number): string {
+    // 浏览器客户端无法进行真正的签名，使用设备 ID 和时间戳生成假签名
+    const data = `${deviceId}-${timestamp}-webchat`;
+    return btoa(data).replace(/=/g, '');
+  }
+
   // 发送消息（通过 WebSocket 发送到 Gateway，使用正确的协议帧格式）
   async sendMessage(sessionKey: string, content: string): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -122,12 +129,16 @@ export class OpenClawConnector {
       const ws = new WebSocket(`${wsUrl}/ws`);
       let requestId = `req-${Date.now()}`;
       let authenticated = false;
-      
+      let finalContent = '';
+      let lastArtifact: any = undefined;
+      let skillMatched: string | undefined;
+      let doneReceived = false;
+
       ws.onopen = () => {
         console.log('[OpenClaw] WebSocket 已连接，发送 connect 请求');
-        
+
         // 发送 connect 请求（使用正确的 Gateway 协议帧格式）
-        const deviceId = this.getDeviceId();
+        // 浏览器客户端不提供设备签名，使用 token 认证
         ws.send(JSON.stringify({
           type: 'req',
           id: requestId,
@@ -142,17 +153,12 @@ export class OpenClawConnector {
               platform: 'web',
               mode: 'webchat',
             },
-            role: 'user',
+            role: 'operator',
             scopes: ['operator.admin'],
             auth: {
               token: this.config.token,
             },
-            device: {
-              id: deviceId,
-              publicKey: 'webchat',
-              signature: '',
-              signedAt: Date.now(),
-            },
+            // 浏览器客户端不提供设备信息，使用 token 认证
           },
         }));
       };
@@ -177,7 +183,7 @@ export class OpenClawConnector {
                 params: {
                   sessionKey,
                   message: content,
-                  timestamp: Date.now(),
+                  idempotencyKey: `chat-${Date.now()}-${Math.random().toString(36).slice(2)}`,
                 },
               }));
             } else {
@@ -190,11 +196,79 @@ export class OpenClawConnector {
           
           // 处理 chat.send 响应
           if (data.type === 'res' && data.id === requestId && data.ok && authenticated) {
-            console.log('[OpenClaw] chat.send 已接受，等待 chat.message 事件');
+            console.log('[OpenClaw] chat.send 已接受，等待 chat 事件');
             return;
           }
           
-          // 处理 chat.message 事件
+          // 处理 agent 事件（agent 活动状态）
+          if (data.type === 'event' && data.event === 'agent') {
+            console.log('[OpenClaw] 收到 agent 事件:', data.payload);
+            // agent 事件表示 AI 正在思考/处理，保持连接
+            return;
+          }
+
+          // 处理 tick 事件（心跳）
+          if (data.type === 'event' && data.event === 'tick') {
+            // 心跳事件，保持连接
+            return;
+          }
+
+          // 处理 chat 事件（包含 chat.message）
+          if (data.type === 'event' && data.event === 'chat') {
+            console.log('[OpenClaw] 收到 chat 事件:', data.payload);
+            const payload = data.payload;
+
+            // 累积内容（处理流式响应）
+            if (payload?.message?.content) {
+              const msg = payload.message;
+              let content = '';
+
+              // 解析 content 字段（可能是字符串或对象数组）
+              if (typeof msg.content === 'string') {
+                content = msg.content;
+              } else if (Array.isArray(msg.content)) {
+                // 对象数组格式：[{type: 'text', text: '...'}]
+                content = msg.content.map(item => {
+                  if (item.type === 'text') return item.text;
+                  if (item.type === 'image') return '[图片]';
+                  return JSON.stringify(item);
+                }).join('');
+              } else if (msg.content && typeof msg.content === 'object') {
+                // 单个对象格式：{type: 'text', text: '...'}
+                if (msg.content.type === 'text') {
+                  content = msg.content.text;
+                } else {
+                  content = JSON.stringify(msg.content);
+                }
+              }
+
+              finalContent = content;
+              lastArtifact = msg.artifact;
+              skillMatched = msg.skillMatched;
+            }
+
+            // 检查是否完成（state: 'done' 表示流式结束）
+            if (payload?.state === 'done') {
+              console.log('[OpenClaw] 收到完成状态，回复完整');
+              doneReceived = true;
+              resolve({
+                content: finalContent || '消息已发送',
+                done: true,
+                artifact: lastArtifact,
+                skillMatched,
+              });
+              ws.close();
+              return;
+            }
+
+            // delta 状态表示正在流式传输，继续等待
+            if (payload?.state === 'delta') {
+              console.log('[OpenClaw] 正在接收流式内容...');
+            }
+            return;
+          }
+          
+          // 处理 chat.message 事件（备用）
           if (data.type === 'event' && data.event === 'chat.message') {
             console.log('[OpenClaw] 收到 chat.message 事件:', data.payload);
             resolve({
@@ -204,6 +278,7 @@ export class OpenClawConnector {
               skillMatched: data.payload?.skillMatched,
             });
             ws.close();
+            return;
           }
           
           // 处理错误
@@ -224,15 +299,29 @@ export class OpenClawConnector {
 
       ws.onclose = (code, reason) => {
         console.log('[OpenClaw] WebSocket 已关闭:', code, reason);
+        // 如果连接关闭但还没收到 done，返回已累积的内容
+        if (!doneReceived && finalContent) {
+          resolve({
+            content: finalContent,
+            done: true,
+            artifact: lastArtifact,
+            skillMatched,
+          });
+        }
       };
 
-      // 超时处理
+      // 超时处理（30 秒）
       setTimeout(() => {
         if (ws.readyState === WebSocket.OPEN) {
-          resolve({
-            content: '消息已发送，等待响应...',
-            done: true,
-          });
+          if (!doneReceived) {
+            console.log('[OpenClaw] 超时，返回已累积的内容:', finalContent);
+            resolve({
+              content: finalContent || '消息已发送，等待响应...',
+              done: true,
+              artifact: lastArtifact,
+              skillMatched,
+            });
+          }
           ws.close();
         }
       }, 30000);
