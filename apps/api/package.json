@@ -25,6 +25,8 @@
   "dependencies": {
     "@ai-sdk/deepseek": "^1.0.31",
     "@ai-sdk/openai": "^2.0.77",
+    "@alicloud/dysmsapi20170525": "^4.5.0",
+    "@alicloud/openapi-client": "^0.4.15",
     "@modelcontextprotocol/sdk": "^0.6.0",
     "@uxin/agent-lib": "workspace:*",
     "@uxin/mcp": "workspace:*",
@@ -52,13 +54,15 @@
     "openai": "^4.0.0",
     "redis": "^4.6.7",
     "resumable-stream": "^2.0.0",
+    "sharp": "^0.34.5",
     "socket.io": "^4.7.2",
     "stripe": "^12.18.0",
     "tailwind-merge": "^3.4.0",
     "tokenlens": "1.3.0",
+    "tsx": "^4.19.2",
+    "uuid": "^9.0.1",
     "ws": "^8.18.3",
-    "zod": "^3.21.4",
-    "tsx": "^4.19.2"
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@prisma/client": "^6.4.1",

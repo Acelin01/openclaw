@@ -2260,3 +2260,79 @@ enum TestPlanStatus {
   COMPLETED
   CANCELLED
 }
+
+// ════════════════════════════════════════
+// 订单系统模型 (M03 服务市场全流程)
+// ════════════════════════════════════════
+
+model Order {
+  id            String   @id @default(uuid())
+  orderNo       String   @unique
+  userId        String
+  sellerId      String
+  serviceId     String
+  packageType   String
+  title         String
+  description   String?  @db.Text
+  unitPrice     Float
+  estimatedHours Int     @default(1)
+  serviceFee    Float    @default(0)
+  totalAmount   Float
+  status        String   @default("PENDING") // PENDING, PAID, IN_PROGRESS, DELIVERED, COMPLETED, CANCELLED
+  paymentStatus String   @default("UNPAID") // UNPAID, PAID, REFUNDED
+  deliveryTime  String   @default("NORMAL") // URGENT, NORMAL, FLEXIBLE
+  deliveryFiles Json?
+  deliveredAt   DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  logs          OrderLog[]
+  tasks         OrderTask[]
+  
+  @@index([userId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderLog {
+  id        String   @id @default(uuid())
+  orderId   String
+  status    String
+  message   String?  @db.Text
+  createdAt DateTime @default(now())
+  
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@index([orderId])
+  @@map("order_logs")
+}
+
+model OrderTask {
+  id        String   @id @default(uuid())
+  orderId   String
+  name      String
+  status    String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  sortOrder Int      @default(0)
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@index([orderId])
+  @@map("order_tasks")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  serviceId String
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, serviceId])
+  @@index([userId])
+  @@index([serviceId])
+  @@map("favorites")
+}

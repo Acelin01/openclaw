@@ -469,3 +469,340 @@ router.post('/logout', (_req: Request, res: Response) => {
 });
 
 export default router;
+
+// ════════════════════════════════════════
+// 短信验证码相关接口 (需要补充实现)
+// ════════════════════════════════════════
+
+/**
+ * POST /api/auth/sms/send
+ * 发送短信验证码
+ * 
+ * 请求体:
+ * { "phone": "13800138000" }
+ * 
+ * 响应:
+ * { "success": true, "message": "验证码已发送", "data": { "expireIn": 60 } }
+ */
+router.post('/sms/send', async (req: Request, res: Response) => {
+  try {
+    const { phone } = req.body;
+    
+    // 验证手机号格式
+    if (!phone || !/^\d{11}$/.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: '请输入正确的 11 位手机号'
+      });
+    }
+
+    // TODO: 集成短信服务商 (阿里云/腾讯云)
+    // 生成 6 位验证码
+    const code = Math.random().toString().slice(-6);
+    
+    // 存储验证码到 Redis/数据库 (5 分钟有效期)
+    // await redis.set(`sms:${phone}`, code, 'EX', 300);
+    
+    console.log(`[SMS] 验证码 ${code} 已发送到 ${phone} (开发环境)`);
+
+    return res.json({
+      success: true,
+      message: '验证码已发送',
+      data: {
+        expireIn: 60, // 60 秒内有效
+        resendAfter: 60 // 60 秒后可重发
+      }
+    });
+  } catch (error) {
+    console.error('发送短信验证码错误:', error);
+    return res.status(500).json({
+      success: false,
+      message: '发送失败，请稍后再试'
+    });
+  }
+});
+
+/**
+ * POST /api/auth/sms/login
+ * 短信验证码登录
+ * 
+ * 请求体:
+ * { "phone": "13800138000", "code": "123456" }
+ * 
+ * 响应:
+ * { "success": true, "message": "登录成功", "data": { "user": {...}, "token": "..." } }
+ */
+router.post('/sms/login', async (req: Request, res: Response) => {
+  try {
+    const { phone, code } = req.body;
+    
+    if (!phone || !code) {
+      return res.status(400).json({
+        success: false,
+        message: '手机号和验证码不能为空'
+      });
+    }
+
+    // TODO: 从 Redis/数据库验证验证码
+    // const storedCode = await redis.get(`sms:${phone}`);
+    // if (!storedCode || storedCode !== code) {
+    //   return res.status(400).json({ success: false, message: '验证码错误' });
+    // }
+
+    // 开发环境：临时跳过验证
+    if (code !== '123456') {
+      return res.status(400).json({
+        success: false,
+        message: '验证码错误 (开发环境请输入 123456)'
+      });
+    }
+
+    const db = DatabaseService.getInstance();
+    if (!db.isAvailable()) {
+      return res.status(500).json({
+        success: false,
+        message: '数据库连接异常'
+      });
+    }
+
+    // 查找或创建用户
+    let user = await db.getUserByPhone(phone);
+    
+    if (!user) {
+      // 自动注册新用户
+      user = await db.createUser({
+        phone,
+        name: `用户_${phone.slice(-4)}`,
+        email: `${phone}@sms.user`,
+        role: 'CUSTOMER',
+        isVerified: false
+      });
+    }
+
+    const token = generateToken(user.id, user.role);
+
+    return res.json({
+      success: true,
+      message: '登录成功',
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          phone: user.phone,
+          isVerified: user.isVerified
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('短信登录错误:', error);
+    return res.status(500).json({
+      success: false,
+      message: '登录失败'
+    });
+  }
+});
+
+/**
+ * POST /api/auth/sms/register
+ * 短信验证码注册
+ * 
+ * 请求体:
+ * { "phone": "13800138000", "code": "123456", "name": "张三", "role": "CUSTOMER" }
+ */
+router.post('/sms/register', async (req: Request, res: Response) => {
+  try {
+    const { phone, code, name, role } = req.body;
+    
+    if (!phone || !code || !name) {
+      return res.status(400).json({
+        success: false,
+        message: '请填写完整信息'
+      });
+    }
+
+    // TODO: 验证验证码
+    // const storedCode = await redis.get(`sms:${phone}`);
+    // if (!storedCode || storedCode !== code) {
+    //   return res.status(400).json({ success: false, message: '验证码错误' });
+    // }
+
+    const db = DatabaseService.getInstance();
+    if (!db.isAvailable()) {
+      return res.status(500).json({
+        success: false,
+        message: '数据库连接异常'
+      });
+    }
+
+    // 检查手机号是否已注册
+    const existingUser = await db.getUserByPhone(phone);
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: '该手机号已被注册'
+      });
+    }
+
+    // 创建用户
+    const user = await db.createUser({
+      phone,
+      name,
+      email: `${phone}@sms.user`,
+      role: role || 'CUSTOMER',
+      isVerified: false
+    });
+
+    const token = generateToken(user.id, user.role);
+
+    return res.json({
+      success: true,
+      message: '注册成功',
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          phone: user.phone
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('短信注册错误:', error);
+    return res.status(500).json({
+      success: false,
+      message: '注册失败'
+    });
+  }
+});
+
+/**
+ * GET /api/auth/captcha
+ * 获取图形验证码
+ */
+router.get('/captcha', (_req: Request, res: Response) => {
+  // TODO: 使用 captcha 库生成图形验证码
+  // 返回 base64 图片和验证码 ID
+  const code = Math.random().toString(36).substring(2, 6).toUpperCase();
+  
+  return res.json({
+    success: true,
+    data: {
+      captchaId: 'xxx',
+      // image: 'data:image/png;base64,...' // 验证码图片 base64
+      code: code // 开发环境直接返回 (生产环境应隐藏)
+    }
+  });
+});
+
+// ════════════════════════════════════════
+// OAuth 相关接口
+// ════════════════════════════════════════
+
+import { oauthService } from '../services/oauth.service.js';
+
+/**
+ * GET /api/auth/oauth/wechat/url
+ * 获取微信授权 URL
+ */
+router.get('/oauth/wechat/url', (req: Request, res: Response) => {
+  const redirectUri = process.env.WECHAT_REDIRECT_URI || 'http://localhost:3002/auth/callback/wechat';
+  const url = oauthService.getWechatAuthUrl(redirectUri);
+  return res.json({ success: true, data: { url } });
+});
+
+/**
+ * GET /api/auth/oauth/github/url
+ * 获取 GitHub 授权 URL
+ */
+router.get('/oauth/github/url', (req: Request, res: Response) => {
+  const redirectUri = process.env.GITHUB_REDIRECT_URI || 'http://localhost:3002/auth/callback/github';
+  const url = oauthService.getGithubAuthUrl(redirectUri);
+  return res.json({ success: true, data: { url } });
+});
+
+/**
+ * POST /api/auth/oauth/wechat/callback
+ * 微信 OAuth 回调
+ */
+router.post('/oauth/wechat/callback', async (req: Request, res: Response) => {
+  try {
+    const { code } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        message: '缺少授权码'
+      });
+    }
+
+    const userInfo = await oauthService.getWechatUserInfo(code);
+    const { user, token } = await oauthService.handleOAuthLogin('wechat', userInfo);
+
+    return res.json({
+      success: true,
+      message: '登录成功',
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          avatar: user.avatar,
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('微信 OAuth 回调错误:', error);
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : '授权失败'
+    });
+  }
+});
+
+/**
+ * POST /api/auth/oauth/github/callback
+ * GitHub OAuth 回调
+ */
+router.post('/oauth/github/callback', async (req: Request, res: Response) => {
+  try {
+    const { code } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        message: '缺少授权码'
+      });
+    }
+
+    const userInfo = await oauthService.getGithubUserInfo(code);
+    const { user, token } = await oauthService.handleOAuthLogin('github', userInfo);
+
+    return res.json({
+      success: true,
+      message: '登录成功',
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          avatar: user.avatar,
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('GitHub OAuth 回调错误:', error);
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : '授权失败'
+    });
+  }
+});

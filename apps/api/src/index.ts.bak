@@ -48,7 +48,6 @@ import projectsRoutes from './routes/projects.js';
 import projectRequirementsRoutes from './routes/project-requirements.js';
 import projectTaskRoutes from './routes/project-tasks.js';
 import positionsRoutes from './routes/positions.js';
-import ordersRoutes from './routes/orders.js';
 import resumesRoutes from './routes/resumes.js';
 import recruitmentRoutes from './routes/recruitment.js';
 import servicesRoutes from './routes/services.js';
@@ -235,7 +234,6 @@ app.use('/api/v1/tasks', authenticateToken, tasksRoutes);
 app.use('/api/v1/projects', projectsRoutes);
 app.use('/api/v1/project-requirements', authenticateToken, projectRequirementsRoutes);
 app.use('/api/v1/project-tasks', authenticateToken, projectTaskRoutes);
-app.use('/api/v1/orders', ordersRoutes); // Order service routes (M03 服务市场全流程)
 app.use('/api/v1/positions', positionsRoutes);
 app.use('/api/v1/resumes', resumesRoutes);
 app.use('/api/v1/recruitment', recruitmentRoutes);
