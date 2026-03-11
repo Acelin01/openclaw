@@ -139,10 +139,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
     try {
       const response = await openclawConnector.sendMessage(sessionKey, content);
 
+      // 确保 content 是字符串
+      let contentText = response.content || '';
+      if (typeof contentText !== 'string') {
+        contentText = JSON.stringify(contentText);
+      }
+
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: response.content || '',
+        content: contentText,
         timestamp: Date.now(),
         metadata: {
           skillMatched: response.skillMatched,

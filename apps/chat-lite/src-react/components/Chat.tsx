@@ -142,6 +142,13 @@ export const Chat: React.FC = () => {
   // 获取当前会话消息
   const currentMessages = currentSessionKey ? (messages[currentSessionKey] || []) : [];
 
+  // 辅助函数：从消息内容中提取文本
+  const getContentText = (content: any): string => {
+    if (typeof content === 'string') return content;
+    if (typeof content === 'object' && content !== null && 'text' in content) return String(content.text);
+    return '';
+  };
+
   return (
     <div className="chat-container">
       {/* OpenClaw 配置入口 */}
@@ -183,7 +190,7 @@ export const Chat: React.FC = () => {
               <div className="session-info">
                 <div className="session-title">{session.label || '新会话'}</div>
                 <div className="session-preview">
-                  {(messages[session.sessionKey] || [])?.slice(-1)[0]?.content?.slice(0, 30) || '暂无消息'}...
+                  {getContentText((messages[session.sessionKey] || [])?.slice(-1)[0]?.content) || '暂无消息'}...
                 </div>
               </div>
               <div className="session-time">{session.lastMessageAt ? formatTime(session.lastMessageAt) : ''}</div>
@@ -284,9 +291,9 @@ export const Chat: React.FC = () => {
                       )}
                       <div className={`message-bubble ${msg.role}`}>
                         {msg.role === 'assistant' ? (
-                          <Markdown content={msg.content} />
+                          <Markdown content={getContentText(msg.content)} />
                         ) : (
-                          <span>{msg.content}</span>
+                          <span>{getContentText(msg.content) || JSON.stringify(msg.content)}</span>
                         )}
                       </div>
                       <div className="message-time">{formatTime(msg.timestamp)}</div>
